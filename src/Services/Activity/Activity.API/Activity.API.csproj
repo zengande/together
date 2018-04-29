@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Nutshell.Extensions.WebHost\Nutshell.Extensions.WebHost.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\Nutshell.Extensions.WebHost\Nutshell.Extensions.WebHost.csproj" />
     <ProjectReference Include="..\Activity.Domain\Activity.Domain.csproj" />
     <ProjectReference Include="..\Activity.Infrastructure\Activity.Infrastructure.csproj" />
   </ItemGroup>
