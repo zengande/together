@@ -18,11 +18,11 @@ namespace DomainTests
             Assert.Equal(0, activity.Participants.Count);
 
             var joinUser = 2;
-            activity.JoinActivity(joinUser, "", "");
+            activity.JoinActivity(joinUser, "", "",1);
 
             Assert.Equal(1, activity.Participants.Count);
 
-            activity.JoinActivity(joinUser, "", "");
+            activity.JoinActivity(joinUser, "", "",1);
             Assert.Equal(1, activity.Participants.Count);
 
             var expected = typeof(ActivityDomainException);
@@ -30,7 +30,7 @@ namespace DomainTests
             try
             {
                 var other_joinUser = 3;
-                activity.JoinActivity(other_joinUser, "", "");
+                activity.JoinActivity(other_joinUser, "", "",1);
             }
             catch (Exception e)
             {

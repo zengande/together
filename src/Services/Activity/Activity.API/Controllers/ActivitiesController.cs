@@ -8,6 +8,7 @@ using Together.Activity.API.Applications.Commands;
 using Together.Activity.API.Applications.Models;
 using Together.Activity.API.Applications.Queries;
 using Together.Activity.API.Models;
+using Together.Activity.Domain.Exceptions;
 
 namespace Together.Activity.API.Controllers
 {
@@ -65,8 +66,15 @@ namespace Together.Activity.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> JoinActivity([FromBody]int activityId)
         {
-            var result = await _mediator.Send(new JoinActivityCommand(activityId, currentUser));
-            return result ? Ok() : (IActionResult)BadRequest();
+            try
+            {
+                await _mediator.Send(new JoinActivityCommand(activityId, currentUser));
+                return Ok();
+            }
+            catch (ActivityDomainException)
+            {
+                return BadRequest("活动加入人数已满");
+            }
         }
     }
 }

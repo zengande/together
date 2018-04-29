@@ -32,7 +32,7 @@ namespace Together.Activity.API.Applications.Commands
 
             foreach (var participant in request.Participants)
             {
-                activity.JoinActivity(participant.UserId, participant.Nickname, participant.Avatar);
+                activity.JoinActivity(participant.UserId, participant.Nickname, participant.Avatar, participant.Sex);
             }
 
             _activityRepository.AddAsync(activity);

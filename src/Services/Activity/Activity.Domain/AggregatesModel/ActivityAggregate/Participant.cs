@@ -16,13 +16,16 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
 
         public int ActivityId { get; private set; }
 
+        public int Sex { get; private set; }
+
         public DateTime JoinTime { get; private set; }
 
-        public Participant(int userId, string nickname, string avatar)
+        public Participant(int userId, string nickname, string avatar, int sex)
         {
             UserId = userId;
             Nickname = nickname;
             Avatar = avatar;
+            Sex = sex;
 
             JoinTime = DateTimeOffset.Now.DateTime;
         }

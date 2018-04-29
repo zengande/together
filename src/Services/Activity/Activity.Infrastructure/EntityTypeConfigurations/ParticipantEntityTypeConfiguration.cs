@@ -31,6 +31,8 @@ namespace Together.Activity.Infrastructure.EntityTypeConfigurations
                 .IsRequired(false);
             builder.Property(p => p.JoinTime)
                 .IsRequired();
+            builder.Property(p => p.Sex)
+                .HasDefaultValue(0);
         }
     }
 }

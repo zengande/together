@@ -31,5 +31,6 @@ namespace Together.Activity.API.Models
         public string Nickname { get; set; }
         public DateTime JoinTime { get; set; }
         public string Avatar { get; set; }
+        public int Sex { get; set; }
     }
 }

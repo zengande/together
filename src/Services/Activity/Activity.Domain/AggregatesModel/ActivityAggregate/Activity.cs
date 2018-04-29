@@ -107,7 +107,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         /// <summary>
         /// 加入活动
         /// </summary>
-        public void JoinActivity(int userId, string nickname, string avatar)
+        public void JoinActivity(int userId, string nickname, string avatar, int sex)
         {
             // 已参加了此活动
             if (_participants.Any(u => u.UserId == userId))
@@ -123,7 +123,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
                 }
             }
 
-            var participant = new Participant(userId, nickname, avatar);
+            var participant = new Participant(userId, nickname, avatar, sex);
             _participants.Add(participant);
 
             // 加入活动领域事件

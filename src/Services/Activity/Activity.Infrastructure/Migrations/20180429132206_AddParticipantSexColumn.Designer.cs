@@ -10,9 +10,10 @@ using Together.Activity.Infrastructure.Data;
 namespace Together.Activity.Infrastructure.Migrations
 {
     [DbContext(typeof(ActivityDbContext))]
-    partial class ActivityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180429132206_AddParticipantSexColumn")]
+    partial class AddParticipantSexColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

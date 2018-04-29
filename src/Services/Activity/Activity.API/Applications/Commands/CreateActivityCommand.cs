@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Together.Activity.API.Applications.Models;
 using Together.Activity.API.Extensions;
+using Together.Activity.API.Models;
 
 namespace Together.Activity.API.Applications.Commands
 {
@@ -86,6 +87,7 @@ namespace Together.Activity.API.Applications.Commands
     
     public class ParticipantDto
     {
+        public int Sex { get; set; }
         public int UserId { get; set; }
         public string Nickname { get; set; }
         public string Avatar { get; set; }

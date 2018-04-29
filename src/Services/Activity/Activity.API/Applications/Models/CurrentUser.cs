@@ -9,7 +9,7 @@ namespace Together.Activity.API.Applications.Models
     {
         public string Avatar { get; set; }
         public int UserId { get; set; }
-
+        public int Sex { get; set; }
         public string Nickname { get; set; }
 
     }

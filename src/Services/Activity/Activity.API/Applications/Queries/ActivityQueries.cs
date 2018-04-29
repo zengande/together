@@ -35,7 +35,7 @@ namespace Together.Activity.API.Applications.Queries
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                var sql = @"SELECT a.OwnerId,a.Id as ActivityId, a.Description, a.Details, a.CreateTime,a.EndTime,a.ActivityTime,a.Address,a.LimitsNum, s.Name as Status,p.Id as PId, p.Nickname, p.JoinTime,p.Avatar  
+                var sql = @"SELECT a.OwnerId,a.Id as ActivityId, a.Description, a.Details, a.CreateTime,a.EndTime,a.ActivityTime,a.Address,a.LimitsNum, s.Name as Status,p.Id as PId, p.Nickname, p.JoinTime,p.Avatar,p.Sex  
                             FROM[dbo].[activities] a
                             LEFT JOIN[dbo].[participant] p ON a.Id = p.ActivityId
                             LEFT JOIN[dbo].[activitystatus] s ON a.ActivityStatusId=s.Id
@@ -74,7 +74,8 @@ namespace Together.Activity.API.Applications.Queries
                     {
                         Avatar = item.Avatar,
                         JoinTime = item.JoinTime,
-                        Nickname = item.Nickname
+                        Nickname = item.Nickname,
+                        Sex = item.Sex
                     });
                 }
             }
