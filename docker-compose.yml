@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  activity.api:
+    image: activityapi
+    build:
+      context: .
+      dockerfile: src/Services/Activity/Activity.API/Dockerfile
+  location.api:
+    image: locationapi
+    build:
+      context: .
+      dockerfile: src/Services/Location/Location.API/Dockerfile
+
