@@ -18,16 +18,23 @@ namespace Together.Activity.API.Applications.Queries
             _connectionString = !string.IsNullOrWhiteSpace(constr) ? constr : throw new ArgumentNullException(nameof(constr));
         }
 
-        public async Task<IEnumerable<ActivitySummaryViewModel>> GetActivitiesAsync()
+        public async Task<IEnumerable<ActivitySummaryViewModel>> GetActivitiesAsync(int pageIndex, int pageSize)
         {
-            var sql = @"SELECT a.Id as ActivityId, a.Description as Title, a.Address,a.LimitsNum, s.Name as Status,ISNULL(c.Count,0) AS NumberOfParticipants
-	                    FROM [dbo].[activities] a
-	                    LEFT JOIN [dbo].[activitystatus] s ON a.ActivityStatusId=s.Id
-	                    LEFT JOIN (SELECT ActivityId, count(*) AS [Count]
-		                    FROM [dbo].[participant]
-		                    GROUP BY [ActivityId]
-	                    ) c on c.ActivityId=a.Id";
-            return await SqlQuery<ActivitySummaryViewModel>(sql, null);
+            var sql = @"SELECT TOP(@pageSize) * FROM (
+	                        SELECT a.Id as ActivityId, a.Description as Title, a.Address,a.LimitsNum, s.Name as Status,ISNULL(c.Count,0) AS NumberOfParticipants
+	                        FROM [dbo].[activities] a
+	                        LEFT JOIN [dbo].[activitystatus] s ON a.ActivityStatusId=s.Id
+	                        LEFT JOIN (SELECT ActivityId, count(*) AS [Count]
+	                        FROM [dbo].[participant]
+	                        GROUP BY [ActivityId]
+	                        ) c on c.ActivityId=a.Id) r
+                        WHERE (r.ActivityId NOT IN
+                                  (SELECT TOP (@pageSize*(@pageIndex-1)) Id
+			                         FROM [dbo].[activities]
+			                         ORDER BY Id)
+                        )
+                        ORDER BY r.ActivityId";
+            return await SqlQuery<ActivitySummaryViewModel>(sql, new { pageSize, pageIndex });
         }
 
         public async Task<ActivityViewModel> GetActivityAsync(int id)
@@ -47,6 +54,17 @@ namespace Together.Activity.API.Applications.Queries
                 }
                 return MapActivityAndParticipant(result);
             }
+        }
+
+        public async Task<IEnumerable<ActivitySummaryViewModel>> GetActivitiesByUserAsync(int userId)
+        {
+            var sql = @"SELECT a.Id as ActivityId, a.Description as Title, a.Address,a.LimitsNum, s.Name as Status
+	                    FROM [dbo].[activities] a
+	                    LEFT JOIN [dbo].[activitystatus] s ON a.ActivityStatusId=s.Id
+	                    WHERE a.Id IN(
+		                    SELECT DISTINCT ActivityId FROM [dbo].[participant] p
+		                    WHERE p.UserId=@userId)";
+            return await SqlQuery<ActivitySummaryViewModel>(sql, new { userId });
         }
 
         private ActivityViewModel MapActivityAndParticipant(dynamic result)

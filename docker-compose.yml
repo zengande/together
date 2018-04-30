@@ -12,3 +12,10 @@ services:
       context: .
       dockerfile: src/Services/Location/Location.API/Dockerfile
 
+
+  usergroup.api:
+    image: usergroupapi
+    build:
+      context: .
+      dockerfile: src/Services/UserGroup/UserGroup.API/Dockerfile
+

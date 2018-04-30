@@ -19,7 +19,7 @@ namespace Together.Activity.API
         public static void Main(string[] args)
         {
             BuildWebHost(args)
-                .MigrateDbContext<ActivityDbContext>(async (context, services) =>
+                .MigrateDbContext<ActivityDbContext>((context, services) =>
                 {
                     var logger = services.GetService<ILogger<ActivityDbContextSeed>>();
                     new ActivityDbContextSeed()

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Together.Activity.API.Applications.Models
+namespace Together.Activity.API.Models
 {
     public class CurrentUser
     {

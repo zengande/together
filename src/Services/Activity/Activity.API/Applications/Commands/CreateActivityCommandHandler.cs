@@ -25,8 +25,10 @@ namespace Together.Activity.API.Applications.Commands
             var activity = new Domain.AggregatesModel.ActivityAggregate.Activity(request.Owner.UserId,
                 request.Description,
                 request.Details,
+                request.EndRegisterTime,
+                request.ActivityDate,
+                request.StartTime,
                 request.EndTime,
-                request.ActivityTime,
                 request.Address,
                 request.LimitsNum);
 

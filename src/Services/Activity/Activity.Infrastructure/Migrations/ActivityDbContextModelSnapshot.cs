@@ -28,27 +28,31 @@ namespace Together.Activity.Infrastructure.Migrations
                         .HasAnnotation("SqlServer:HiLoSequenceName", "activityseq")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
-                    b.Property<int>("ActivityStatusId");
+                    b.Property<DateTime>("ActivitDate");
 
-                    b.Property<DateTime>("ActivityTime");
+                    b.Property<int>("ActivityStatusId");
 
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasMaxLength(200);
 
-                    b.Property<DateTime>("CreateTime")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(new DateTime(2018, 4, 29, 21, 22, 5, 426, DateTimeKind.Local));
+                    b.Property<DateTime>("CreateTime");
 
                     b.Property<string>("Description");
 
                     b.Property<string>("Details");
 
+                    b.Property<DateTime>("EndRegisterDate");
+
                     b.Property<DateTime>("EndTime");
+
+                    b.Property<decimal?>("Funds");
 
                     b.Property<int?>("LimitsNum");
 
                     b.Property<int?>("OwnerId");
+
+                    b.Property<DateTime>("StartTime");
 
                     b.HasKey("Id");
 

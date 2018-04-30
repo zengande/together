@@ -37,12 +37,12 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         /// <summary>
         /// 截止报名时间
         /// </summary>
-        public DateTime EndTime { get; private set; }
+        public DateTime EndRegisterDate { get; private set; }
 
         /// <summary>
-        /// 活动时间
+        /// 活动日期
         /// </summary>
-        public DateTime ActivityTime { get; private set; }
+        public DateTime ActivitDate { get; private set; }
 
         /// <summary>
         /// 活动地点
@@ -55,6 +55,20 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         public int? LimitsNum { get; private set; }
 
         /// <summary>
+        /// 参加经费
+        /// </summary>
+        public decimal? Funds { get; private set; }
+
+        /// <summary>
+        /// 开始时间
+        /// </summary>
+        public DateTime StartTime { get; private set; }
+        /// <summary>
+        /// 结束时间
+        /// </summary>
+        public DateTime EndTime { get; private set; }
+
+        /// <summary>
         /// 参与者
         /// </summary>
         private readonly List<Participant> _participants;
@@ -63,7 +77,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         protected Activity()
         {
             _participants = new List<Participant>();
-            CreateTime = DateTime.Now;
+            CreateTime = DateTimeOffset.Now.DateTime;
 
             // 创建活动领域事件
             AddDomainEvent(new ActivityCreatedEvent { Activity = this });
@@ -75,20 +89,38 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         /// <param name="userId"></param>
         /// <param name="discription"></param>
         /// <param name="details"></param>
-        /// <param name="endTime"></param>
-        /// <param name="activityTime"></param>
+        /// <param name="endRegisterTime"></param>
+        /// <param name="activityDate"></param>
         /// <param name="address"></param>
         /// <param name="limitsNum"></param>
-        public Activity(int? userId, string description, string details, DateTime endTime, DateTime activityTime, string address, int? limitsNum = null)
+        public Activity(int? userId, string description, string details, DateTime endRegisterTime, DateTime activityDate, DateTime startTime, DateTime endTime, string address, int? limitsNum = null, decimal? funds = null)
             : this()
         {
+            // 截止报名时间早于当前时间（活动在过去）
+            if (DateTimeOffset.Now > endRegisterTime)
+            {
+                throw new ActivityDomainException("截止报名时间不能早于当前时间");
+            }
+            // 活动时间早于截止报名时间
+            if (activityDate < endRegisterTime)
+            {
+                throw new ActivityDomainException("截止报名时间不能晚于活动时间");
+            }
+            // 开始时间晚于结束时间
+            if (startTime > endTime)
+            {
+                throw new ActivityDomainException("开始时间不能晚于结束结束时间");
+            }
             OwnerId = userId;
             Description = description;
             Details = details;
+            EndRegisterDate = endRegisterTime;
+            ActivitDate = activityDate;
+            StartTime = startTime;
             EndTime = endTime;
-            ActivityTime = activityTime;
             Address = address;
             LimitsNum = limitsNum;
+            Funds = funds;
             _activityStatusId = ActivityStatus.Draft.Id;
         }
 
@@ -114,12 +146,19 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
             {
                 return;
             }
+
+            // 判断是否已经截止了报名
+            if (DateTimeOffset.Now > EndRegisterDate)
+            {
+                throw new ActivityDomainException("已经截止了报名");
+            }
+
             // 人数已满
             if (LimitsNum.HasValue)
             {
                 if (_participants.Count >= LimitsNum.Value)
                 {
-                    JoinActivityException();
+                    throw new ActivityDomainException("本次活动人数已满");
                 }
             }
 
@@ -137,14 +176,6 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         private void StatusChangeException(ActivityStatus activityStatusToChange)
         {
             throw new ActivityDomainException($"Is not possible to change the activity status from {ActivityStatus.Name} to {activityStatusToChange.Name}.");
-        }
-
-        /// <summary>
-        /// 加入活动人数已满异常
-        /// </summary>
-        private void JoinActivityException()
-        {
-            throw new ActivityDomainException($"The number of people involved in this activity has reached its maximum:{LimitsNum.Value}");
         }
     }
 }
