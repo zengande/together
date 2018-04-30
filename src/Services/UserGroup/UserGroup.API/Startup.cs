@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Swashbuckle.AspNetCore.Swagger;
 using Together.UserGroup.API.Infrastructure.Data;
 using Together.UserGroup.API.Infrastructure.Repositories;
 using Together.UserGroup.API.Infrastructure.Services;
@@ -47,14 +48,40 @@ namespace Together.UserGroup.API
                     options.SerializerSettings.MaxDepth = 2;
                 });
 
+            services.AddSwaggerGen(options =>
+            {
+                options.DescribeAllEnumsAsStrings();
+                options.SwaggerDoc("v1", new Info { Title = "UserGroup API", Version = "v1" });
+
+                //options.AddSecurityDefinition("oauth2", new OAuth2Scheme
+                //{
+                //    Type = "oauth2",
+                //    Flow = "implicit",
+                //    AuthorizationUrl = $"{Configuration.GetValue<string>("IdentityUrlExternal")}/connect/authorize",
+                //    TokenUrl = $"{Configuration.GetValue<string>("IdentityUrlExternal")}/connect/token",
+                //    Scopes = new Dictionary<string, string>()
+                //    {
+                //        { "activities", "Activity API" }
+                //    }
+                //});
+                //options.OperationFilter<AuthorizeCheckOperationFilter>();
+            });
+
             services.AddTransient<IUserRepository, UserRepository>()
-                .AddTransient<IUserService, UserService>();
+                .AddTransient<IGroupRepository, GroupRepository>()
+                .AddTransient<IUserService, UserService>()
+                .AddTransient<IGroupService, GroupService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseMvc();
+            app.UseSwagger()
+               .UseSwaggerUI(c =>
+               {
+                   c.SwaggerEndpoint("/swagger/v1/swagger.json", "UserGroup API V1");
+               });
         }
     }
 }

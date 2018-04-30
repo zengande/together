@@ -6,9 +6,9 @@ using Together.UserGroup.API.Infrastructure.Models;
 
 namespace Together.UserGroup.API.Infrastructure.Services
 {
-    public interface IUserService
-        : IBaseService<User>
+    public interface IGroupService
+        : IBaseService<Group>
     {
-        Task<User> JoinGroup(int userId, int groupId);
+        Task<Group> CreateGroup(Group group);
     }
 }

@@ -39,5 +39,10 @@ namespace Together.UserGroup.API.Infrastructure.Services
         {
             return await _repository.SaveChangesAsync();
         }
+
+        public bool Existed(Func<T, bool> where)
+        {
+            return _repository.Existed(where);
+        }
     }
 }

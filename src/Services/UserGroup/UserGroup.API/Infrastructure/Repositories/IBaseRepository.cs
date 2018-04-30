@@ -13,5 +13,6 @@ namespace Together.UserGroup.API.Infrastructure.Repositories
         Task<T> AddAsync(T entity);
         bool Delete(T entity);
         Task<bool> SaveChangesAsync();
+        bool Existed(Func<T, bool> where);
     }
 }

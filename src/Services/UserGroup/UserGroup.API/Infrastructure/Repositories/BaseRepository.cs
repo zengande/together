@@ -44,5 +44,11 @@ namespace Together.UserGroup.API.Infrastructure.Repositories
         {
             return await _context.SaveChangesAsync() > 0;
         }
+
+        public bool Existed(Func<T,bool> where)
+        {
+            return _context.Set<T>()
+                .Any(where);
+        }
     }
 }
