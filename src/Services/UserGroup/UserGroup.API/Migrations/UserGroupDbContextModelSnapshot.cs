@@ -50,10 +50,18 @@ namespace Together.UserGroup.API.Migrations
 
                     b.Property<DateTime?>("Birthday");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
                     b.Property<int?>("GroupId");
 
                     b.Property<string>("Nickname")
                         .HasMaxLength(50);
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(200);
 
                     b.Property<int?>("Sex");
 

@@ -58,6 +58,12 @@ namespace Together.UserGroup.API.Infrastructure.Data
                 .HasMaxLength(200);
             builder.Property(u => u.Sex)
                 .IsRequired(false);
+            builder.Property(u => u.Email)
+                .HasMaxLength(50)
+                .IsRequired();
+            builder.Property(u => u.Password)
+                .HasMaxLength(200)
+                .IsRequired();
         }
     }
 }

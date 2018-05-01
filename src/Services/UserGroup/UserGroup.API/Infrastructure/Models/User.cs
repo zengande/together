@@ -15,6 +15,11 @@ namespace Together.UserGroup.API.Infrastructure.Models
         public int Id { get; set; }
 
         /// <summary>
+        /// 邮箱
+        /// </summary>
+        public string Email { get; set; }
+
+        /// <summary>
         /// 昵称
         /// </summary>
         public string Nickname { get; set; }
@@ -33,6 +38,11 @@ namespace Together.UserGroup.API.Infrastructure.Models
         /// 生日
         /// </summary>
         public DateTime? Birthday { get; set; }
+
+        /// <summary>
+        /// 密码
+        /// </summary>
+        public string Password { get; set; }
 
         public int? GroupId { get; set; }
 

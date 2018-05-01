@@ -19,3 +19,17 @@ services:
       context: .
       dockerfile: src/Services/UserGroup/UserGroup.API/Dockerfile
 
+
+  webmvc:
+    image: webmvc
+    build:
+      context: .
+      dockerfile: src/WebApps/WebMVC/Dockerfile
+
+
+  api.gateway:
+    image: apigateway
+    build:
+      context: .
+      dockerfile: src/ApiGateways/Api.Gateway/Dockerfile
+

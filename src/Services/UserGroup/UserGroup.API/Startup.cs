@@ -3,14 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Consul;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server.Features;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.Swagger;
+using Together.UserGroup.API.Configurations;
 using Together.UserGroup.API.Infrastructure.Data;
 using Together.UserGroup.API.Infrastructure.Repositories;
 using Together.UserGroup.API.Infrastructure.Services;
@@ -35,6 +41,19 @@ namespace Together.UserGroup.API
                 options.UseMySQL(Configuration.GetConnectionString("DefaultConnection"), sql =>
                     sql.MigrationsAssembly(assembly));
             });
+
+            services.AddOptions();
+            services.Configure<ServiceDiscoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
+            services.AddSingleton<IConsulClient>(p => new ConsulClient(cfg =>
+            {
+                var serviceConfiguration = p.GetRequiredService<IOptions<ServiceDiscoveryOptions>>().Value;
+
+                if (!string.IsNullOrEmpty(serviceConfiguration.Consul.HttpEndpoint))
+                {
+                    // if not configured, the client will use the default value "127.0.0.1:8500"
+                    cfg.Address = new Uri(serviceConfiguration.Consul.HttpEndpoint);
+                }
+            }));
 
             services.AddMvc()
                 .AddJsonOptions(options =>
@@ -74,14 +93,60 @@ namespace Together.UserGroup.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app,
+        IApplicationLifetime lifetime,
+        ILoggerFactory loggerFactory,
+        IOptions<ServiceDiscoveryOptions> serviceOptions,
+        IConsulClient consul)
         {
+            lifetime.ApplicationStarted.Register(() => { RegisterConsulService(app, lifetime, serviceOptions, consul); });
+
             app.UseMvc();
             app.UseSwagger()
                .UseSwaggerUI(c =>
                {
                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "UserGroup API V1");
                });
+        }
+
+        /// <summary>
+        /// 注册Consul服务
+        /// </summary>
+        private void RegisterConsulService(IApplicationBuilder app,
+            IApplicationLifetime lifetime,
+            IOptions<ServiceDiscoveryOptions> options,
+            IConsulClient consul)
+        {
+            var features = app.Properties["server.Features"] as FeatureCollection;
+            if (features != null)
+            {
+                var addresses = features.Get<IServerAddressesFeature>()
+                    .Addresses
+                    .Select(a => new Uri(a));
+                foreach (var address in addresses)
+                {
+                    var serviceId = $"{options.Value.ServiceName}_{address.Host}_{address.Port}";
+                    var httpCheck = new AgentServiceCheck
+                    {
+                        DeregisterCriticalServiceAfter = TimeSpan.FromMinutes(1),
+                        Interval = TimeSpan.FromSeconds(30),
+                        HTTP = new Uri(address, "HealthCheck").OriginalString
+                    };
+                    var registration = new AgentServiceRegistration
+                    {
+                        Checks = new[] { httpCheck },
+                        Address = address.Host,
+                        ID = serviceId,
+                        Name = options.Value.ServiceName,
+                        Port = address.Port
+                    };
+                    consul.Agent.ServiceRegister(registration).GetAwaiter().GetResult();
+                    lifetime.ApplicationStopping.Register(() =>
+                    {
+                        consul.Agent.ServiceDeregister(serviceId).GetAwaiter().GetResult();
+                    });
+                }
+            }
         }
     }
 }

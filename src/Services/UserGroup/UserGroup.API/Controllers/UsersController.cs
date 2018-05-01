@@ -18,6 +18,7 @@ namespace Together.UserGroup.API.Controllers
             _userService = userService;
         }
 
+        // 获取用户信息
         [Route("{userId:int}")]
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -32,14 +33,20 @@ namespace Together.UserGroup.API.Controllers
             return NotFound();
         }
 
+        // 添加用户
         [Route("")]
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> Post([FromBody]InputUserViewModel model)
+        public async Task<IActionResult> Post([FromBody]UserRegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
+                // 邮箱已被注册
+                if (_userService.Existed(u => u.Email.Equals(model.Email.Trim(), StringComparison.CurrentCultureIgnoreCase)))
+                {
+                    return BadRequest("邮箱已被注册");
+                }
                 var user = await _userService.AddAsync(model.ToEntity());
                 var result = await _userService.SaveChangesAsync();
                 return result ? Ok(user) : (IActionResult)BadRequest();

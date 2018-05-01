@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace Identity.API
+namespace Together.Identity.API
 {
     public class Program
     {
@@ -19,6 +19,7 @@ namespace Identity.API
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseUrls("http://localhost:5000/")
                 .UseStartup<Startup>()
                 .Build();
     }
