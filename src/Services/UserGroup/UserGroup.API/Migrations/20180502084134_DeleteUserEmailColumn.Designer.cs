@@ -10,9 +10,10 @@ using Together.UserGroup.API.Infrastructure.Data;
 namespace Together.UserGroup.API.Migrations
 {
     [DbContext(typeof(UserGroupDbContext))]
-    partial class UserGroupDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180502084134_DeleteUserEmailColumn")]
+    partial class DeleteUserEmailColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

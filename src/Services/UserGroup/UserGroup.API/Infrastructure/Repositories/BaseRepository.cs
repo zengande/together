@@ -15,7 +15,7 @@ namespace Together.UserGroup.API.Infrastructure.Repositories
             _context = context;
         }
 
-        public virtual async Task<T> GetAsync(int Id)
+        public virtual async Task<T> GetAsync(object Id)
         {
             var model = await _context.Set<T>()
                 .FindAsync(Id);

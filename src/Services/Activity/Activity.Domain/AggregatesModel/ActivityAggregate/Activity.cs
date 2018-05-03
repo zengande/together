@@ -80,7 +80,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
             CreateTime = DateTimeOffset.Now.DateTime;
 
             // 创建活动领域事件
-            AddDomainEvent(new ActivityCreatedEvent { Activity = this });
+            AddDomainEvent(new ActivityCreatedDomainEvent { Activity = this });
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
             _participants.Add(participant);
 
             // 加入活动领域事件
-            AddDomainEvent(new ActivityJoinedEvent { Participant = participant });
+            AddDomainEvent(new UserJoinedActivityDomainEvent { Participant = participant });
         }
 
         /// <summary>

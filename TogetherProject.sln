@@ -51,11 +51,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UserGroup", "UserGroup", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserGroup.API", "src\Services\UserGroup\UserGroup.API\UserGroup.API.csproj", "{F23333E3-4170-4D18-9F1B-76A00E13AB7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebMVC", "src\WebApps\WebMVC\WebMVC.csproj", "{3699DEEF-0E09-4657-AC63-F5EFEFB298CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebMVC", "src\WebApps\WebMVC\WebMVC.csproj", "{3699DEEF-0E09-4657-AC63-F5EFEFB298CB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiGateways", "ApiGateways", "{81F22FEF-6FB9-4BE6-8ED4-0F5AF72AA1E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api.Gateway", "src\ApiGateways\Api.Gateway\Api.Gateway.csproj", "{0AEE2BE5-2085-4B37-B2B7-D514EC2D1BD8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api.Gateway", "src\ApiGateways\Api.Gateway\Api.Gateway.csproj", "{0AEE2BE5-2085-4B37-B2B7-D514EC2D1BD8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

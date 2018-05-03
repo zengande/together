@@ -20,6 +20,7 @@ using Together.UserGroup.API.Configurations;
 using Together.UserGroup.API.Infrastructure.Data;
 using Together.UserGroup.API.Infrastructure.Repositories;
 using Together.UserGroup.API.Infrastructure.Services;
+using Together.UserGroup.API.IntegrationEventHandlers;
 
 namespace Together.UserGroup.API
 {
@@ -67,6 +68,32 @@ namespace Together.UserGroup.API
                     options.SerializerSettings.MaxDepth = 2;
                 });
 
+            services.AddScoped<IUserRepository, UserRepository>()
+                .AddScoped<IGroupRepository, GroupRepository>()
+                .AddScoped<IUserService, UserService>()
+                .AddScoped<IGroupService, GroupService>()
+                .AddScoped<AccountCreatedIntegrationEventHandler>();
+
+            services.AddCap(options =>
+            {
+                options.UseEntityFramework<UserGroupDbContext>()
+                    .UseRabbitMQ(r =>
+                    {
+                        r.HostName = "localhost";
+                        r.Port = 32771;
+                    })
+                    .UseDashboard()
+                    .UseDiscovery(d =>
+                    {
+                        d.DiscoveryServerHostName = "localhost";
+                        d.DiscoveryServerPort = 8500;
+                        d.CurrentNodeHostName = "localhost";
+                        d.CurrentNodePort = 58750;
+                        d.NodeName = "User Group Api Cap No.1 Node";
+                        d.NodeId = 1;
+                    });
+            });
+
             services.AddSwaggerGen(options =>
             {
                 options.DescribeAllEnumsAsStrings();
@@ -85,11 +112,6 @@ namespace Together.UserGroup.API
                 //});
                 //options.OperationFilter<AuthorizeCheckOperationFilter>();
             });
-
-            services.AddTransient<IUserRepository, UserRepository>()
-                .AddTransient<IGroupRepository, GroupRepository>()
-                .AddTransient<IUserService, UserService>()
-                .AddTransient<IGroupService, GroupService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -101,6 +123,7 @@ namespace Together.UserGroup.API
         {
             lifetime.ApplicationStarted.Register(() => { RegisterConsulService(app, lifetime, serviceOptions, consul); });
 
+            app.UseCap();
             app.UseMvc();
             app.UseSwagger()
                .UseSwaggerUI(c =>
@@ -117,15 +140,14 @@ namespace Together.UserGroup.API
             IOptions<ServiceDiscoveryOptions> options,
             IConsulClient consul)
         {
-            var features = app.Properties["server.Features"] as FeatureCollection;
-            if (features != null)
+            if (app.Properties["server.Features"] is FeatureCollection features)
             {
                 var addresses = features.Get<IServerAddressesFeature>()
                     .Addresses
                     .Select(a => new Uri(a));
                 foreach (var address in addresses)
                 {
-                    var serviceId = $"{options.Value.ServiceName}_{address.Host}_{address.Port}";
+                    var serviceId = $"{options.Value.ServiceName}_{address.Host}:{address.Port}";
                     var httpCheck = new AgentServiceCheck
                     {
                         DeregisterCriticalServiceAfter = TimeSpan.FromMinutes(1),

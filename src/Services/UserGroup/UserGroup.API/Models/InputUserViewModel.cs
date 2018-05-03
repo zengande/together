@@ -10,16 +10,16 @@ namespace Together.UserGroup.API.Models
     public class UserRegisterViewModel
     {
         [Required]
+        public string Id { get; set; }
+        [Required]
         public string Nickname { get; set; }
         [Required]
         public string Email { get; set; }
-        [Required]
-        public string Password { get; set; }
 
         public User ToEntity() => new User
         {
+            Id = Id,
             Nickname = Nickname,
-            Password = Password,
             Email = Email
         };
     }

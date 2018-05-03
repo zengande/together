@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Together.Activity.Domain.Events
 {
-    public class ActivityJoinedEvent
+    public class UserJoinedActivityDomainEvent
         : INotification
     {
         public AggregatesModel.ActivityAggregate.Participant Participant { get; set; }

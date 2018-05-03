@@ -10,9 +10,10 @@ using Together.UserGroup.API.Infrastructure.Data;
 namespace Together.UserGroup.API.Migrations
 {
     [DbContext(typeof(UserGroupDbContext))]
-    partial class UserGroupDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180502054722_UpdateUserInfo")]
+    partial class UpdateUserInfo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,7 +52,9 @@ namespace Together.UserGroup.API.Migrations
 
                     b.Property<DateTime?>("Birthday");
 
-                    b.Property<string>("Email");
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.Property<int?>("GroupId");
 

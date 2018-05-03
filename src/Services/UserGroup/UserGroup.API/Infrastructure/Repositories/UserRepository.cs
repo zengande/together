@@ -17,7 +17,7 @@ namespace Together.UserGroup.API.Infrastructure.Repositories
             _context = context;
         }
 
-        public override async Task<User> GetAsync(int userId)
+        public override async Task<User> GetAsync(object userId)
         {
             var user = await _context.Users
                 .FindAsync(userId);

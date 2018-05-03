@@ -8,7 +8,7 @@ namespace Together.UserGroup.API.Infrastructure.Services
     public interface IBaseService<T>
         where T : class, new()
     {
-        Task<T> GetAsync(int Id);
+        Task<T> GetAsync(object Id);
         T Update(T entity);
         Task<T> AddAsync(T entity);
         bool Delete(T entity);

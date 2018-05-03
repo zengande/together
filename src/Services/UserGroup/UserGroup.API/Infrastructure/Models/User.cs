@@ -12,7 +12,7 @@ namespace Together.UserGroup.API.Infrastructure.Models
         /// <summary>
         /// 主键
         /// </summary>
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// 邮箱
@@ -38,11 +38,6 @@ namespace Together.UserGroup.API.Infrastructure.Models
         /// 生日
         /// </summary>
         public DateTime? Birthday { get; set; }
-
-        /// <summary>
-        /// 密码
-        /// </summary>
-        public string Password { get; set; }
 
         public int? GroupId { get; set; }
 

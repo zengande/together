@@ -52,6 +52,9 @@ namespace Together.UserGroup.API.Infrastructure.Data
             builder.ToTable("users");
 
             builder.HasKey(u => u.Id);
+            builder.Property(u => u.Id)
+                .HasMaxLength(200)
+                .IsRequired();
             builder.Property(u => u.Nickname)
                 .HasMaxLength(50);
             builder.Property(u => u.Avatar)
@@ -60,9 +63,6 @@ namespace Together.UserGroup.API.Infrastructure.Data
                 .IsRequired(false);
             builder.Property(u => u.Email)
                 .HasMaxLength(50)
-                .IsRequired();
-            builder.Property(u => u.Password)
-                .HasMaxLength(200)
                 .IsRequired();
         }
     }

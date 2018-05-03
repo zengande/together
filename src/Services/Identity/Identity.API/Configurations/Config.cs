@@ -18,6 +18,7 @@ namespace Together.Identity.API.Configurations
                 ClientSecrets = new List<Secret>{
                     new Secret("secret".Sha256())
                 },
+                RequireConsent = false,
                 RefreshTokenExpiration = TokenExpiration.Sliding,
                 AllowOfflineAccess = true,
                 RequireClientSecret = false,

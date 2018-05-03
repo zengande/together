@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using DnsClient;
+using Together.Identity.API.Configurations;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Together.Identity.API.Models;
 
 namespace Together.Identity.API.Controllers
@@ -17,7 +20,8 @@ namespace Together.Identity.API.Controllers
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
+           
+            ViewData["Message"] =$"hello world!";
 
             return View();
         }

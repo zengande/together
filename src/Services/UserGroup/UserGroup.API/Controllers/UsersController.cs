@@ -19,11 +19,11 @@ namespace Together.UserGroup.API.Controllers
         }
 
         // 获取用户信息
-        [Route("{userId:int}")]
+        [Route("{userId}")]
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> Get(int userId)
+        public async Task<IActionResult> Get(string userId)
         {
             var user = await _userService.GetAsync(userId);
             if (user != null)

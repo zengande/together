@@ -15,7 +15,7 @@ namespace Together.UserGroup.API.Infrastructure.Services
             _repository = repository;
         }
 
-        public virtual async Task<T> GetAsync(int Id)
+        public virtual async Task<T> GetAsync(object Id)
         {
             return await _repository.GetAsync(Id);
         }

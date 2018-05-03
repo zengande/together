@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.2" />
+    <PackageReference Include="Consul" Version="0.7.2.4" />
     <PackageReference Include="Dapper" Version="1.50.4" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="5.0.1-alpha-0002" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
