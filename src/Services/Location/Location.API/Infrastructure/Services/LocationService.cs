@@ -3,6 +3,7 @@ using Location.API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Location.API.Infrastructure.Services
@@ -10,16 +11,25 @@ namespace Location.API.Infrastructure.Services
     public class LocationService
         : ILocationService
     {
-        private readonly LocationRepository _locationRepository;
-        public LocationService(LocationRepository locationRepository)
+        private readonly ILocationRepository _locationRepository;
+        public LocationService(ILocationRepository locationRepository)
         {
             _locationRepository = locationRepository;
         }
 
-        public List<Locations> GetCityListByParentId(int parentId)
+        public async Task<Locations> GetAsync(string locationCode)
         {
-            //_locationRepository.GetChildLocationListAsync(parentId)
-            return null;
+            return await _locationRepository.GetAsync(locationCode, default(CancellationToken));
+        }
+
+        public async Task<List<Locations>> GetCityListByParentId(string parentCode)
+        {
+            return await _locationRepository.GetChildLocationListAsync(parentCode, default(CancellationToken));
+        }
+
+        public async Task<List<Locations>> Search(string keyword)
+        {
+            return await _locationRepository.Search(keyword);
         }
     }
 }

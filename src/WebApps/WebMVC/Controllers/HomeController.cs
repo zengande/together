@@ -4,30 +4,33 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Nutshell.Resilience.HttpRequest.abstracts;
 using WebMVC.Models;
 
 namespace WebMVC.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
-        public IActionResult Index()
+        private readonly IHttpClient _httpClient;
+        private readonly IOptions<AppSettings> _appSettings;
+        
+        public HomeController(IHttpClient httpClient, 
+            IHttpContextAccessor httpContextAccessor,
+            IOptions<AppSettings> appSettings)
+            : base(httpContextAccessor)
         {
-            return View();
+            _appSettings = appSettings;
+            _httpClient = httpClient;
         }
 
-        [Authorize]
-        public IActionResult About()
+        public async Task<IActionResult> Index()
         {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
+            //var result = await _httpClient.GetStringAsync("http://localhost:52769/api/v1/activities");
+            //var result = await _httpClient.GetStringAsync($"http://restapi.amap.com/v3/place/text?key={_appSettings.Value.GaoDeMapKey}&keywords=杭州&types=&city=&children=&offset=20&page=1&extensions=base");
+            //ViewData["Result"] = result;
             return View();
         }
 

@@ -15,16 +15,15 @@ namespace Together.Activity.Infrastructure.EntityTypeConfigurations
         {
             builder.ToTable("participant");
 
-            builder.HasKey(o => o.Id);
-
+            builder.HasKey(p => new { p.UserId, p.ActivityId });
+            builder.Ignore(p => p.Id);
             builder.Ignore(p => p.DomainEvents);
 
-            builder.Property(o => o.Id)
-               .ForSqlServerUseSequenceHiLo("participantseq");
             builder.Property(p => p.Nickname)
                 .HasMaxLength(100)
                 .IsRequired();
             builder.Property(p => p.UserId)
+                .HasMaxLength(200)
                 .IsRequired();
             builder.Property(p => p.Avatar)
                 .HasMaxLength(200)

@@ -14,7 +14,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         /// <summary>
         /// 活动发起人
         /// </summary>
-        public int? OwnerId { get; private set; }
+        public string OwnerId { get; private set; }
 
         public ActivityStatus ActivityStatus { get; private set; }
         private int _activityStatusId;
@@ -47,7 +47,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         /// <summary>
         /// 活动地点
         /// </summary>
-        public string Address { get; private set; }
+        public Address Address { get; private set; }
 
         /// <summary>
         /// 限制人数
@@ -93,7 +93,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         /// <param name="activityDate"></param>
         /// <param name="address"></param>
         /// <param name="limitsNum"></param>
-        public Activity(int? userId, string description, string details, DateTime endRegisterTime, DateTime activityDate, DateTime startTime, DateTime endTime, string address, int? limitsNum = null, decimal? funds = null)
+        public Activity(string userId, string description, string details, DateTime endRegisterTime, DateTime activityDate, DateTime startTime, DateTime endTime, Address address, int? limitsNum = null, decimal? funds = null)
             : this()
         {
             // 截止报名时间早于当前时间（活动在过去）
@@ -139,7 +139,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         /// <summary>
         /// 加入活动
         /// </summary>
-        public void JoinActivity(int userId, string nickname, string avatar, int sex)
+        public void JoinActivity(string userId, string nickname, string avatar, int sex)
         {
             // 已参加了此活动
             if (_participants.Any(u => u.UserId == userId))

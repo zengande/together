@@ -45,8 +45,8 @@ namespace Together.Activity.API.Models
         /// <summary>
         /// 活动地址
         /// </summary>
-        [Required]
-        public string Address { get; set; }
+        //[Required]
+        //public string Address { get; set; }
 
         /// <summary>
         /// 限制人数

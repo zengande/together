@@ -26,12 +26,10 @@ namespace Together.Activity.Infrastructure.EntityTypeConfigurations
             builder.Property(a => a.CreateTime)
                 .IsRequired();
             builder.Property(a => a.OwnerId)
+                .HasMaxLength(200)
                 .IsRequired(false);
             builder.Property<int>("ActivityStatusId")
                 .IsRequired();
-            builder.Property(a => a.Address)
-                .HasMaxLength(200)
-                .IsRequired(true);
             builder.Property(a => a.Description)
                 .IsRequired(false);
             builder.Property(a => a.Details)
@@ -43,6 +41,7 @@ namespace Together.Activity.Infrastructure.EntityTypeConfigurations
             builder.HasOne(a => a.ActivityStatus)
                 .WithMany()
                 .HasForeignKey("ActivityStatusId");
+            builder.OwnsOne(a => a.Address);
 
             var navigation = builder.Metadata
                 .FindNavigation(nameof(Domain.AggregatesModel.ActivityAggregate.Activity.Participants));

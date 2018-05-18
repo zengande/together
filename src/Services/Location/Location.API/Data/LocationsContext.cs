@@ -14,7 +14,7 @@ namespace Location.API.Data
         private IMongoDatabase _database;
         private LocationsSettings _settings;
 
-        public LocationsContext(IOptionsSnapshot<LocationsSettings> settings)
+        public LocationsContext(IOptions<LocationsSettings> settings)
         {
             _settings = settings.Value;
             var client = new MongoClient(_settings.MongoConnentionString);

@@ -8,7 +8,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
     public class Participant
         : Entity
     {
-        public int UserId { get; private set; }
+        public string UserId { get; private set; }
 
         public string Nickname { get; private set; }
 
@@ -20,7 +20,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
 
         public DateTime JoinTime { get; private set; }
 
-        public Participant(int userId, string nickname, string avatar, int sex)
+        public Participant(string userId, string nickname, string avatar, int sex)
         {
             UserId = userId;
             Nickname = nickname;

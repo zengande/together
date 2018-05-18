@@ -18,7 +18,6 @@ namespace Together.Activity.Infrastructure.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.1.0-preview2-30571")
                 .HasAnnotation("Relational:Sequence:.activityseq", "'activityseq', '', '1', '10', '', '', 'Int64', 'False'")
-                .HasAnnotation("Relational:Sequence:.participantseq", "'participantseq', '', '1', '10', '', '', 'Int64', 'False'")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.ActivityAggregate.Activity", b =>
@@ -31,10 +30,6 @@ namespace Together.Activity.Infrastructure.Migrations
                     b.Property<DateTime>("ActivitDate");
 
                     b.Property<int>("ActivityStatusId");
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasMaxLength(200);
 
                     b.Property<DateTime>("CreateTime");
 
@@ -50,7 +45,8 @@ namespace Together.Activity.Infrastructure.Migrations
 
                     b.Property<int?>("LimitsNum");
 
-                    b.Property<int?>("OwnerId");
+                    b.Property<string>("OwnerId")
+                        .HasMaxLength(200);
 
                     b.Property<DateTime>("StartTime");
 
@@ -77,10 +73,8 @@ namespace Together.Activity.Infrastructure.Migrations
 
             modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.ActivityAggregate.Participant", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:HiLoSequenceName", "participantseq")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
+                    b.Property<string>("UserId")
+                        .HasMaxLength(200);
 
                     b.Property<int>("ActivityId");
 
@@ -97,9 +91,7 @@ namespace Together.Activity.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasDefaultValue(0);
 
-                    b.Property<int>("UserId");
-
-                    b.HasKey("Id");
+                    b.HasKey("UserId", "ActivityId");
 
                     b.HasIndex("ActivityId");
 
@@ -112,6 +104,28 @@ namespace Together.Activity.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("ActivityStatusId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.OwnsOne("Together.Activity.Domain.AggregatesModel.ActivityAggregate.Address", "Address", b1 =>
+                        {
+                            b1.Property<int?>("ActivityId");
+
+                            b1.Property<string>("City");
+
+                            b1.Property<string>("County");
+
+                            b1.Property<string>("DetailAddress");
+
+                            b1.Property<string>("Location");
+
+                            b1.Property<string>("Province");
+
+                            b1.ToTable("activities");
+
+                            b1.HasOne("Together.Activity.Domain.AggregatesModel.ActivityAggregate.Activity")
+                                .WithOne("Address")
+                                .HasForeignKey("Together.Activity.Domain.AggregatesModel.ActivityAggregate.Address", "ActivityId")
+                                .OnDelete(DeleteBehavior.Cascade);
+                        });
                 });
 
             modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.ActivityAggregate.Participant", b =>

@@ -33,7 +33,8 @@ namespace Together.Activity.API.Controllers
             {
                 try
                 {
-                    var result = await _mediator.Send(new CreateActivityCommand(CurrentUser, model.Title, model.Details, model.EndRegisterDate, model.ActivitDate, model.StartTime, model.EndTime, model.Address, model.LimitsNum));
+                    var address = new Domain.AggregatesModel.ActivityAggregate.Address("ZheJiang", "HangZhou", "XiHu", "浙大科技园","");
+                    var result = await _mediator.Send(new CreateActivityCommand(CurrentUser, model.Title, model.Details, model.EndRegisterDate, model.ActivitDate, model.StartTime, model.EndTime, address, model.LimitsNum));
                     return result ? Ok() : (IActionResult)BadRequest();
                 }
                 catch (ActivityDomainException ex)

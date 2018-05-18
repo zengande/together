@@ -12,6 +12,6 @@ namespace Together.Activity.API.Applications.Queries
 
         Task<IEnumerable<ActivitySummaryViewModel>> GetActivitiesAsync(int pageIndex, int pageSize);
 
-        Task<IEnumerable<ActivitySummaryViewModel>> GetActivitiesByUserAsync(int userId);
+        Task<IEnumerable<ActivitySummaryViewModel>> GetActivitiesByUserAsync(string userId);
     }
 }

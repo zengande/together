@@ -1,13 +1,11 @@
 ﻿body {
-    padding-top: 50px;
     padding-bottom: 20px;
 }
 
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+    padding:0px;
 }
 
 /* Carousel */
@@ -33,3 +31,14 @@
         display: none;
     }
 }
+.m-header{
+    background:#fff;
+    border:none;
+    margin:0px;
+}
+    .m-header a{
+        transition:all ease-in .3s;
+    }
+    .m-header a:hover {
+        color: #d5046f !important
+    }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Together.Activity.API.Models;
 using Together.Activity.API.Extensions;
+using Together.Activity.Domain.AggregatesModel.ActivityAggregate;
 
 namespace Together.Activity.API.Applications.Commands
 {
@@ -68,7 +69,7 @@ namespace Together.Activity.API.Applications.Commands
         /// 活动地点
         /// </summary>
         [DataMember]
-        public string Address { get; private set; }
+        public Address Address { get; private set; }
 
         /// <summary>
         /// 限制人数
@@ -87,7 +88,7 @@ namespace Together.Activity.API.Applications.Commands
             _participants = new List<ParticipantDto>();
         }
 
-        public CreateActivityCommand(CurrentUser owner, string description, string details, DateTime endRegisterTime, DateTime activityDate, DateTime startTime, DateTime endTime, string address, int? limitsNum = null)
+        public CreateActivityCommand(CurrentUser owner, string description, string details, DateTime endRegisterTime, DateTime activityDate, DateTime startTime, DateTime endTime, Address address, int? limitsNum = null)
             : this()
         {
             Owner = owner;
@@ -106,7 +107,7 @@ namespace Together.Activity.API.Applications.Commands
     public class ParticipantDto
     {
         public int Sex { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public string Nickname { get; set; }
         public string Avatar { get; set; }
     }
