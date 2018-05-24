@@ -34,3 +34,10 @@ services:
       context: .
       dockerfile: src/Services/Topic/Topic.API/Dockerfile
 
+
+  noticeservice:
+    image: noticeservice
+    build:
+      context: .
+      dockerfile: src/Services/Notice/NoticeService/Dockerfile
+

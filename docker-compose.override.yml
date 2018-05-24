@@ -48,3 +48,10 @@ services:
     ports:
       - "80"
 
+
+  noticeservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "80"
+

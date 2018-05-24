@@ -48,6 +48,7 @@ namespace WebMVC
                     options.SaveTokens = true;
                 });
 
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IResilientHttpClientFactory, ResilientHttpClientFactory>(sp =>
             {
                 var logger = sp.GetRequiredService<ILogger<ResilientHttpClient>>();

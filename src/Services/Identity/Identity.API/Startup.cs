@@ -61,7 +61,7 @@ namespace Together.Identity.API
                     {
                         r.HostName = "localhost";
                         // 5672端口
-                        r.Port = 32771;
+                        //r.Port = 32771;
                     })
                     .UseDashboard()
                     .UseDiscovery(d =>

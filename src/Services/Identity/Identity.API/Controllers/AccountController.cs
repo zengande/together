@@ -45,6 +45,7 @@ namespace Together.Identity.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Login(string returnUrl)
         {
+            await _publisher.PublishAsync("Together.Notice.Email", new SendEmailNoticeIntegrationEvent { To="835290734@qq.com", HtmlContent="<b>Hello, world</b>", Subject="Test Email" });
             var context = await _interaction.GetAuthorizationContextAsync(returnUrl);
             if (context?.IdP != null)
             {
