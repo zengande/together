@@ -16,6 +16,9 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         /// </summary>
         public string OwnerId { get; private set; }
 
+        /// <summary>
+        /// 活动状态
+        /// </summary>
         public ActivityStatus ActivityStatus { get; private set; }
         private int _activityStatusId;
 

@@ -17,4 +17,8 @@
     <PackageReference Include="Sendgrid" Version="9.9.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Nutshell.Common.Cache\Nutshell.Common.Cache.csproj" />
+  </ItemGroup>
+
 </Project>

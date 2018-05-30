@@ -18,6 +18,12 @@ using Together.Identity.API.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using Microsoft.AspNetCore.Identity;
+using zipkin4net;
+using Microsoft.AspNetCore.Hosting.Internal;
+using zipkin4net.Middleware;
+using zipkin4net.Transport.Http;
+using zipkin4net.Tracers.Zipkin;
+using zipkin4net.Tracers;
 
 namespace Together.Identity.API
 {
@@ -39,7 +45,10 @@ namespace Together.Identity.API
                     sql => sql.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name));
             });
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>(config =>
+            {
+                config.SignIn.RequireConfirmedEmail = true;
+            })
                 .AddEntityFrameworkStores<IdentityDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -88,7 +97,7 @@ namespace Together.Identity.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory logger)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory logger, IApplicationLifetime lifetime)
         {
             logger.AddDebug();
             if (env.IsDevelopment())
@@ -100,6 +109,9 @@ namespace Together.Identity.API
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+            RegisterZipkinTracer(app, logger, lifetime);
+
             app.UseIdentityServer();
             app.UseCap();
             app.UseStaticFiles();
@@ -109,6 +121,30 @@ namespace Together.Identity.API
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private static void RegisterZipkinTracer(IApplicationBuilder app, 
+            ILoggerFactory logger, 
+            IApplicationLifetime lifetime)
+        {
+            lifetime.ApplicationStarted.Register(() =>
+            {
+                TraceManager.SamplingRate = 1.0f;
+                var _logger = new TracingLogger(logger, "zipkin4net");
+                var httpSender = new HttpZipkinSender("http://localhost:9411", "application/json");
+                var tracer = new ZipkinTracer(httpSender, new JSONSpanSerializer(), new Statistics());
+
+                var consoleTracer = new ConsoleTracer();
+
+                TraceManager.RegisterTracer(consoleTracer);
+                TraceManager.RegisterTracer(tracer);
+                TraceManager.Start(_logger);
+            });
+            lifetime.ApplicationStopped.Register(() =>
+            {
+                TraceManager.Stop();
+            });
+            app.UseTracing("identity_api");
         }
     }
 }

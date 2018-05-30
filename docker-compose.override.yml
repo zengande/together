@@ -4,6 +4,10 @@ services:
   together.mvc:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+    image: webmvc
+    build:
+      context: .
+      dockerfile: src/WebApps/WebMVC/Dockerfile
     ports:
       - "80"
 

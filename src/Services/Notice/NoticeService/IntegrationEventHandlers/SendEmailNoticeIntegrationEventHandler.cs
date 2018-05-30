@@ -13,15 +13,29 @@ namespace Together.Notice.IntegrationEventHandlers
         : ICapSubscribe
     {
         private readonly IEmailSender _sender;
-        public SendEmailNoticeIntegrationEventHandler(IEmailSender sender)
+        private readonly IEmailTemplateService _templateService;
+        public SendEmailNoticeIntegrationEventHandler(IEmailSender sender,
+            IEmailTemplateService templateService)
         {
+            _templateService = templateService;
             _sender = sender;
         }
 
-        [CapSubscribe("Together.Notice.Email")]
-        public async Task SendEmailNotice(SendEmailNoticeIntegrationEvent @event)
+        [CapSubscribe("Together.Notice.Email.Test")]
+        public async Task SendTestEmailNotice(SendEmailNoticeIntegrationEvent @event)
         {
             // TODO : 将记录添加到数据库
+            var result = await _sender.Send(@event.To, @event.Subject, CleanHtml(@event.HtmlContent), @event.HtmlContent);
+        }
+
+        [CapSubscribe("Together.Notice.Email.Confirm.EmailAddress")]
+        public async Task SendMailboxVerificationNotice(SendEmailNoticeIntegrationEvent @event)
+        {
+            //var template = _templateService.GetTemplate(1);
+            //if (template == null)
+            //{
+            //    return;
+            //}
             var result = await _sender.Send(@event.To, @event.Subject, CleanHtml(@event.HtmlContent), @event.HtmlContent);
         }
 

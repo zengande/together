@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Together.Identity.API.Data;
 using Together.Identity.API.IntegrationEvents;
 using Together.Identity.API.Models;
@@ -25,6 +26,7 @@ namespace Together.Identity.API.Controllers
         private readonly InMemoryClientStore _clientStore;
         private readonly IUserService _userService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ICapPublisher _publisher;
         private readonly IdentityDbContext _context;
         public AccountController(IIdentityServerInteractionService interaction,
@@ -32,7 +34,8 @@ namespace Together.Identity.API.Controllers
             IUserService userService,
             UserManager<ApplicationUser> userManager,
             ICapPublisher publisher,
-            IdentityDbContext context)
+            IdentityDbContext context,
+            SignInManager<ApplicationUser> signInManager)
         {
             _context = context;
             _userService = userService;
@@ -40,12 +43,12 @@ namespace Together.Identity.API.Controllers
             _interaction = interaction;
             _userManager = userManager;
             _publisher = publisher;
+            _signInManager = signInManager;
         }
 
         [HttpGet]
         public async Task<IActionResult> Login(string returnUrl)
         {
-            await _publisher.PublishAsync("Together.Notice.Email", new SendEmailNoticeIntegrationEvent { To="835290734@qq.com", HtmlContent="<b>Hello, world</b>", Subject="Test Email" });
             var context = await _interaction.GetAuthorizationContextAsync(returnUrl);
             if (context?.IdP != null)
             {
@@ -64,6 +67,14 @@ namespace Together.Identity.API.Controllers
                 var user = await _userService.FindByEmail(model.Email);
                 if (await _userService.ValidateCredentials(user, model.Password))
                 {
+                    if (!await _userManager.IsEmailConfirmedAsync(user))
+                    {
+                        await SendConfirmEmaileAddressNotice(user);
+
+                        ModelState.AddModelError(string.Empty, "You must have a confirmed email to log in.");
+                        return View(model);
+                    }
+
                     AuthenticationProperties props = null;
                     if (model.RememberMe)
                     {
@@ -129,6 +140,9 @@ namespace Together.Identity.API.Controllers
                     }
                     if (result.Succeeded)
                     {
+                        // 发送验证邮箱地址的邮件
+                        await SendConfirmEmaileAddressNotice(user);
+
                         // TODO : 创建账户成功，发送消息给用户服务初始化用户信息
                         await AccountCreatedEvent(new AccountCreatedIntegrationEvent
                         {
@@ -181,6 +195,83 @@ namespace Together.Identity.API.Controllers
             return new ChallengeResult(provider, props);
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult> SendCode(string returnUrl = null, bool rememberMe = false)
+        {
+            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            if (user == null)
+            {
+                return View("Error");
+            }
+            var userFactors = await _userManager.GetValidTwoFactorProvidersAsync(user);
+            var factorOptions = userFactors.Select(purpose => new SelectListItem { Text = purpose, Value = purpose }).ToList();
+            return View(new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe });
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SendCode(SendCodeViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            if (user == null)
+            {
+                return View("Error");
+            }
+
+            // Generate the token and send it
+            var code = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
+            var message = "Your security code is: " + code;
+            if (string.IsNullOrWhiteSpace(code))
+            {
+                return View("Error");
+            }
+            await _publisher.PublishAsync("", new SendEmailNoticeIntegrationEvent { To = await _userManager.GetEmailAsync(user), Subject = "Security Code", HtmlContent = message });
+
+
+            return RedirectToAction(nameof(VerifyCode), new { Provider = "Email", ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> VerifyCode(string provider, bool rememberMe, string returnUrl = null)
+        {
+            // Require that the user has already logged in via username/password or external login
+            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            if (user == null)
+            {
+                return View("Error");
+            }
+            return View(new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
+        }
+
+        /// <summary>
+        /// 确认邮箱地址
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        {
+            if (string.IsNullOrEmpty(userId) ||
+                string.IsNullOrEmpty(code))
+            {
+                return View("Error");
+            }
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return View("Error");
+            }
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+
+            return View(result.Succeeded ? "ConfirmEmail" : "Error");
+        }
+
         private async Task<LoginViewModel> BuildLoginViewModelAsync(string returnUrl, AuthorizationRequest context)
         {
             var allowLocal = true;
@@ -214,7 +305,6 @@ namespace Together.Identity.API.Controllers
                 ModelState.AddModelError(string.Empty, error.Description);
             }
         }
-
         /// <summary>
         /// 发布注册用户的消息
         /// </summary>
@@ -222,6 +312,15 @@ namespace Together.Identity.API.Controllers
         private async Task AccountCreatedEvent(AccountCreatedIntegrationEvent @evnet)
         {
             await _publisher.PublishAsync("Identity.API.AccountCreatedEvent", @evnet);
+        }
+        private async Task SendConfirmEmaileAddressNotice(ApplicationUser user)
+        {
+            // 发送确认邮箱的邮件
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var callbackUrl = Url.Action(nameof(ConfirmEmail), "Account",
+                new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+
+            await _publisher.PublishAsync("Together.Notice.Email.Confirm.EmailAddress", new SendEmailNoticeIntegrationEvent { To = user.Email, HtmlContent = $"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>", Subject = "Confirm your account" });
         }
     }
 }

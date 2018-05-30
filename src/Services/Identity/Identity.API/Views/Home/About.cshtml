@@ -5,3 +5,7 @@
 <h3>@ViewData["Message"]</h3>
 
 <p>Use this area to provide additional information.</p>
+@foreach(var item in User.Claims)
+{ 
+    <p>@item.Value</p>
+}

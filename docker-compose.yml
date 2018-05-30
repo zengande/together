@@ -26,15 +26,11 @@ services:
     build:
       context: .
       dockerfile: src/ApiGateways/Api.Gateway/Dockerfile
-
-
   topic.api:
     image: topicapi
     build:
       context: .
       dockerfile: src/Services/Topic/Topic.API/Dockerfile
-
-
   noticeservice:
     image: noticeservice
     build:

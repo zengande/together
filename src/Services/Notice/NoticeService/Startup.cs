@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Redis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Nutshell.Common.Cache;
 using Together.Notice.IntegrationEventHandlers;
 using Together.Notice.Services;
 
@@ -34,7 +36,13 @@ namespace Together.Notice
             });
 
             services.AddScoped<IEmailSender, EmailSender>()
-                .AddScoped<SendEmailNoticeIntegrationEventHandler>();
+                .AddScoped<SendEmailNoticeIntegrationEventHandler>()
+                .AddScoped<IEmailTemplateService, EmailTemplateService>()
+                .AddSingleton<ICacheService>(p => new RedisCacheService(new RedisCacheOptions
+                {
+                    Configuration = Configuration.GetSection("RedisConnectionString").Value,
+                    InstanceName = Configuration.GetSection("RedisInstanceName").Value
+                }));
 
             services.AddCap(x =>
             {
@@ -45,6 +53,8 @@ namespace Together.Notice
                     config.HostName = "localhost";
                 });
             });
+
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,6 +65,7 @@ namespace Together.Notice
                 app.UseDeveloperExceptionPage();
             }
             app.UseCap();
+            app.UseMvcWithDefaultRoute();
         }
     }
 }

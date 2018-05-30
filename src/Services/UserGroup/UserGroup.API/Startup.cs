@@ -21,6 +21,11 @@ using Together.UserGroup.API.Infrastructure.Data;
 using Together.UserGroup.API.Infrastructure.Repositories;
 using Together.UserGroup.API.Infrastructure.Services;
 using Together.UserGroup.API.IntegrationEventHandlers;
+using zipkin4net;
+using zipkin4net.Middleware;
+using zipkin4net.Tracers;
+using zipkin4net.Tracers.Zipkin;
+using zipkin4net.Transport.Http;
 
 namespace Together.UserGroup.API
 {
@@ -116,12 +121,16 @@ namespace Together.UserGroup.API
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app,
-        IApplicationLifetime lifetime,
-        ILoggerFactory loggerFactory,
-        IOptions<ServiceDiscoveryOptions> serviceOptions,
-        IConsulClient consul)
+            IApplicationLifetime lifetime,
+            ILoggerFactory loggerFactory,
+            IOptions<ServiceDiscoveryOptions> serviceOptions,
+            IConsulClient consul)
         {
-            lifetime.ApplicationStarted.Register(() => { RegisterConsulService(app, lifetime, serviceOptions, consul); });
+            lifetime.ApplicationStarted.Register(() =>
+            {
+                RegisterConsulService(app, lifetime, serviceOptions, consul);
+                RegisterZipkinTracer(loggerFactory, lifetime);
+            });
 
             app.UseCap();
             app.UseMvc();
@@ -130,6 +139,7 @@ namespace Together.UserGroup.API
                {
                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "UserGroup API V1");
                });
+            app.UseTracing("usergroup_api");
         }
 
         /// <summary>
@@ -169,6 +179,26 @@ namespace Together.UserGroup.API
                     });
                 }
             }
+        }
+
+        private static void RegisterZipkinTracer(
+            ILoggerFactory logger,
+            IApplicationLifetime lifetime)
+        {
+            TraceManager.SamplingRate = 1.0f;
+            var _logger = new TracingLogger(logger, "zipkin4net");
+            var httpSender = new HttpZipkinSender("http://localhost:9411", "application/json");
+            var tracer = new ZipkinTracer(httpSender, new JSONSpanSerializer(), new Statistics());
+
+            var consoleTracer = new ConsoleTracer();
+
+            TraceManager.RegisterTracer(consoleTracer);
+            TraceManager.RegisterTracer(tracer);
+            TraceManager.Start(_logger);
+            lifetime.ApplicationStopped.Register(() =>
+            {
+                TraceManager.Stop();
+            });
         }
     }
 }

@@ -8,6 +8,7 @@ using Together.Identity.API.Configurations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Together.Identity.API.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Together.Identity.API.Controllers
 {
@@ -18,6 +19,7 @@ namespace Together.Identity.API.Controllers
             return View();
         }
 
+        [Authorize]
         public IActionResult About()
         {
            
