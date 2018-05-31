@@ -36,7 +36,8 @@ namespace Together.Notice.IntegrationEventHandlers
             //{
             //    return;
             //}
-            var result = await _sender.Send(@event.To, @event.Subject, CleanHtml(@event.HtmlContent), @event.HtmlContent);
+            //var result = await _sender.Send(@event.To, @event.Subject, CleanHtml(@event.HtmlContent), @event.HtmlContent);
+            var result = await _sender.Send(@event.To, @event.Subject, @event.HtmlContent);
         }
 
         /// <summary>
