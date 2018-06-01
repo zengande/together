@@ -29,6 +29,8 @@ namespace Nutshell.Common.Cache
         #endregion
 
         #region 获取
+        Task<string> GetStringAsync(string key);
+        string GetString(string key);
         T Get<T>(string key) where T : class;
         Task<T> GetAsync<T>(string key) where T : class;
         object Get(string key);

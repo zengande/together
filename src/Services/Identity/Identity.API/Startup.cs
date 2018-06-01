@@ -24,6 +24,8 @@ using zipkin4net.Middleware;
 using zipkin4net.Transport.Http;
 using zipkin4net.Tracers.Zipkin;
 using zipkin4net.Tracers;
+using Microsoft.AspNetCore.DataProtection;
+using StackExchange.Redis;
 
 namespace Together.Identity.API
 {
@@ -45,6 +47,21 @@ namespace Together.Identity.API
                     sql => sql.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name));
             });
 
+            services.AddDataProtection()
+                .PersistKeysToRedis(ConnectionMultiplexer.Connect(configuration: "localhost:6379"), "DataProtection-Key")
+                .SetApplicationName("IdentityAPI");
+
+            services.AddDistributedRedisCache(options =>
+            {
+                options.Configuration = "localhost:6379";
+                options.InstanceName = "DataProtection";
+            });
+            services.AddSession();
+
+            services.ConfigureApplicationCookie(options => {
+                options.Cookie.Name = ".AspNet.SharedCookie";
+            });
+
             services.AddIdentity<ApplicationUser, IdentityRole>(config =>
             {
                 config.SignIn.RequireConfirmedEmail = true;
@@ -58,8 +75,6 @@ namespace Together.Identity.API
                 .AddInMemoryApiResources(Config.GetApiResources())
                 .AddInMemoryClients(Config.GetClients())
                 .AddAspNetIdentity<ApplicationUser>();
-
-            //services.Configure<ServiceDiscoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
 
             services.AddMvc();
 
@@ -85,10 +100,6 @@ namespace Together.Identity.API
             });
 
             services.AddTransient<IUserService, UserService>()
-                //.AddSingleton<IHttpClient>(p =>
-                //{
-                //    //return new ResilientHttpClient(;
-                //})
                 .AddSingleton<IDnsQuery>(p =>
                 {
                     var options = p.GetRequiredService<IOptions<ServiceDiscoveryOptions>>().Value;
@@ -102,7 +113,6 @@ namespace Together.Identity.API
             logger.AddDebug();
             if (env.IsDevelopment())
             {
-                app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
             }
             else
@@ -111,6 +121,8 @@ namespace Together.Identity.API
             }
 
             RegisterZipkinTracer(app, logger, lifetime);
+
+            app.UseSession();
 
             app.UseIdentityServer();
             app.UseCap();

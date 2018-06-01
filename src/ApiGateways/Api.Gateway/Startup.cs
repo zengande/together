@@ -29,7 +29,8 @@ namespace Api.Gateway
                     o.RequireHttpsMetadata = false;
                 });
 
-            services.AddOcelot();
+            services.AddOcelot()
+                .AddStoreOcelotConfigurationInConsul();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

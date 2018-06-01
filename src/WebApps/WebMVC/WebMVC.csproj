@@ -6,7 +6,8 @@
 
   <ItemGroup>
     <PackageReference Include="DnsClient" Version="1.0.7" />
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.0" />
   </ItemGroup>
 
@@ -15,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\BuildingBlocks\Nutshell.Common.Cache\Nutshell.Common.Cache.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\Nutshell.Resilience.HttpRequest\Nutshell.Resilience.HttpRequest.csproj" />
   </ItemGroup>
 

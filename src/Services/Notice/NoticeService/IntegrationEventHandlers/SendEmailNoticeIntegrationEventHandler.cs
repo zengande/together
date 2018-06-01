@@ -1,6 +1,7 @@
 ﻿using DotNetCore.CAP;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -25,19 +26,21 @@ namespace Together.Notice.IntegrationEventHandlers
         public async Task SendTestEmailNotice(SendEmailNoticeIntegrationEvent @event)
         {
             // TODO : 将记录添加到数据库
-            var result = await _sender.Send(@event.To, @event.Subject, CleanHtml(@event.HtmlContent), @event.HtmlContent);
+            //var result = await _sender.Send(@event.To, @event.Subject, CleanHtml(@event.HtmlContent), @event.HtmlContent);
         }
 
         [CapSubscribe("Together.Notice.Email.Confirm.EmailAddress")]
-        public async Task SendMailboxVerificationNotice(SendEmailNoticeIntegrationEvent @event)
+        public async Task SendMailboxVerificationNotice(VerifyAccountEmailNoticeEvent @event)
         {
-            //var template = _templateService.GetTemplate(1);
-            //if (template == null)
-            //{
-            //    return;
-            //}
-            //var result = await _sender.Send(@event.To, @event.Subject, CleanHtml(@event.HtmlContent), @event.HtmlContent);
-            var result = await _sender.Send(@event.To, @event.Subject, @event.HtmlContent);
+            var template = await _templateService.GetTemplate(1);
+            if (template == null)
+            {
+                return;
+            }
+            var values = new Dictionary<string, string>();
+            values.Add("link", @event.Link);
+            var content = _templateService.Build(template.Template, values);
+            await _sender.Send(@event.To, template.Title, content);
         }
 
         /// <summary>

@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using Nutshell.Resilience.HttpRequest.abstracts;
+using WebMVC.Hubs;
 using WebMVC.Models;
 
 namespace WebMVC.Controllers
@@ -16,21 +18,20 @@ namespace WebMVC.Controllers
     {
         private readonly IHttpClient _httpClient;
         private readonly IOptions<AppSettings> _appSettings;
-        
+        private IHubContext<NoticeHub> _hubContext;
+
         public HomeController(IHttpClient httpClient, 
             IHttpContextAccessor httpContextAccessor,
-            IOptions<AppSettings> appSettings)
+            IOptions<AppSettings> appSettings,
+            IHubContext<NoticeHub> hubContext)
             : base(httpContextAccessor)
         {
             _appSettings = appSettings;
             _httpClient = httpClient;
+            _hubContext = hubContext;
         }
-
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            //var result = await _httpClient.GetStringAsync("http://localhost:52769/api/v1/activities");
-            //var result = await _httpClient.GetStringAsync($"http://restapi.amap.com/v3/place/text?key={_appSettings.Value.GaoDeMapKey}&keywords=杭州&types=&city=&children=&offset=20&page=1&extensions=base");
-            //ViewData["Result"] = result;
             return View();
         }
 

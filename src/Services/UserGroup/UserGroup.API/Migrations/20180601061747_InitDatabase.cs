@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Together.UserGroup.API.Migrations
 {
@@ -13,11 +13,11 @@ namespace Together.UserGroup.API.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySQL:AutoIncrement", true),
-                    CreateDate = table.Column<DateTime>(nullable: false),
-                    Founder = table.Column<string>(maxLength: 50, nullable: true),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     GroupName = table.Column<string>(maxLength: 50, nullable: false),
-                    Introduction = table.Column<string>(maxLength: 200, nullable: true)
+                    Introduction = table.Column<string>(maxLength: 200, nullable: true),
+                    CreateDate = table.Column<DateTime>(nullable: false),
+                    Founder = table.Column<string>(maxLength: 50, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -28,13 +28,13 @@ namespace Together.UserGroup.API.Migrations
                 name: "users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySQL:AutoIncrement", true),
-                    Avatar = table.Column<string>(maxLength: 200, nullable: true),
-                    Birthday = table.Column<DateTime>(nullable: true),
-                    GroupId = table.Column<int>(nullable: true),
+                    Id = table.Column<string>(maxLength: 200, nullable: false),
+                    Email = table.Column<string>(maxLength: 50, nullable: false),
                     Nickname = table.Column<string>(maxLength: 50, nullable: true),
-                    Sex = table.Column<int>(nullable: true)
+                    Avatar = table.Column<string>(maxLength: 200, nullable: true),
+                    Sex = table.Column<int>(nullable: true),
+                    Birthday = table.Column<DateTime>(nullable: true),
+                    GroupId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using DotNetCore.CAP;
@@ -72,8 +73,8 @@ namespace Together.Identity.API.Controllers
                     {
                         await SendConfirmEmaileAddressNotice(user, model.ReturnUrl);
 
-                        //ModelState.AddModelError(string.Empty, "You must have a confirmed email to log in.");
-                        return RedirectToAction(nameof(SendCode));
+                        // ModelState.AddModelError(string.Empty, "You must have a confirmed email to log in.");
+                        return RedirectToAction(nameof(Verification));
                     }
 
                     AuthenticationProperties props = null;
@@ -145,7 +146,7 @@ namespace Together.Identity.API.Controllers
                         // 发送验证邮箱地址的邮件
                         await SendConfirmEmaileAddressNotice(user);
 
-                        // TODO : 创建账户成功，发送消息给用户服务初始化用户信息
+                        // 创建账户成功，发送消息给用户服务初始化用户信息
                         await AccountCreatedEvent(new AccountCreatedIntegrationEvent
                         {
                             Id = user.Id,
@@ -199,7 +200,7 @@ namespace Together.Identity.API.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult SendCode()
+        public ActionResult Verification()
         {
             return View();
         }
@@ -278,7 +279,7 @@ namespace Together.Identity.API.Controllers
             var callbackUrl = Url.Action(nameof(ConfirmEmail), "Account",
                 new { userId = user.Id, code, returnUrl }, protocol: HttpContext.Request.Scheme);
 
-            await _publisher.PublishAsync("Together.Notice.Email.Confirm.EmailAddress", new SendEmailNoticeIntegrationEvent { To = user.Email, HtmlContent = $"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>", Subject = "Confirm your account" });
+            await _publisher.PublishAsync("Together.Notice.Email.Confirm.EmailAddress", new VerifyAccountEmailNoticeEvent { To = user.Email, Link = callbackUrl });
         }
     }
 }

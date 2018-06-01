@@ -129,6 +129,26 @@ namespace Nutshell.Common.Cache
             return value;
         }
 
+        public string GetString(string key)
+        {
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+            var value = _database.StringGet(GetKeyForRedis(key));
+            return value.IsNull ? string.Empty : value.ToString();
+        }
+
+        public async Task<string> GetStringAsync(string key)
+        {
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+            var value = await _database.StringGetAsync(GetKeyForRedis(key));
+            return value.IsNull ? string.Empty : value.ToString();
+        }
+
         public IDictionary<string, object> GetAll(IEnumerable<string> keys)
         {
             if (keys == null)
@@ -188,7 +208,7 @@ namespace Nutshell.Common.Cache
             {
                 throw new ArgumentNullException(nameof(key));
             }
-            return _database.KeyDelete(key);
+            return _database.KeyDelete(GetKeyForRedis(key));
         }
 
         public void RemoveAll(IEnumerable<string> keys)
@@ -197,7 +217,7 @@ namespace Nutshell.Common.Cache
             {
                 throw new ArgumentNullException(nameof(keys));
             }
-            keys.ToList().ForEach(key => _database.KeyDelete(key));
+            keys.ToList().ForEach(key => _database.KeyDelete(GetKeyForRedis(key)));
         }
 
         public async Task RemoveAllAsync(IEnumerable<string> keys)
@@ -208,7 +228,7 @@ namespace Nutshell.Common.Cache
             }
             foreach (var key in keys)
             {
-                await _database.KeyDeleteAsync(key);
+                await _database.KeyDeleteAsync(GetKeyForRedis(key));
             }
         }
 
@@ -218,7 +238,7 @@ namespace Nutshell.Common.Cache
             {
                 throw new ArgumentNullException(nameof(key));
             }
-            return await _database.KeyDeleteAsync(key);
+            return await _database.KeyDeleteAsync(GetKeyForRedis(key));
         }
 
         #endregion

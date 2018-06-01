@@ -9,8 +9,10 @@
           "Port": 58750
         }
       ],
-      "UpstreamPathTemplate": "/users/{userId}",
+      "UpstreamPathTemplate": "/api/{version}/users/{userId}",
       "UpstreamHttpMethod": [ "Get" ],
+      "ServiceName": "user_group_api",
+      "LoadBalancer": "LeastConnection",
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "together",
         "AllowedScopes": []
@@ -18,6 +20,11 @@
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:8000"
+    "BaseUrl": "https://localhost:8000",
+    "ServiceDiscoveryProvider": {
+      "Host": "localhost",
+      "Port": 8500,
+      "ConfigurationKey": "together_ocelot"
+    }
   }
 }

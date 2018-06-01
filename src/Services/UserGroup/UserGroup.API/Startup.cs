@@ -40,9 +40,10 @@ namespace Together.UserGroup.API
         public void ConfigureServices(IServiceCollection services)
         {
             var assembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<UserGroupDbContext>(options =>
             {
-                options.UseMySQL(Configuration.GetConnectionString("DefaultConnection"), sql =>
+                options.UseSqlServer(connectionString, sql =>
                     sql.MigrationsAssembly(assembly));
             });
 
@@ -69,7 +70,8 @@ namespace Together.UserGroup.API
                     //设置时间格式
                     options.SerializerSettings.DateFormatString = "yyyy-MM-dd";
                     options.SerializerSettings.MaxDepth = 2;
-                });
+                })
+                .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_1);
 
             services.AddScoped<IUserRepository, UserRepository>()
                 .AddScoped<IGroupRepository, GroupRepository>()
@@ -79,11 +81,11 @@ namespace Together.UserGroup.API
 
             services.AddCap(options =>
             {
-                options.UseEntityFramework<UserGroupDbContext>()
+                options.UseSqlServer(connectionString)
                     .UseRabbitMQ(r =>
                     {
                         r.HostName = "localhost";
-                        r.Port = 32771;
+                        //r.Port = 32771;
                     })
                     .UseDashboard()
                     .UseDiscovery(d =>
@@ -130,6 +132,9 @@ namespace Together.UserGroup.API
                 RegisterZipkinTracer(loggerFactory, lifetime);
             });
 
+            app.UseHsts();
+
+            app.UseHttpsRedirection();
             app.UseCap();
             app.UseMvc();
             app.UseSwagger()

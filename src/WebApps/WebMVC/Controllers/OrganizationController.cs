@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebMVC.Models.Organization;
 
 namespace WebMVC.Controllers
 {
+    [Authorize]
     public class OrganizationController : Controller
     {
         [HttpGet]
-
         public IActionResult Create()
         {
             // 获取用户所在位置

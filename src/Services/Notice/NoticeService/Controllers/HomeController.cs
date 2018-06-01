@@ -13,16 +13,24 @@ namespace Together.Notice.Controllers
     {
         private IEmailSender _sender;
         private ICacheService _cacheService;
-        public HomeController(ICacheService cacheService, IEmailSender sender)
+        private IEmailTemplateService _templateService;
+        public HomeController(ICacheService cacheService, IEmailSender sender, IEmailTemplateService emailTemplateService)
         {
+            _templateService = emailTemplateService;
             _sender = sender;
             _cacheService = cacheService;
         }
         public async Task<IActionResult> Index()
         {
-            _cacheService.Add("username", "zengande");
-            await _sender.Send("zengande@qq.com", "test", "test", "<b>test</b>");
-            await _sender.Send("835290734@qq.com", "test", "<b>test</b>");
+            var template = await _templateService.GetTemplate(1);
+            if (template == null)
+            {
+                return Content("NULL");
+            }
+            var values = new Dictionary<string, string>();
+            values.Add("link", "zengande.cn");
+            var content = _templateService.Build(template.Template, values);
+            await _sender.Send("835290734@qq.com", template.Title, content);
             return Content("OK");
         }
     }
