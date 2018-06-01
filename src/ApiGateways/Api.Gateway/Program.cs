@@ -14,10 +14,10 @@ namespace Api.Gateway
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            CreateWebHostBuilder(args).Build().Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
@@ -29,7 +29,6 @@ namespace Api.Gateway
                     .AddEnvironmentVariables();
                 })
                 .UseUrls("http://localhost:8000")
-                .UseStartup<Startup>()
-                .Build();
+                .UseStartup<Startup>();
     }
 }

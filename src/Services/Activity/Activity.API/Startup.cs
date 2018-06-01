@@ -16,6 +16,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http.Features;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Together.Activity.API
 {
@@ -40,38 +41,16 @@ namespace Together.Activity.API
             services.AddOptions();
             services.Configure<ServiceDiscoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
 
-            services.AddMvc();
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddSwaggerGen(options =>
             {
                 options.DescribeAllEnumsAsStrings();
                 options.SwaggerDoc("v1", new Info { Title = "Activity API", Version = "v1" });
-
-                //options.AddSecurityDefinition("oauth2", new OAuth2Scheme
-                //{
-                //    Type = "oauth2",
-                //    Flow = "implicit",
-                //    AuthorizationUrl = $"{Configuration.GetValue<string>("IdentityUrlExternal")}/connect/authorize",
-                //    TokenUrl = $"{Configuration.GetValue<string>("IdentityUrlExternal")}/connect/token",
-                //    Scopes = new Dictionary<string, string>()
-                //    {
-                //        { "activities", "Activity API" }
-                //    }
-                //});
-                //options.OperationFilter<AuthorizeCheckOperationFilter>();
             });
             
             services.AddMediatR(typeof(Startup));
-            //services.AddSingleton<IConsulClient>(p => new ConsulClient(cfg =>
-            //{
-            //    var serviceConfiguration = p.GetRequiredService<IOptions<ServiceDiscoveryOptions>>().Value;
-
-            //    if (!string.IsNullOrEmpty(serviceConfiguration.Consul.HttpEndpoint))
-            //    {
-            //        // if not configured, the client will use the default value "127.0.0.1:8500"
-            //        cfg.Address = new Uri(serviceConfiguration.Consul.HttpEndpoint);
-            //    }
-            //}));
             var container = new ContainerBuilder();
             container.Populate(services);
             var serviceConfiguration = services.BuildServiceProvider().GetRequiredService<IOptions<ServiceDiscoveryOptions>>();
@@ -94,6 +73,11 @@ namespace Together.Activity.API
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseHsts();
+            }
+            app.UseHttpsRedirection();
             app.UseMvc();
 
             app.UseSwagger()

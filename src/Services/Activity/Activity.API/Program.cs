@@ -18,7 +18,7 @@ namespace Together.Activity.API
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args)
+            CreateWebHostBuilder(args).Build()
                 .MigrateDbContext<ActivityDbContext>((context, services) =>
                 {
                     var logger = services.GetService<ILogger<ActivityDbContextSeed>>();
@@ -29,9 +29,8 @@ namespace Together.Activity.API
                 .Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .Build();
+                .UseStartup<Startup>();
     }
 }

@@ -26,6 +26,8 @@ using zipkin4net.Tracers.Zipkin;
 using zipkin4net.Tracers;
 using Microsoft.AspNetCore.DataProtection;
 using StackExchange.Redis;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Together.Identity.API
 {
@@ -50,14 +52,12 @@ namespace Together.Identity.API
             services.AddDataProtection()
                 .PersistKeysToRedis(ConnectionMultiplexer.Connect(configuration: "localhost:6379"), "DataProtection-Key")
                 .SetApplicationName("IdentityAPI");
-
             services.AddDistributedRedisCache(options =>
             {
                 options.Configuration = "localhost:6379";
                 options.InstanceName = "DataProtection";
             });
             services.AddSession();
-
             services.ConfigureApplicationCookie(options => {
                 options.Cookie.Name = ".AspNet.SharedCookie";
             });
@@ -76,7 +76,15 @@ namespace Together.Identity.API
                 .AddInMemoryClients(Config.GetClients())
                 .AddAspNetIdentity<ApplicationUser>();
 
-            services.AddMvc();
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddCap(options =>
             {
@@ -118,6 +126,7 @@ namespace Together.Identity.API
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
             }
 
             RegisterZipkinTracer(app, logger, lifetime);
@@ -126,7 +135,9 @@ namespace Together.Identity.API
 
             app.UseIdentityServer();
             app.UseCap();
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseCookiePolicy();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
