@@ -25,14 +25,16 @@ namespace Together.Activity.API.Applications.Commands
             var activity = new Domain.AggregatesModel.ActivityAggregate.Activity(request.Owner.UserId,
                 request.Description,
                 request.Details,
+                request.EndRegisterTime,
+                request.ActivityDate,
+                request.StartTime,
                 request.EndTime,
-                request.ActivityTime,
                 request.Address,
                 request.LimitsNum);
 
             foreach (var participant in request.Participants)
             {
-                activity.JoinActivity(participant.UserId, participant.Nickname, participant.Avatar);
+                activity.JoinActivity(participant.UserId, participant.Nickname, participant.Avatar, participant.Sex);
             }
 
             _activityRepository.AddAsync(activity);

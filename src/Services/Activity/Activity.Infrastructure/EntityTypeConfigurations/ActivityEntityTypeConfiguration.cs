@@ -21,29 +21,27 @@ namespace Together.Activity.Infrastructure.EntityTypeConfigurations
             builder.Property(a => a.Id)
                 .ForSqlServerUseSequenceHiLo("activityseq");
 
-            builder.Property(a => a.ActivityTime)
+            builder.Property(a => a.ActivitDate)
                 .IsRequired();
             builder.Property(a => a.CreateTime)
-                .HasDefaultValue(DateTime.Now)
                 .IsRequired();
             builder.Property(a => a.OwnerId)
+                .HasMaxLength(200)
                 .IsRequired(false);
             builder.Property<int>("ActivityStatusId")
                 .IsRequired();
-            builder.Property(a => a.Address)
-                .HasMaxLength(200)
-                .IsRequired(true);
             builder.Property(a => a.Description)
                 .IsRequired(false);
             builder.Property(a => a.Details)
                 .IsRequired(false);
-            builder.Property(a => a.EndTime)
+            builder.Property(a => a.EndRegisterDate)
                 .IsRequired();
             builder.Property(a => a.LimitsNum);
 
             builder.HasOne(a => a.ActivityStatus)
                 .WithMany()
                 .HasForeignKey("ActivityStatusId");
+            builder.OwnsOne(a => a.Address);
 
             var navigation = builder.Metadata
                 .FindNavigation(nameof(Domain.AggregatesModel.ActivityAggregate.Activity.Participants));

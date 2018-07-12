@@ -8,29 +8,29 @@ namespace DomainTests
     public class AggregateModelTest
     {
         [Fact]
-        public void create_activit_and_join_activity()
+        public void Create_activit_and_join_activity()
         {
-            var userId = 1;
+            var userId = "1564646";
             var desc = "这是一个测试的活动";
             var details = "详细信息";
-            var activity = new Activity(userId, desc, details, DateTime.Now.AddDays(7), DateTime.Now.AddDays(10), "BaiJing, Chian", 1);
+            var activity = new Activity(userId, desc, details, DateTime.Now.AddDays(7), DateTime.Now.AddDays(10), DateTime.Now.AddDays(10), DateTime.Now.AddDays(10).AddHours(2), new Address("Beijing","Beijing","","鸟巢",""), 1);
 
             Assert.Equal(0, activity.Participants.Count);
 
-            var joinUser = 2;
-            activity.JoinActivity(joinUser, "", "");
+            var joinUser = "788745";
+            activity.JoinActivity(joinUser, "", "", 1);
 
             Assert.Equal(1, activity.Participants.Count);
 
-            activity.JoinActivity(joinUser, "", "");
+            activity.JoinActivity(joinUser, "", "", 1);
             Assert.Equal(1, activity.Participants.Count);
 
             var expected = typeof(ActivityDomainException);
             Type actual = null;
             try
             {
-                var other_joinUser = 3;
-                activity.JoinActivity(other_joinUser, "", "");
+                var other_joinUser = "9456456";
+                activity.JoinActivity(other_joinUser, "", "", 1);
             }
             catch (Exception e)
             {

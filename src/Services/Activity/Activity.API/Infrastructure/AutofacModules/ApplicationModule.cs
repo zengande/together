@@ -1,4 +1,6 @@
 ﻿using Autofac;
+using Consul;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +17,11 @@ namespace Together.Activity.API.Infrastructure.AutofacModules
         : Autofac.Module
     {
         public string QueriesConnectionString { get; }
-        public ApplicationModule(string qconstr)
+        private readonly IOptions<ServiceDiscoveryOptions> _serviceOptions;
+        public ApplicationModule(string qconstr, IOptions<ServiceDiscoveryOptions> serviceOptions)
         {
             QueriesConnectionString = qconstr;
+            _serviceOptions = serviceOptions;
         }
 
         protected override void Load(ContainerBuilder builder)
@@ -33,6 +37,19 @@ namespace Together.Activity.API.Infrastructure.AutofacModules
 
             //builder.RegisterAssemblyTypes(typeof(CreateActivityCommandHandler).GetTypeInfo().Assembly)
             //    .AsClosedTypesOf(typeof(IIntegrationEventHandler<>));
+
+            builder.RegisterType<ConsulClient>()
+                .As<IConsulClient>()
+                .WithParameter("configOverride", new Action<ConsulClientConfiguration>(cfg =>
+                {
+                    var serviceConfiguration = _serviceOptions.Value;
+                    if (!string.IsNullOrEmpty(serviceConfiguration.Consul.HttpEndpoint))
+                    {
+                        // if not configured, the client will use the default value "127.0.0.1:8500"
+                        cfg.Address = new Uri(serviceConfiguration.Consul.HttpEndpoint);
+                    }
+                }))
+                .SingleInstance();
 
         }
     }

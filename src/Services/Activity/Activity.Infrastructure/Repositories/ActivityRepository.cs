@@ -26,16 +26,16 @@ namespace Together.Activity.Infrastructure.Repositories
         public async Task<Domain.AggregatesModel.ActivityAggregate.Activity> GetAsync(int activityId)
         {
             var activity = await _context.Activities.FindAsync(activityId);
-            // TODO : 延迟加载
-            //if (activity != null)
-            //{
-            //    await _context.Entry(activity)
-            //        .Collection(a => a.Participants)
-            //        .LoadAsync();
-            //    await _context.Entry(activity)
-            //        .Reference(a => a.ActivityStatus)
-            //        .LoadAsync();
-            //}
+            // TODO: 延迟加载
+            if (activity != null)
+            {
+                await _context.Entry(activity)
+                    .Collection(a => a.Participants)
+                    .LoadAsync();
+                await _context.Entry(activity)
+                    .Reference(a => a.ActivityStatus)
+                    .LoadAsync();
+            }
             return activity;
         }
 

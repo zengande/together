@@ -4,8 +4,9 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using MediatR;
-using Together.Activity.API.Applications.Models;
+using Together.Activity.API.Models;
 using Together.Activity.API.Extensions;
+using Together.Activity.Domain.AggregatesModel.ActivityAggregate;
 
 namespace Together.Activity.API.Applications.Commands
 {
@@ -45,19 +46,30 @@ namespace Together.Activity.API.Applications.Commands
         /// 截止报名时间
         /// </summary>
         [DataMember]
-        public DateTime EndTime { get; private set; }
+        public DateTime EndRegisterTime { get; private set; }
+
+        /// <summary>
+        /// 开始时间
+        /// </summary>
+        [DataMember]
+        public DateTime StartTime { get; set; }
+        /// <summary>
+        /// 结束时间
+        /// </summary>
+        [DataMember]
+        public DateTime EndTime { get; set; }
 
         /// <summary>
         /// 活动时间
         /// </summary>
         [DataMember]
-        public DateTime ActivityTime { get; private set; }
+        public DateTime ActivityDate { get; private set; }
 
         /// <summary>
         /// 活动地点
         /// </summary>
         [DataMember]
-        public string Address { get; private set; }
+        public Address Address { get; private set; }
 
         /// <summary>
         /// 限制人数
@@ -65,28 +77,37 @@ namespace Together.Activity.API.Applications.Commands
         [DataMember]
         public int? LimitsNum { get; private set; }
 
+        /// <summary>
+        /// 活动经费
+        /// </summary>
+        [DataMember]
+        public decimal? Funds { get; set; }
+
         public CreateActivityCommand()
         {
             _participants = new List<ParticipantDto>();
         }
 
-        public CreateActivityCommand(CurrentUser owner, string description, string details, DateTime endTime, DateTime activityTime, string address, int? limitsNum = null)
-            :this()
+        public CreateActivityCommand(CurrentUser owner, string description, string details, DateTime endRegisterTime, DateTime activityDate, DateTime startTime, DateTime endTime, Address address, int? limitsNum = null)
+            : this()
         {
             Owner = owner;
             Description = description;
             Details = details;
+            EndRegisterTime = endRegisterTime;
+            ActivityDate = activityDate;
+            StartTime = startTime;
             EndTime = endTime;
-            ActivityTime = activityTime;
             Address = address;
             LimitsNum = limitsNum;
         }
 
     }
-    
+
     public class ParticipantDto
     {
-        public int UserId { get; set; }
+        public int Sex { get; set; }
+        public string UserId { get; set; }
         public string Nickname { get; set; }
         public string Avatar { get; set; }
     }

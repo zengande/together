@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Together.Activity.API.Applications.Commands;
-using Together.Activity.API.Applications.Models;
-using Together.Activity.API.Applications.Queries;
 using Together.Activity.API.Models;
+using Together.Activity.API.Applications.Queries;
+using Together.Activity.Domain.Exceptions;
 
 namespace Together.Activity.API.Controllers
 {
@@ -27,10 +27,22 @@ namespace Together.Activity.API.Controllers
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> CreateActivity()
+        public async Task<IActionResult> CreateActivity(CreateActivityViewModel model)
         {
-            var result = await _mediator.Send(new CreateActivityCommand(currentUser, "测试活动", "test", DateTime.Now, DateTime.Now, "Beijing, China", 10));
-            return result ? Ok() : (IActionResult)BadRequest();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var address = new Domain.AggregatesModel.ActivityAggregate.Address("ZheJiang", "HangZhou", "XiHu", "浙大科技园","");
+                    var result = await _mediator.Send(new CreateActivityCommand(CurrentUser, model.Title, model.Details, model.EndRegisterDate, model.ActivitDate, model.StartTime, model.EndTime, address, model.LimitsNum));
+                    return result ? Ok() : (IActionResult)BadRequest();
+                }
+                catch (ActivityDomainException ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
+            return BadRequest();
         }
 
         [Route("{activityId:int}")]
@@ -53,9 +65,11 @@ namespace Together.Activity.API.Controllers
         [Route("")]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<ActivitySummaryViewModel>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetActivities()
+        public async Task<IActionResult> GetActivities(int? pageIndex = 1, int? pageSize = 10)
         {
-            var activities = await _activityQueries.GetActivitiesAsync();
+            pageIndex = pageIndex.HasValue ? (pageIndex.Value <= 0 ? 1 : pageIndex.Value) : 1;
+            pageSize = pageSize.HasValue ? (pageSize.Value <= 0 ? 10 : pageSize.Value) : 10;
+            var activities = await _activityQueries.GetActivitiesAsync(pageIndex.Value, pageSize.Value);
             return Ok(activities);
         }
 
@@ -65,8 +79,28 @@ namespace Together.Activity.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> JoinActivity([FromBody]int activityId)
         {
-            var result = await _mediator.Send(new JoinActivityCommand(activityId, currentUser));
-            return result ? Ok() : (IActionResult)BadRequest();
+            try
+            {
+                await _mediator.Send(new JoinActivityCommand(activityId, CurrentUser));
+                return Ok();
+            }
+            catch (ActivityDomainException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException)
+            {
+                return BadRequest($"活动不存在");
+            }
+        }
+
+        [Route("joined_activities")]
+        [HttpGet]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetMyJoinedActivities()
+        {
+            var activities = await _activityQueries.GetActivitiesByUserAsync(CurrentUser.UserId);
+            return Ok(activities);
         }
     }
 }

@@ -18,6 +18,7 @@ namespace Together.Activity.Infrastructure.Data
         public DbSet<Domain.AggregatesModel.ActivityAggregate.Activity> Activities { get; set; }
         public DbSet<ActivityStatus> ActivityStatuses { get; set; }
         public DbSet<Participant> Participants { get; set; }
+        //public DbSet<Address> Addresses { get; set; }
 
         private readonly IMediator _mediator;
 
@@ -37,6 +38,7 @@ namespace Together.Activity.Infrastructure.Data
             modelBuilder.ApplyConfiguration(new ActivityStatusEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ActivityEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ParticipantEntityTypeConfiguration());
+            //modelBuilder.ApplyConfiguration(new AddressEntityTypeConfiguration());
         }
 
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default(CancellationToken))

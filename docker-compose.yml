@@ -11,4 +11,29 @@ services:
     build:
       context: .
       dockerfile: src/Services/Location/Location.API/Dockerfile
+  usergroup.api:
+    image: usergroupapi
+    build:
+      context: .
+      dockerfile: src/Services/UserGroup/UserGroup.API/Dockerfile
+  webmvc:
+    image: webmvc
+    build:
+      context: .
+      dockerfile: src/WebApps/WebMVC/Dockerfile
+  api.gateway:
+    image: apigateway
+    build:
+      context: .
+      dockerfile: src/ApiGateways/Api.Gateway/Dockerfile
+  topic.api:
+    image: topicapi
+    build:
+      context: .
+      dockerfile: src/Services/Topic/Topic.API/Dockerfile
+  noticeservice:
+    image: noticeservice
+    build:
+      context: .
+      dockerfile: src/Services/Notice/NoticeService/Dockerfile
 
