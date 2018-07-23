@@ -1,4 +1,5 @@
-﻿using IdentityServer4.Models;
+﻿using IdentityServer4;
+using IdentityServer4.Models;
 using IdentityServer4.Test;
 using System;
 using System.Collections.Generic;
@@ -27,11 +28,44 @@ namespace Together.Identity.API.Configurations
                 PostLogoutRedirectUris = { "http://localhost:5001/signout-callback-oidc" },
                 AllowedScopes = {
                     "api_gateway",
-                    IdentityServer4.IdentityServerConstants.StandardScopes.OpenId,
-                    IdentityServer4.IdentityServerConstants.StandardScopes.Profile,
-                    IdentityServer4.IdentityServerConstants.StandardScopes.OfflineAccess
+                    IdentityServerConstants.StandardScopes.OpenId,
+                    IdentityServerConstants.StandardScopes.Profile,
+                    IdentityServerConstants.StandardScopes.OfflineAccess
                 }
-            }
+            },
+            new Client
+                {
+                    ClientId = "together_spa",
+                    ClientName = "React SPA Client",
+                    AllowedGrantTypes = GrantTypes.Implicit,
+                    AllowAccessTokensViaBrowser = true,
+                    RequireConsent = false,
+                    RedirectUris = { "http://localhost:3000/account/callback" },
+                    PostLogoutRedirectUris = { "http://localhost:3000/logout" },
+                    AllowedCorsOrigins = { "http://localhost:3000" },
+
+                    AllowedScopes =
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile
+                    },
+                },
+            new Client
+                {
+                    ClientId = "activityswaggerui",
+                    ClientName = "Activity Swagger UI",
+                    AllowedGrantTypes = GrantTypes.Implicit,
+                    AllowAccessTokensViaBrowser = true,
+                    RequireConsent=false,
+
+                    RedirectUris = { $"http://localhost:52769/swagger/oauth2-redirect.html" },
+                    PostLogoutRedirectUris = { $"http://localhost:52769/swagger/" },
+
+                    AllowedScopes =
+                    {
+                        "activities"
+                    }
+                },
         };
 
         public static List<TestUser> GetUsers() => new List<TestUser>
@@ -45,7 +79,8 @@ namespace Together.Identity.API.Configurations
 
         public static IEnumerable<ApiResource> GetApiResources() => new List<ApiResource>
         {
-            new ApiResource("user_group_api", "User Group Service")
+            new ApiResource("user_group_api", "User Group Service"),
+            new ApiResource("activities", "Activity Service")
         };
 
         public static IEnumerable<IdentityResource> GetIdentityResources() => new List<IdentityResource>

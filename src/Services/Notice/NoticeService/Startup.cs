@@ -36,14 +36,32 @@ namespace Together.Notice
                     sql.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name));
             });
 
-            services.AddScoped<IEmailSender, EmailSender>()
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+            });
+
+            services.AddSingleton<IEmailSender, EmailSender>()
                 .AddScoped<SendEmailNoticeIntegrationEventHandler>()
-                .AddScoped<IEmailTemplateService, EmailTemplateService>()
-                .AddSingleton<ICacheService>(p => new RedisCacheService(new RedisCacheOptions
+                .AddScoped<NewUserJoinedActivityEventHandler>()
+                .AddScoped<IEmailTemplateService, EmailTemplateService>();
+
+            if (Configuration.GetValue<string>("UseRedis") == Boolean.TrueString)
+            {
+                services.AddSingleton<ICacheService>(p => new RedisCacheService(new RedisCacheOptions
                 {
                     Configuration = Configuration.GetSection("RedisConnectionString").Value,
                     InstanceName = Configuration.GetSection("RedisInstanceName").Value
                 }));
+            }
+            else
+            {
+                // TODO InMemoryCache
+            }
 
             services.AddCap(x =>
             {
@@ -54,6 +72,9 @@ namespace Together.Notice
                     config.HostName = "localhost";
                 });
             });
+
+
+            services.AddSignalR();
 
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
@@ -70,9 +91,18 @@ namespace Together.Notice
             {
                 app.UseHsts();
             }
+
+            app.UseCors("CorsPolicy");
+
             app.UseHttpsRedirection();
             app.UseCap();
-            app.UseMvcWithDefaultRoute();
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<NotificationsHub>("/notificationhub", options =>
+                    options.Transports = Microsoft.AspNetCore.Http.Connections.HttpTransports.All);
+            });
+            app.UseMvc();
         }
     }
 }

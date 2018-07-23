@@ -8,10 +8,12 @@ using Together.Activity.API.Applications.Commands;
 using Together.Activity.API.Models;
 using Together.Activity.API.Applications.Queries;
 using Together.Activity.Domain.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Together.Activity.API.Controllers
 {
     [Route("api/v1/[controller]")]
+    [Authorize]
     public class ActivitiesController : BaseController
     {
         private IMediator _mediator;
@@ -47,6 +49,7 @@ namespace Together.Activity.API.Controllers
 
         [Route("{activityId:int}")]
         [HttpGet]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(ActivityViewModel), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Get(int activityId)
@@ -64,6 +67,7 @@ namespace Together.Activity.API.Controllers
 
         [Route("")]
         [HttpGet]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(IEnumerable<ActivitySummaryViewModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetActivities(int? pageIndex = 1, int? pageSize = 10)
         {
@@ -73,11 +77,11 @@ namespace Together.Activity.API.Controllers
             return Ok(activities);
         }
 
-        [Route("join")]
+        [Route("join/{activityId:int}")]
         [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> JoinActivity([FromBody]int activityId)
+        public async Task<IActionResult> JoinActivity(int activityId)
         {
             try
             {

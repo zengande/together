@@ -50,8 +50,8 @@
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
-        <script src="~/lib/signalr/signalr.js"></script>
     </environment>
+    <script src="~/lib/signalr/signalr.js"></script>
     <environment exclude="Development">
         <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
                 asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
@@ -67,30 +67,31 @@
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
-    <script>
+    <script type="text/javascript">
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl("/hubs/notice")
+            .withUrl("http://localhost:54529/notificationhub")
             .build();
 
-        connection.on("Notice", (data) => {
-            alert(data);
-        });
-
         connection.start()
+            .then(() => {
+                console.log("connected to signalr hub");
+            })
             .catch(error => {
-                console.error(error.tostring());
+                console.error(error);
             });
-        $(function () {
-            var timer = setInterval(() => { 
 
-                if (connection.connection.connectionState == 1) {
-                    connection.invoke('Notice').catch(err => {
-                        alert(err);
-                    });
-                    clearInterval(timer);
-                }
-            }, 100)
+        connection.on("NewUserJoined", (title, entrants) => {
+            console.log("your " + title + " has user joined : " + entrants + "");
         })
+
+        function stablishConnection() {
+
+            let hubHttpConnection = new signalR.HttpConnection('http://localhost:54529/hub/notificationhub', {
+                transport: signalR.TransportType.LongPolling
+            });
+            return new signalR.HubConnection(hubHttpConnection);
+        }
+
     </script>
     @RenderSection("Scripts", required: false)
 </body>

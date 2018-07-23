@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using Nutshell.Resilience.HttpRequest.abstracts;
-using WebMVC.Hubs;
 using WebMVC.Models;
 
 namespace WebMVC.Controllers
@@ -18,17 +17,14 @@ namespace WebMVC.Controllers
     {
         private readonly IHttpClient _httpClient;
         private readonly IOptions<AppSettings> _appSettings;
-        private IHubContext<NoticeHub> _hubContext;
 
         public HomeController(IHttpClient httpClient, 
             IHttpContextAccessor httpContextAccessor,
-            IOptions<AppSettings> appSettings,
-            IHubContext<NoticeHub> hubContext)
+            IOptions<AppSettings> appSettings)
             : base(httpContextAccessor)
         {
             _appSettings = appSettings;
             _httpClient = httpClient;
-            _hubContext = hubContext;
         }
         public IActionResult Index()
         {

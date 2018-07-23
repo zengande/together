@@ -32,6 +32,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         /// </summary>
         public string Details { get; private set; }
 
+
         /// <summary>
         /// 创建时间
         /// </summary>
@@ -170,6 +171,12 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
 
             // 加入活动领域事件
             AddDomainEvent(new UserJoinedActivityDomainEvent { Participant = participant });
+        }
+
+
+        public void SetFinishedStatus()
+        {
+            _activityStatusId = ActivityStatus.Finished.Id;
         }
 
         /// <summary>
