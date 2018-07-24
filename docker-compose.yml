@@ -37,3 +37,10 @@ services:
       context: .
       dockerfile: src/Services/Notice/NoticeService/Dockerfile
 
+
+  activity.backgroundtasks:
+    image: ${DOCKER_REGISTRY}activitybackgroundtasks
+    build:
+      context: .
+      dockerfile: src/Services/Activity/Activity.BackgroundTasks/Dockerfile
+

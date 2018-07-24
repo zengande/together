@@ -28,6 +28,7 @@ using Microsoft.AspNetCore.DataProtection;
 using StackExchange.Redis;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using IdentityServer4.Services;
 
 namespace Together.Identity.API
 {
@@ -49,16 +50,17 @@ namespace Together.Identity.API
                     sql => sql.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name));
             });
 
-            services.AddDataProtection()
-                .PersistKeysToRedis(ConnectionMultiplexer.Connect(configuration: "localhost:6379"), "DataProtection-Key")
-                .SetApplicationName("IdentityAPI");
+            //services.AddDataProtection()
+            //    .PersistKeysToRedis(ConnectionMultiplexer.Connect(configuration: "localhost:6379"), "DataProtection-Key")
+            //    .SetApplicationName("IdentityAPI");
             services.AddDistributedRedisCache(options =>
             {
                 options.Configuration = "localhost:6379";
                 options.InstanceName = "DataProtection";
             });
             services.AddSession();
-            services.ConfigureApplicationCookie(options => {
+            services.ConfigureApplicationCookie(options =>
+            {
                 options.Cookie.Name = ".AspNet.SharedCookie";
             });
 
@@ -74,7 +76,8 @@ namespace Together.Identity.API
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryApiResources(Config.GetApiResources())
                 .AddInMemoryClients(Config.GetClients())
-                .AddAspNetIdentity<ApplicationUser>();
+                .AddAspNetIdentity<ApplicationUser>()
+                .Services.AddTransient<IProfileService, ProfileService>();
 
             services.Configure<CookiePolicyOptions>(options =>
             {

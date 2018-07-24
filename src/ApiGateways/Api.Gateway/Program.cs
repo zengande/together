@@ -7,6 +7,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Ocelot.DependencyInjection;
 
 namespace Api.Gateway
 {
@@ -17,18 +18,30 @@ namespace Api.Gateway
             CreateWebHostBuilder(args).Build().Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration((hostingContext, config) =>
-                {
-                    config
-                    .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
-                    //.AddJsonFile("appsettings.json", true, true)
-                    //.AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", true, true)
-                    .AddJsonFile("ocelot.json")
-                    .AddEnvironmentVariables();
-                })
-                .UseUrls("http://localhost:8000")
-                .UseStartup<Startup>();
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args)
+        {
+            var builder = WebHost.CreateDefaultBuilder(args);
+            builder.ConfigureAppConfiguration((hostingContext, config) =>
+             {
+                 config.SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
+                     .AddJsonFile("appsettings.json", true, true)
+                     .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", true, true)
+                     .AddOcelot()
+                     .AddEnvironmentVariables();
+                 //var files = Directory.GetFiles($"{hostingContext.HostingEnvironment.ContentRootPath}/OcelotConfigurations");
+                 //if (files != null)
+                 //{
+                 //    foreach (var file in files)
+                 //    {
+                 //        config.AddJsonFile(file);
+                 //    }
+                 //}
+
+             })
+               .UseUrls("http://localhost:8000")
+               .UseStartup<Startup>();
+            return builder;
+        }
+
     }
 }

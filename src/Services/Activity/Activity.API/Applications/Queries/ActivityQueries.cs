@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace Together.Activity.API.Applications.Queries
 {
     using Together.Activity.API.Models;
+    using Together.Activity.Domain.AggregatesModel.ActivityAggregate;
 
     public class ActivityQueries
         : IActivityQueries
@@ -18,7 +19,7 @@ namespace Together.Activity.API.Applications.Queries
             _connectionString = !string.IsNullOrWhiteSpace(constr) ? constr : throw new ArgumentNullException(nameof(constr));
         }
 
-        public async Task<IEnumerable<ActivitySummaryViewModel>> GetActivitiesAsync(int pageIndex, int pageSize)
+        public async Task<IEnumerable<ActivitySummaryViewModel>> GetActivitiesAsync(int pageIndex, int pageSize, int status = 2)
         {
             var sql = @"SELECT TOP(@pageSize) * FROM (
 	                        SELECT a.Id as ActivityId, a.Description as Title,a.LimitsNum, s.Name as Status,ISNULL(c.Count,0) AS NumberOfParticipants
@@ -27,14 +28,17 @@ namespace Together.Activity.API.Applications.Queries
 	                        LEFT JOIN (SELECT ActivityId, count(*) AS [Count]
 	                        FROM [dbo].[participant]
 	                        GROUP BY [ActivityId]
-	                        ) c on c.ActivityId=a.Id) r
+	                        ) c on c.ActivityId=a.Id
+                            WHERE a.ActivityStatusId=@status
+                        ) r
                         WHERE (r.ActivityId NOT IN
                                   (SELECT TOP (@pageSize*(@pageIndex-1)) Id
 			                         FROM [dbo].[activities]
+                                     WHERE ActivityStatusId=@status
 			                         ORDER BY Id)
                         )
                         ORDER BY r.ActivityId";
-            return await SqlQuery<ActivitySummaryViewModel>(sql, new { pageSize, pageIndex });
+            return await SqlQuery<ActivitySummaryViewModel>(sql, new { pageSize, pageIndex, status });
         }
 
         public async Task<ActivityViewModel> GetActivityAsync(int id)
@@ -58,7 +62,7 @@ namespace Together.Activity.API.Applications.Queries
 
         public async Task<IEnumerable<ActivitySummaryViewModel>> GetActivitiesByUserAsync(string userId)
         {
-            var sql = @"SELECT a.Id as ActivityId, a.Description as Title, a.Address,a.LimitsNum, s.Name as Status
+            var sql = @"SELECT a.Id as ActivityId, a.Description as Title,a.LimitsNum, s.Name as Status
 	                    FROM [dbo].[activities] a
 	                    LEFT JOIN [dbo].[activitystatus] s ON a.ActivityStatusId=s.Id
 	                    WHERE a.Id IN(

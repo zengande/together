@@ -8,6 +8,10 @@
     padding:0px;
 }
 
+.row{
+    margin:0px;
+}
+
 /* Carousel */
 .carousel-caption p {
     font-size: 20px;
@@ -42,3 +46,9 @@
     .m-header a:hover {
         color: #d5046f !important
     }
+
+.page-title {
+    font-size: 26px;
+    font-weight: 600;
+    color: #494949
+}

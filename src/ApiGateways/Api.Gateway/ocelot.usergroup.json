@@ -1,0 +1,59 @@
+﻿{
+  "ReRoutes": [
+    {
+      "DownstreamPathTemplate": "/api/v1/users/{userId}",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/api/users/{userId}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "ServiceName": "user_group_api",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      "UseServiceDiscovery": true
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/users",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/api/users",
+      "UpstreamHttpMethod": [ "Post" ],
+      "ServiceName": "user_group_api",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      "UseServiceDiscovery": true
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/users/join_group/{groupId}",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/api/users/join_group/{groupId}",
+      "UpstreamHttpMethod": [ "Put" ],
+      "ServiceName": "user_group_api",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      "UseServiceDiscovery": true
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/groups/{groupId}",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/api/groups/{groupId}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "ServiceName": "user_group_api",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      "UseServiceDiscovery": true
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/groups",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/api/groups",
+      "UpstreamHttpMethod": [ "Post" ],
+      "ServiceName": "user_group_api",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      "UseServiceDiscovery": true
+    }
+  ]
+}

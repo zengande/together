@@ -1,22 +1,161 @@
-﻿
+﻿@model WebMVC.Models.Activities.CreateViewModel
 @{
     ViewData["Title"] = "创建活动";
 }
 
 @section Styles{
+    <link href="~/lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+    <style>
+        .left-content {
+            width: 580px;
+            padding-top: 30px;
+        }
 
+        .radio-block {
+            padding: 5px 20px !important;
+            font-size: 12px;
+        }
+
+            .radio-block input[type='radio'] {
+                display: none;
+            }
+
+        .r-b-check {
+            opacity: 0;
+        }
+
+        .m-border {
+            /* 尺寸永远和容器一样大，假装是容器 */
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            z-index: -1;
+            border: 1px solid #bbb;
+            margin: -1px;
+            border-radius: 3px;
+        }
+
+        .r-b-check:before {
+            content: "";
+            position: absolute;
+            right: -1px;
+            bottom: -1px;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 0 12px 12px;
+            border-color: transparent transparent #4db4be;
+        }
+
+        .r-b-check:after {
+            content: "";
+            position: absolute;
+            right: 1px;
+            bottom: 2px;
+            width: 4px;
+            height: 2px;
+            border: 1px solid #fff;
+            border-top: 0;
+            border-right: 0;
+            -webkit-transform: rotate(-45deg);
+            -ms-transform: rotate(-45deg);
+            transform: rotate(-45deg);
+        }
+
+        .radio-block input[type='radio']:checked + .r-b-check {
+            opacity: 1;
+        }
+
+        .radio-block input[type='radio']:checked ~ .m-border {
+            border-color: #4db4be;
+        }
+    </style>
 }
 
 <div class="container">
-    <div class=" m-steps">
-        
+    <h1 class="page-title">创建同城活动</h1>
+    <div class="left-content">
+        <form class="form-horizontal" asp-controller="activities" asp-action="create" method="post">
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="">活动类别</label>
+                <div class="col-sm-10">
+                    <select class="form-control">
+                        <option>请选择</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">活动标题</label>
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">活动时间</label>
+                <div class="col-sm-10">
+                    <div class="input-group date form_datetime col-md-5" data-date-format="yyyy-mm-dd HH:ii" data-link-field="dtp_input1">
+                        <input class="form-control" size="16" type="text" value="" readonly>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                    </div>
+                    <input type="hidden" id="dtp_input1" value="" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">活动费用</label>
+                <div class="col-sm-10">
+                    <label class="radio-block radio-inline">
+                        @*<input type="radio" name="fee" value="1" checked />*@
+                        @Html.RadioButtonFor(m => m.HasFee, false, new { @checked = true })
+                        <i class="r-b-check"></i>
+                        <span class="m-border"></span>
+                        免费
+                    </label>
+                    <label class="radio-block radio-inline">
+                        @*<input id="rdFee" type="radio" name="fee" value="2" />*@
+                        @Html.RadioButtonFor(m => m.HasFee, true, new { })
+                        <i class="r-b-check"></i>
+                        <span class="m-border"></span>
+                        收费
+                    </label>
+                </div>
+            </div>
+            <div class="form-group" id="fee-content" style="display:none;">
+                <label class="col-sm-2 control-label">票价</label>
+                <div class="col-sm-10">
+                    <div></div>
+                </div>
+            </div>
+            <button>提交</button>
+        </form>
     </div>
 </div>
 
 @section Scripts{
+    <script src="~/lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
+    <script src="~/lib/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
     <script>
         $(function () {
+            $('.form_datetime').datetimepicker({
+                language: 'zh-CN',
+                weekStart: 1,
+                todayBtn: 1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                forceParse: 0,
+                showMeridian: 1
+            });
 
+            $('input[name="HasFee"]').change(function () {
+                console.log($('input[name="HasFee"]:checked').val());
+                if ($('input[name="HasFee"]:checked').val() === 'True') {
+                    $("#fee-content").show();
+                } else {
+                    $("#fee-content").hide();
+                }
+            })
         })
     </script>
 }

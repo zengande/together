@@ -13,7 +13,6 @@ using Microsoft.Extensions.Logging;
 using Nutshell.Common.Cache;
 using Nutshell.Resilience.HttpRequest;
 using Nutshell.Resilience.HttpRequest.abstracts;
-using WebMVC.Hubs;
 using WebMVC.Services;
 
 namespace WebMVC
@@ -119,11 +118,6 @@ namespace WebMVC
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
-            });
-
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<NoticeHub>("/hubs/notice");
             });
         }
     }
