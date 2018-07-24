@@ -35,7 +35,8 @@ namespace Together.Activity.BackgroundTasks.Tasks
             {
                 await CheckExpiredActivities();
 
-                await Task.Delay(1000, stoppingToken);
+                // delay 10s
+                await Task.Delay(100000, stoppingToken);
 
             }
             await Task.CompletedTask;
