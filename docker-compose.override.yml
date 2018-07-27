@@ -1,65 +1,100 @@
-version: '3'
+version: '3.4'
 
 services:
-  together.mvc:
+  sql.data:
+    environment:
+      - SA_PASSWORD=Pass@word
+      - ACCEPT_EULA=Y
+    ports:
+      - "1433:1433"
+  nosql.redis.data:
+    ports:
+      - "6379:6379"
+  nosql.mongo.data:
+    ports:
+      - "27017:27017" 
+  rabbitmq:
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+  consul:
+    ports:
+      - "8500:8500"
+      - "8600:8600"
+#  fabio:
+#    environment:
+#      - registry_consul_addr=10.0.1.46:8500
+#  together.mvc:
+#    environment:
+#      - ASPNETCORE_ENVIRONMENT=Development
+#    image: webmvc
+#    build:
+#      context: .
+#      dockerfile: src/WebApps/WebMVC/Dockerfile
+#    ports:
+#      - "80"
+
+  identity.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-    image: webmvc
-    build:
-      context: .
-      dockerfile: src/WebApps/WebMVC/Dockerfile
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionString=Data Source=sql.data;Initial Catalog=Together.IdentityDb;Persist Security Info=True;User ID=sa;Password=Pass@word
     ports:
-      - "80"
+      - "5000:80"
 
   activity.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionString=Data Source=sql.data;Initial Catalog=Together.ActivityDb;Persist Security Info=True;User ID=sa;Password=Pass@word
+      #- IdentityUrl=http://identity.api
+      - IdentityUrlExternal=http://${EXTERNAL_DNS_NAME_OR_IP}:5000
     ports:
-      - "80"
+      - "5100:80"
 
 
-  location.api:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-    ports:
-      - "80"
+#  location.api:
+#    environment:
+#      - ASPNETCORE_ENVIRONMENT=Development
+#    ports:
+#      - "80"
 
 
-  usergroup.api:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-    ports:
-      - "80"
+#  usergroup.api:
+#    environment:
+#      - ASPNETCORE_ENVIRONMENT=Development
+#    ports:
+#      - "80"
 
 
-  webmvc:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-    ports:
-      - "80"
+#  webmvc:
+#    environment:
+#      - ASPNETCORE_ENVIRONMENT=Development
+#    ports:
+#      - "80"
 
 
   api.gateway:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
-      - "80"
+      - "8000:80"
 
 
-  topic.api:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-    ports:
-      - "80"
-
-
-  noticeservice:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-    ports:
-      - "80"
-
-
+#  topic.api:
+#    environment:
+#      - ASPNETCORE_ENVIRONMENT=Development
+#    ports:
+#      - "80"
+#
+#
+#  noticeservice:
+#    environment:
+#      - ASPNETCORE_ENVIRONMENT=Development
+#    ports:
+#      - "80"
+#
+#
   activity.backgroundtasks:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -71,3 +106,4 @@ services:
     volumes:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+

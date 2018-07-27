@@ -26,7 +26,6 @@ namespace Together.Activity.API.Infrastructure.AutofacModules
 
         protected override void Load(ContainerBuilder builder)
         {
-
             builder.Register(c => new ActivityQueries(QueriesConnectionString))
                 .As<IActivityQueries>()
                 .InstancePerLifetimeScope();

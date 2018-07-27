@@ -44,18 +44,22 @@ namespace Together.Identity.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var connectionString = Configuration.GetValue<string>("ConnectionString") ?? 
+                throw new ArgumentNullException("ConnectionString");
             services.AddDbContext<IdentityDbContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection"),
+                options.UseSqlServer(connectionString,
                     sql => sql.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name));
             });
 
-            //services.AddDataProtection()
-            //    .PersistKeysToRedis(ConnectionMultiplexer.Connect(configuration: "localhost:6379"), "DataProtection-Key")
-            //    .SetApplicationName("IdentityAPI");
+            services.AddDataProtection()
+                .PersistKeysToRedis(ConnectionMultiplexer.Connect(configuration: "nosql.redis.data"), "DataProtection-Key")
+                //.PersistKeysToRedis(ConnectionMultiplexer.Connect(configuration: "localhost:6379"), "DataProtection-Key")
+                .SetApplicationName("IdentityAPI");
             services.AddDistributedRedisCache(options =>
             {
-                options.Configuration = "localhost:6379";
+                options.Configuration = "nosql.redis.data";
+                //options.Configuration = "localhost:6379";
                 options.InstanceName = "DataProtection";
             });
             services.AddSession();
@@ -86,29 +90,24 @@ namespace Together.Identity.API
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
             services.AddCap(options =>
             {
                 options.UseEntityFramework<IdentityDbContext>()
-                    .UseRabbitMQ(r =>
-                    {
-                        r.HostName = "localhost";
-                        // 5672端口
-                        //r.Port = 32771;
-                    })
-                    .UseDashboard()
-                    .UseDiscovery(d =>
-                    {
-                        d.DiscoveryServerHostName = "localhost";
-                        d.DiscoveryServerPort = 8500;
-                        d.CurrentNodeHostName = "localhost";
-                        d.CurrentNodePort = 5000;
-                        d.NodeName = "Idnetity Api Cap No.1 Node";
-                        d.NodeId = 2;
-                    });
+                    .UseRabbitMQ("rabbitmq")
+                    .UseDashboard();
+                    //.UseDiscovery(d =>
+                    //{
+                    //    d.DiscoveryServerHostName = "localhost";
+                    //    d.DiscoveryServerPort = 8500;
+                    //    d.CurrentNodeHostName = "localhost";
+                    //    d.CurrentNodePort = 5000;
+                    //    d.NodeName = "Idnetity Api Cap No.1 Node";
+                    //    d.NodeId = 2;
+                    //});
             });
+
+            services.AddMvc()
+               .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddTransient<IUserService, UserService>()
                 .AddSingleton<IDnsQuery>(p =>
@@ -132,7 +131,7 @@ namespace Together.Identity.API
                 app.UseHsts();
             }
 
-            RegisterZipkinTracer(app, logger, lifetime);
+            // RegisterZipkinTracer(app, logger, lifetime);
 
             app.UseSession();
 

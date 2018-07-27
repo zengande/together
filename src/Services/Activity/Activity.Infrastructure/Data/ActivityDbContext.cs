@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -51,10 +52,18 @@ namespace Together.Activity.Infrastructure.Data
 
     public class ActivityDbContextDesignFactory : IDesignTimeDbContextFactory<ActivityDbContext>
     {
+        private readonly IConfiguration _configuration;
+        public ActivityDbContextDesignFactory(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         public ActivityDbContext CreateDbContext(string[] args)
         {
+            var connectionString = _configuration.GetValue<string>("ConnectionString") ??
+                throw new ArgumentNullException("ConnectionString");
             var optionsBuilder = new DbContextOptionsBuilder<ActivityDbContext>()
-                .UseSqlServer("Data Source=.;Initial Catalog=Together.ActivityDb;Persist Security Info=True;User ID=sa;Password=pwd123");
+                .UseSqlServer(connectionString);
 
             return new ActivityDbContext(optionsBuilder.Options, new NoMediator());
         }

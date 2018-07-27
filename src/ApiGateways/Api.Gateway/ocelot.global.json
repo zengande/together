@@ -2,7 +2,7 @@
   "GlobalConfiguration": {
     "BaseUrl": "https://localhost:8000",
     "ServiceDiscoveryProvider": {
-      "Host": "localhost",
+      "Host": "consul",
       "Port": 8500,
       "Type": "Consul"
     }
