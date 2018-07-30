@@ -4,7 +4,7 @@
       "DownstreamPathTemplate": "/api/v1/users/{userId}",
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/api/users/{userId}",
-      "UpstreamHttpMethod": [ "Get" ],
+      "UpstreamHttpMethod": [ "GET" ],
       "ServiceName": "user_group_api",
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
@@ -15,29 +15,31 @@
       "DownstreamPathTemplate": "/api/v1/users",
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/api/users",
-      "UpstreamHttpMethod": [ "Post" ],
+      "UpstreamHttpMethod": [ "POST" ],
       "ServiceName": "user_group_api",
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
       },
-      "UseServiceDiscovery": true
+      "UseServiceDiscovery": true,
+      "Priority": 1
     },
     {
-      "DownstreamPathTemplate": "/api/v1/users/join_group/{groupId}",
+      "DownstreamPathTemplate": "/api/v1/users/join_group?groupId={groupId}",
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/api/users/join_group/{groupId}",
-      "UpstreamHttpMethod": [ "Put" ],
+      "UpstreamHttpMethod": [ "PUT" ],
       "ServiceName": "user_group_api",
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
       },
-      "UseServiceDiscovery": true
+      "UseServiceDiscovery": true,
+      "Priority": 2
     },
     {
       "DownstreamPathTemplate": "/api/v1/groups/{groupId}",
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/api/groups/{groupId}",
-      "UpstreamHttpMethod": [ "Get" ],
+      "UpstreamHttpMethod": [ "GET" ],
       "ServiceName": "user_group_api",
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
@@ -48,12 +50,13 @@
       "DownstreamPathTemplate": "/api/v1/groups",
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/api/groups",
-      "UpstreamHttpMethod": [ "Post" ],
+      "UpstreamHttpMethod": [ "POST" ],
       "ServiceName": "user_group_api",
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
       },
-      "UseServiceDiscovery": true
+      "UseServiceDiscovery": true,
+      "Priority": 1
     }
   ]
 }

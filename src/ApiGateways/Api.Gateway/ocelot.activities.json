@@ -4,7 +4,7 @@
       "DownstreamPathTemplate": "/api/v1/activities/{activityId}",
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/api/activities/{activityId}",
-      "UpstreamHttpMethod": [ "Get" ],
+      "UpstreamHttpMethod": [ "GET" ],
       "ServiceName": "activity_api",
       "LoadBalancerOptions": {
         "Type": "LeastConnection"

@@ -16,8 +16,7 @@ services:
   consul:
     image: consul
 
-#  fabio:
-#    image: magiconair/fabio
+
   
   identity.api:
     image: identityapi
@@ -38,44 +37,62 @@ services:
       - sql.data
       - rabbitmq
       - identity.api
-#  location.api:
-#    image: locationapi
-#    build:
-#      context: .
-#      dockerfile: src/Services/Location/Location.API/Dockerfile
-#    depends_on: 
-#      - nosql.mongo.data
-#  usergroup.api:
-#    image: usergroupapi
-#    build:
-#      context: .
-#      dockerfile: src/Services/UserGroup/UserGroup.API/Dockerfile
-#  webmvc:
-#    image: webmvc
-#    build:
-#      context: .
-#      dockerfile: src/WebApps/WebMVC/Dockerfile
+      - consul
+
+  location.api:
+    image: locationapi
+    build:
+      context: .
+      dockerfile: src/Services/Location/Location.API/Dockerfile
+    depends_on: 
+      - nosql.mongo.data
+      - consul
+
+  usergroup.api:
+    image: usergroupapi
+    build:
+      context: .
+      dockerfile: src/Services/UserGroup/UserGroup.API/Dockerfile
+    depends_on:
+      - sql.data
+      - rabbitmq
+      - consul
+  
   api.gateway:
     image: apigateway
     build:
       context: .
       dockerfile: src/ApiGateways/Api.Gateway/Dockerfile
-#  topic.api:
-#    image: topicapi
-#    build:
-#      context: .
-#      dockerfile: src/Services/Topic/Topic.API/Dockerfile
-#  noticeservice:
-#    image: noticeservice
-#    build:
-#      context: .
-#      dockerfile: src/Services/Notice/NoticeService/Dockerfile
-#
+    depends_on:
+      - consul
 
+  topic.api:
+    image: topicapi
+    build:
+      context: .
+      dockerfile: src/Services/Topic/Topic.API/Dockerfile
+
+  noticeservice:
+    image: noticeservice
+    build:
+      context: .
+      dockerfile: src/Services/Notice/NoticeService/Dockerfile
+    depends_on:
+      - sql.data
 
   activity.backgroundtasks:
     image: activity_backgroundtasks
     build:
       context: .
       dockerfile: src/Services/Activity/Activity.BackgroundTasks/Dockerfile
+    depends_on:
+      - sql.data
+      - rabbitmq
 
+  webmvc:
+    image: webmvc
+    build:
+      context: .
+      dockerfile: src/WebApps/WebMVC/Dockerfile
+    depends_on:
+      - identity.api

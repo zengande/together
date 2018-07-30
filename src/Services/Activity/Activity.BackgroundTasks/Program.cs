@@ -7,6 +7,8 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Nutshell.Extensions.WebHost;
+using Together.Activity.BackgroundTasks.Data;
 
 namespace Together.Activity.BackgroundTasks
 {
@@ -14,7 +16,8 @@ namespace Together.Activity.BackgroundTasks
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            CreateWebHostBuilder(args).Build()
+                .MigrateDbContext<TasksDbContext>((_,__)=> { }).Run();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>

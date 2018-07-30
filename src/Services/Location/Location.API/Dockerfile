@@ -1,12 +1,11 @@
-FROM microsoft/aspnetcore:2.0 AS base
+FROM microsoft/dotnet:2.1.2-aspnetcore-runtime AS base
 WORKDIR /app
 EXPOSE 80
 
-FROM microsoft/aspnetcore-build:2.0 AS build
+FROM microsoft/dotnet:2.1-sdk AS build
 WORKDIR /src
-COPY TogetherProject.sln ./
 COPY src/Services/Location/Location.API/Location.API.csproj src/Services/Location/Location.API/
-RUN dotnet restore -nowarn:msb3202,nu1503
+RUN dotnet restore src/Services/Location/Location.API/Location.API.csproj
 COPY . .
 WORKDIR /src/src/Services/Location/Location.API
 RUN dotnet build -c Release -o /app

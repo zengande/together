@@ -65,7 +65,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nutshell.Extensions.WebHost
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nutshell.Common.Cache", "src\BuildingBlocks\Nutshell.Common.Cache\Nutshell.Common.Cache.csproj", "{D0C25B96-F7C2-4EEC-AC0A-2F31780A7802}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Activity.BackgroundTasks", "src\Services\Activity\Activity.BackgroundTasks\Activity.BackgroundTasks.csproj", "{0CA1DAD9-DF55-42A5-8EFF-9950B55AD4FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Activity.BackgroundTasks", "src\Services\Activity\Activity.BackgroundTasks\Activity.BackgroundTasks.csproj", "{0CA1DAD9-DF55-42A5-8EFF-9950B55AD4FA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{10C9A2A2-5711-4B3F-AF68-FCD58E5E9658}"
+	ProjectSection(SolutionItems) = preProject
+		.env = .env
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

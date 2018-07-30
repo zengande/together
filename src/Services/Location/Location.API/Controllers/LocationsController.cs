@@ -51,13 +51,17 @@ namespace Location.API.Controllers
             return Ok(result);
         }
 
-        [Route("")]
+        [Route("{parentCode}")]
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Get(string parentCode)
         {
             var locations = await _locationService.GetCityListByParentId(parentCode);
+            if (locations == null)
+            {
+                return NotFound(parentCode);
+            }
             return Ok(locations);
         }
     }

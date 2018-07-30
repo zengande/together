@@ -95,15 +95,6 @@ namespace Together.Identity.API
                 options.UseEntityFramework<IdentityDbContext>()
                     .UseRabbitMQ("rabbitmq")
                     .UseDashboard();
-                    //.UseDiscovery(d =>
-                    //{
-                    //    d.DiscoveryServerHostName = "localhost";
-                    //    d.DiscoveryServerPort = 8500;
-                    //    d.CurrentNodeHostName = "localhost";
-                    //    d.CurrentNodePort = 5000;
-                    //    d.NodeName = "Idnetity Api Cap No.1 Node";
-                    //    d.NodeId = 2;
-                    //});
             });
 
             services.AddMvc()

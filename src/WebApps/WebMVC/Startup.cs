@@ -58,7 +58,7 @@ namespace WebMVC
                 {
                     options.SignInScheme = "Cookies";
 
-                    options.Authority = "http://localhost:5000";
+                    options.Authority = Configuration.GetValue<string>("IdentityUrl");
                     options.RequireHttpsMetadata = false;
 
                     options.ClientId = "mvc";
@@ -88,7 +88,7 @@ namespace WebMVC
                 .AddSingleton<IHttpClient, ResilientHttpClient>(sp => sp.GetService<IResilientHttpClientFactory>().CreateResilientHttpClient())
                 .AddScoped<ICacheService>(p => new RedisCacheService(new Microsoft.Extensions.Caching.Redis.RedisCacheOptions
                 {
-                    Configuration = "localhost:6379",
+                    Configuration = "nosql.redis.data:6379",
                     InstanceName = "signalr",
                 }));
 

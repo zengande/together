@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\BuildingBlocks\Nutshell.Common.Cache\Nutshell.Common.Cache.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\Nutshell.Extensions.WebHost\Nutshell.Extensions.WebHost.csproj" />
   </ItemGroup>
 
 </Project>

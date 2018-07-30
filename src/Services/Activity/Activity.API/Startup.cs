@@ -71,7 +71,7 @@ namespace Together.Activity.API
 
             services.AddSwaggerGen(options =>
             {
-                var identityUrl = Configuration.GetValue<string>("IdentityUrlExternal");
+                var identityUrl = Configuration.GetValue<string>("IdentityUrl");
                 options.DescribeAllEnumsAsStrings();
                 options.SwaggerDoc("v1", new Info { Title = "Activity HTTP API", Version = "v1" });
                 options.AddSecurityDefinition("oauth2", new OAuth2Scheme
@@ -101,8 +101,7 @@ namespace Together.Activity.API
             var container = new ContainerBuilder();
             container.Populate(services);
             var serviceConfiguration = services.BuildServiceProvider().GetRequiredService<IOptions<ServiceDiscoveryOptions>>();
-            container.RegisterModule(new ApplicationModule(Configuration.GetConnectionString("DefaultConnection"),
-                serviceConfiguration));
+            container.RegisterModule(new ApplicationModule(connectionString, serviceConfiguration));
             container.RegisterModule(new MediatorModule());
             return new AutofacServiceProvider(container.Build());
         }
@@ -153,52 +152,25 @@ namespace Together.Activity.API
             IConsulClient consul,
             ILoggerFactory loggerFactory)
         {
-            //if (app.Properties["server.Features"] is FeatureCollection features)
-            //{
-            //    var addresses = features.Get<IServerAddressesFeature>()
-            //        .Addresses
-            //        .Select(a => new Uri(a));
-            //    foreach (var address in addresses)
-            //    {
-            //        var serviceId = $"{options.Value.ServiceName}_{address.Host}:{address.Port}";
-            //        var httpCheck = new AgentServiceCheck
-            //        {
-            //            DeregisterCriticalServiceAfter = TimeSpan.FromMinutes(1),
-            //            Interval = TimeSpan.FromSeconds(30),
-            //            HTTP = new Uri(address, "HealthCheck").OriginalString
-            //        };
-            //        var registration = new AgentServiceRegistration
-            //        {
-            //            Checks = new[] { httpCheck },
-            //            Address = address.Host,
-            //            ID = serviceId,
-            //            Name = options.Value.ServiceName,
-            //            Port = address.Port
-            //        };
-            //        consul.Agent.ServiceRegister(registration).GetAwaiter().GetResult();
-            //        lifetime.ApplicationStopping.Register(() =>
-            //        {
-            //            consul.Agent.ServiceDeregister(serviceId).GetAwaiter().GetResult();
-            //        });
-            //    }
-            //}
+            var address = Configuration.GetValue<string>("ServiceRegisterUrl") ??
+                throw new ArgumentNullException("ServiceRegisterUrl");
+            var uri = new Uri(address);
 
-            var ip = "10.0.1.46";
-            loggerFactory.CreateLogger("Register Consul").LogError($"当前应用程序IP： {LocalIPAddress}");
-            var serviceId = $"{options.Value.ServiceName}_{ip}:5100";
+
+            var serviceId = $"{options.Value.ServiceName}_{uri.Host}:{uri.Port}";
             var httpCheck = new AgentServiceCheck
             {
                 DeregisterCriticalServiceAfter = TimeSpan.FromMinutes(1),
                 Interval = TimeSpan.FromSeconds(30),
-                HTTP = $"http://{ip}:5100/HealthCheck"
+                HTTP = Configuration.GetValue<string>("HealthCheckUrl")
             };
             var registration = new AgentServiceRegistration
             {
                 Checks = new[] { httpCheck },
-                Address = ip,
+                Address = uri.Host,
                 ID = serviceId,
                 Name = options.Value.ServiceName,
-                Port = 5100
+                Port = uri.Port
             };
             consul.Agent.ServiceRegister(registration).GetAwaiter().GetResult();
             lifetime.ApplicationStopping.Register(() =>
@@ -212,14 +184,12 @@ namespace Together.Activity.API
             // prevent from mapping "sub" claim to nameidentifier.
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-            //var identityUrl = Configuration.GetValue<string>("IdentityUrl");
-            var identityUrl = Configuration.GetValue<string>("IdentityUrlExternal");
+            var identityUrl = Configuration.GetValue<string>("IdentityUrl");
 
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
             })
             .AddJwtBearer(options =>
             {
@@ -237,36 +207,6 @@ namespace Together.Activity.API
             //}
 
             app.UseAuthentication();
-        }
-
-        private string LocalIPAddress
-        {
-            get
-            {
-                UnicastIPAddressInformation mostSuitableIp = null;
-                var networkInterfaces = NetworkInterface.GetAllNetworkInterfaces();
-
-                foreach (var network in networkInterfaces)
-                {
-                    if (network.OperationalStatus != OperationalStatus.Up)
-                        continue;
-                    var properties = network.GetIPProperties();
-                    if (properties.GatewayAddresses.Count == 0)
-                        continue;
-
-                    foreach (var address in properties.UnicastAddresses)
-                    {
-                        if (address.Address.AddressFamily != AddressFamily.InterNetwork)
-                            continue;
-                        if (IPAddress.IsLoopback(address.Address))
-                            continue;
-                        return address.Address.ToString();
-                    }
-                }
-                return mostSuitableIp != null
-                    ? mostSuitableIp.Address.ToString()
-                    : "";
-            }
         }
     }
 }

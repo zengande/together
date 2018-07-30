@@ -21,18 +21,6 @@ services:
     ports:
       - "8500:8500"
       - "8600:8600"
-#  fabio:
-#    environment:
-#      - registry_consul_addr=10.0.1.46:8500
-#  together.mvc:
-#    environment:
-#      - ASPNETCORE_ENVIRONMENT=Development
-#    image: webmvc
-#    build:
-#      context: .
-#      dockerfile: src/WebApps/WebMVC/Dockerfile
-#    ports:
-#      - "80"
 
   identity.api:
     environment:
@@ -47,62 +35,71 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - ConnectionString=Data Source=sql.data;Initial Catalog=Together.ActivityDb;Persist Security Info=True;User ID=sa;Password=Pass@word
-      #- IdentityUrl=http://identity.api
-      - IdentityUrlExternal=http://${EXTERNAL_DNS_NAME_OR_IP}:5000
+      - IdentityUrl=http://10.0.1.46:5000
+#      - IdentityUrlExternal=http://${EXTERNAL_DNS_NAME_OR_IP}:5000
+      - ServiceRegisterUrl=http://activity.api:80
+      - HealthCheckUrl=http://activity.api/HealthCheck
     ports:
       - "5100:80"
 
 
-#  location.api:
-#    environment:
-#      - ASPNETCORE_ENVIRONMENT=Development
-#    ports:
-#      - "80"
+  location.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConsulHttpEndpoint=http://consul:8500
+      - ServiceRegisterUrl=http://location.api:80
+      - HealthCheckUrl=http://location.api/HealthCheck
+    ports:
+      - "5106:80"
 
 
-#  usergroup.api:
-#    environment:
-#      - ASPNETCORE_ENVIRONMENT=Development
-#    ports:
-#      - "80"
+  usergroup.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ServiceRegisterUrl=http://usergroup.api:80
+      - HealthCheckUrl=http://usergroup.api/HealthCheck
+    ports:
+      - "5105:80"
 
 
-#  webmvc:
-#    environment:
-#      - ASPNETCORE_ENVIRONMENT=Development
-#    ports:
-#      - "80"
-
+  webmvc:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - IdentityUrl=http://10.0.1.46:5000
+    ports:
+      - "5001:80"
 
   api.gateway:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
     ports:
       - "8000:80"
 
 
-#  topic.api:
-#    environment:
-#      - ASPNETCORE_ENVIRONMENT=Development
-#    ports:
-#      - "80"
-#
-#
-#  noticeservice:
-#    environment:
-#      - ASPNETCORE_ENVIRONMENT=Development
-#    ports:
-#      - "80"
-#
-#
+  topic.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - "5103:80"
+
+  noticeservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - RedisConnectionString=nosql.redis.data:6379
+    ports:
+      - "5104:80"
   activity.backgroundtasks:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ASPNETCORE_HTTPS_PORT=44360
+      - ASPNETCORE_URLS=http://+:80
     ports:
-      - "49336:80"
-      - "44360:443"
+      - "5101:80"
     volumes:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro

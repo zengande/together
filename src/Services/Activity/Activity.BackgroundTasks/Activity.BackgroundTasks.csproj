@@ -17,4 +17,8 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Nutshell.Extensions.WebHost\Nutshell.Extensions.WebHost.csproj" />
+  </ItemGroup>
+
 </Project>
