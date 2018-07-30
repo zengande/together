@@ -54,8 +54,8 @@ namespace Together.Notice
             {
                 services.AddSingleton<ICacheService>(p => new RedisCacheService(new RedisCacheOptions
                 {
-                    Configuration = Configuration.GetSection("RedisConnectionString").Value,
-                    InstanceName = Configuration.GetSection("RedisInstanceName").Value
+                    Configuration = Configuration.GetValue<string>("RedisConnectionString"),
+                    InstanceName = Configuration.GetValue<string>("RedisInstanceName")
                 }));
             }
             else
@@ -67,10 +67,7 @@ namespace Together.Notice
             {
                 x.UseEntityFramework<ApplicationDbContext>();
                 x.UseDashboard();
-                x.UseRabbitMQ(config =>
-                {
-                    config.HostName = "localhost";
-                });
+                x.UseRabbitMQ("localhost");
             });
 
 

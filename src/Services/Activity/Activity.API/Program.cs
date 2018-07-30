@@ -19,9 +19,11 @@ namespace Together.Activity.API
         public static void Main(string[] args)
         {
             CreateWebHostBuilder(args).Build()
-                .MigrateDbContext<ActivityDbContext>((context, services) =>
+                .MigrateDbContext<ActivityDbContext>(async (context, services) =>
                 {
+                    var configurations = services.GetService<IConfiguration>();
                     var logger = services.GetService<ILogger<ActivityDbContextSeed>>();
+
                     new ActivityDbContextSeed()
                         .SeedAsync(context, logger)
                         .Wait();
@@ -31,7 +33,10 @@ namespace Together.Activity.API
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseUrls("http://localhost:5100")
-                .UseStartup<Startup>();
+                .UseStartup<Startup>()
+                .ConfigureAppConfiguration((builderContext, config) =>
+                {
+                    config.AddEnvironmentVariables();
+                });
     }
 }

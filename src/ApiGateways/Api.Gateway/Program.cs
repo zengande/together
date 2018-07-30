@@ -38,7 +38,6 @@ namespace Api.Gateway
                  //}
 
              })
-               .UseUrls("http://localhost:8000")
                .UseStartup<Startup>();
             return builder;
         }

@@ -5,15 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="ocelot.global.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="wwwroot\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="ocelot.global.json" />
   </ItemGroup>
 
   <ItemGroup>

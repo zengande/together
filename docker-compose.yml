@@ -1,46 +1,98 @@
-version: '3'
+version: '3.4'
 
 services:
+  sql.data:
+    image: microsoft/mssql-server-linux:2017-latest
+
+  nosql.mongo.data:
+    image: mongo
+
+  nosql.redis.data:
+    image: redis
+
+  rabbitmq: 
+    image: rabbitmq:3-management-alpine
+
+  consul:
+    image: consul
+
+
+  
+  identity.api:
+    image: identityapi
+    build:
+      context: .
+      dockerfile: src/Services/Identity/Identity.API/Dockerfile
+    depends_on: 
+      - sql.data
+      - rabbitmq
+      - nosql.redis.data
+
   activity.api:
     image: activityapi
     build:
       context: .
       dockerfile: src/Services/Activity/Activity.API/Dockerfile
+    depends_on: 
+      - sql.data
+      - rabbitmq
+      - identity.api
+      - consul
+
   location.api:
     image: locationapi
     build:
       context: .
       dockerfile: src/Services/Location/Location.API/Dockerfile
+    depends_on: 
+      - nosql.mongo.data
+      - consul
+
   usergroup.api:
     image: usergroupapi
     build:
       context: .
       dockerfile: src/Services/UserGroup/UserGroup.API/Dockerfile
-  webmvc:
-    image: webmvc
-    build:
-      context: .
-      dockerfile: src/WebApps/WebMVC/Dockerfile
+    depends_on:
+      - sql.data
+      - rabbitmq
+      - consul
+  
   api.gateway:
     image: apigateway
     build:
       context: .
       dockerfile: src/ApiGateways/Api.Gateway/Dockerfile
+    depends_on:
+      - consul
+
   topic.api:
     image: topicapi
     build:
       context: .
       dockerfile: src/Services/Topic/Topic.API/Dockerfile
+
   noticeservice:
     image: noticeservice
     build:
       context: .
       dockerfile: src/Services/Notice/NoticeService/Dockerfile
-
+    depends_on:
+      - sql.data
 
   activity.backgroundtasks:
-    image: ${DOCKER_REGISTRY}activitybackgroundtasks
+    image: activity_backgroundtasks
     build:
       context: .
       dockerfile: src/Services/Activity/Activity.BackgroundTasks/Dockerfile
+    depends_on:
+      - sql.data
+      - rabbitmq
 
+  webmvc:
+    image: webmvc
+    build:
+      context: .
+      dockerfile: src/WebApps/WebMVC/Dockerfile
+    depends_on:
+      - identity.api

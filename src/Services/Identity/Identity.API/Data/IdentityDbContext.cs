@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,10 +21,16 @@ namespace Together.Identity.API.Data
 
     public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<IdentityDbContext>
     {
+        private readonly IConfiguration _configuration;
+        public DesignTimeDbContextFactory(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         public IdentityDbContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<IdentityDbContext>()
-               .UseSqlServer("Data Source=.;Initial Catalog=Together.IdentityDb;Persist Security Info=True;User ID=sa;Password=pwd123");
+                .UseSqlServer(_configuration.GetValue<string>("ConnectionString"));
             return new IdentityDbContext(optionsBuilder.Options);
         }
     }

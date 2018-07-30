@@ -1,0 +1,27 @@
+﻿{
+  "ReRoutes": [
+    {
+      "DownstreamPathTemplate": "/api/v1/locations/search?keyword={keyword}",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/api/locations/search/{keyword}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "ServiceName": "location_api",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      "UseServiceDiscovery": true
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/locations/{parentCode}",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/api/locations/{parentCode}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "ServiceName": "location_api",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      "UseServiceDiscovery": true,
+      "Priority": 1
+    }
+  ]
+}

@@ -1,73 +1,106 @@
-version: '3'
+version: '3.4'
 
 services:
-  together.mvc:
+  sql.data:
+    environment:
+      - SA_PASSWORD=Pass@word
+      - ACCEPT_EULA=Y
+    ports:
+      - "1433:1433"
+  nosql.redis.data:
+    ports:
+      - "6379:6379"
+  nosql.mongo.data:
+    ports:
+      - "27017:27017" 
+  rabbitmq:
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+  consul:
+    ports:
+      - "8500:8500"
+      - "8600:8600"
+
+  identity.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-    image: webmvc
-    build:
-      context: .
-      dockerfile: src/WebApps/WebMVC/Dockerfile
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionString=Data Source=sql.data;Initial Catalog=Together.IdentityDb;Persist Security Info=True;User ID=sa;Password=Pass@word
     ports:
-      - "80"
+      - "5000:80"
 
   activity.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionString=Data Source=sql.data;Initial Catalog=Together.ActivityDb;Persist Security Info=True;User ID=sa;Password=Pass@word
+      - IdentityUrl=http://10.0.1.46:5000
+#      - IdentityUrlExternal=http://${EXTERNAL_DNS_NAME_OR_IP}:5000
+      - ServiceRegisterUrl=http://activity.api:80
+      - HealthCheckUrl=http://activity.api/HealthCheck
     ports:
-      - "80"
+      - "5100:80"
 
 
   location.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConsulHttpEndpoint=http://consul:8500
+      - ServiceRegisterUrl=http://location.api:80
+      - HealthCheckUrl=http://location.api/HealthCheck
     ports:
-      - "80"
+      - "5106:80"
 
 
   usergroup.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ServiceRegisterUrl=http://usergroup.api:80
+      - HealthCheckUrl=http://usergroup.api/HealthCheck
     ports:
-      - "80"
+      - "5105:80"
 
 
   webmvc:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - IdentityUrl=http://10.0.1.46:5000
     ports:
-      - "80"
-
+      - "5001:80"
 
   api.gateway:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
     ports:
-      - "80"
+      - "8000:80"
 
 
   topic.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
     ports:
-      - "80"
-
+      - "5103:80"
 
   noticeservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - RedisConnectionString=nosql.redis.data:6379
     ports:
-      - "80"
-
-
+      - "5104:80"
   activity.backgroundtasks:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ASPNETCORE_HTTPS_PORT=44360
+      - ASPNETCORE_URLS=http://+:80
     ports:
-      - "49336:80"
-      - "44360:443"
+      - "5101:80"
     volumes:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+

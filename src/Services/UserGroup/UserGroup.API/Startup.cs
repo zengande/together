@@ -82,21 +82,8 @@ namespace Together.UserGroup.API
             services.AddCap(options =>
             {
                 options.UseSqlServer(connectionString)
-                    .UseRabbitMQ(r =>
-                    {
-                        r.HostName = "localhost";
-                        //r.Port = 32771;
-                    })
-                    .UseDashboard()
-                    .UseDiscovery(d =>
-                    {
-                        d.DiscoveryServerHostName = "localhost";
-                        d.DiscoveryServerPort = 8500;
-                        d.CurrentNodeHostName = "localhost";
-                        d.CurrentNodePort = 58750;
-                        d.NodeName = "User Group Api Cap No.1 Node";
-                        d.NodeId = 1;
-                    });
+                    .UseRabbitMQ("rabbitmq")
+                    .UseDashboard();
             });
 
             services.AddSwaggerGen(options =>
@@ -129,7 +116,7 @@ namespace Together.UserGroup.API
             lifetime.ApplicationStarted.Register(() =>
             {
                 RegisterConsulService(app, lifetime, serviceOptions, consul);
-                RegisterZipkinTracer(loggerFactory, lifetime);
+                //RegisterZipkinTracer(loggerFactory, lifetime);
             });
 
             app.UseHsts();
@@ -153,35 +140,30 @@ namespace Together.UserGroup.API
             IOptions<ServiceDiscoveryOptions> options,
             IConsulClient consul)
         {
-            if (app.Properties["server.Features"] is FeatureCollection features)
+            var address = Configuration.GetValue<string>("ServiceRegisterUrl") ??
+                throw new ArgumentNullException("ServiceRegisterUrl");
+            var uri = new Uri(address);
+
+            var serviceId = $"{options.Value.ServiceName}_{uri.Host}:{uri.Port}";
+            var httpCheck = new AgentServiceCheck
             {
-                var addresses = features.Get<IServerAddressesFeature>()
-                    .Addresses
-                    .Select(a => new Uri(a));
-                foreach (var address in addresses)
-                {
-                    var serviceId = $"{options.Value.ServiceName}_{address.Host}:{address.Port}";
-                    var httpCheck = new AgentServiceCheck
-                    {
-                        DeregisterCriticalServiceAfter = TimeSpan.FromMinutes(1),
-                        Interval = TimeSpan.FromSeconds(30),
-                        HTTP = new Uri(address, "HealthCheck").OriginalString
-                    };
-                    var registration = new AgentServiceRegistration
-                    {
-                        Checks = new[] { httpCheck },
-                        Address = address.Host,
-                        ID = serviceId,
-                        Name = options.Value.ServiceName,
-                        Port = address.Port
-                    };
-                    consul.Agent.ServiceRegister(registration).GetAwaiter().GetResult();
-                    lifetime.ApplicationStopping.Register(() =>
-                    {
-                        consul.Agent.ServiceDeregister(serviceId).GetAwaiter().GetResult();
-                    });
-                }
-            }
+                DeregisterCriticalServiceAfter = TimeSpan.FromMinutes(1),
+                Interval = TimeSpan.FromSeconds(30),
+                HTTP = Configuration.GetValue<string>("HealthCheckUrl")
+            };
+            var registration = new AgentServiceRegistration
+            {
+                Checks = new[] { httpCheck },
+                Address = uri.Host,
+                ID = serviceId,
+                Name = options.Value.ServiceName,
+                Port = uri.Port
+            };
+            consul.Agent.ServiceRegister(registration).GetAwaiter().GetResult();
+            lifetime.ApplicationStopping.Register(() =>
+            {
+                consul.Agent.ServiceDeregister(serviceId).GetAwaiter().GetResult();
+            });
         }
 
         private static void RegisterZipkinTracer(

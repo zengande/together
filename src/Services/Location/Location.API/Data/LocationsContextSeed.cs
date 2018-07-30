@@ -68,7 +68,7 @@ namespace Location.API.Data
         {
             var builder = Builders<Locations>.IndexKeys;
             var keys = builder.Geo2DSphere(p => p.Location);
-            await _context.Locations.Indexes.CreateOneAsync(keys);
+            await _context.Locations.Indexes.CreateOneAsync(new CreateIndexModel<Locations>(keys));
         }
     }
 }

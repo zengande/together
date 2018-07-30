@@ -57,9 +57,8 @@ namespace Together.Identity.API.Configurations
                     AllowedGrantTypes = GrantTypes.Implicit,
                     AllowAccessTokensViaBrowser = true,
                     RequireConsent=false,
-
-                    RedirectUris = { $"http://localhost:52769/swagger/oauth2-redirect.html" },
-                    PostLogoutRedirectUris = { $"http://localhost:52769/swagger/" },
+                    RedirectUris = { $"http://localhost:5100/swagger/oauth2-redirect.html" },
+                    PostLogoutRedirectUris = { $"http://localhost:5100/swagger/" },
 
                     AllowedScopes =
                     {

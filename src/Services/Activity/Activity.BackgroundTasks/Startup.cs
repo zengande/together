@@ -44,7 +44,7 @@ namespace Together.Activity.BackgroundTasks
             {
                 
                 options.UseEntityFramework<TasksDbContext>()
-                    .UseRabbitMQ("localhost")
+                    .UseRabbitMQ("rabbitmq")
                     .UseDashboard();
             });
 
