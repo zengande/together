@@ -49,21 +49,15 @@ namespace Together.Activity.API.Applications.Commands
         public DateTime EndRegisterTime { get; private set; }
 
         /// <summary>
-        /// 开始时间
+        /// 活动开始时间
         /// </summary>
         [DataMember]
-        public DateTime StartTime { get; set; }
+        public DateTime ActivityStartTime { get; set; }
         /// <summary>
-        /// 结束时间
+        /// 活动结束时间
         /// </summary>
         [DataMember]
-        public DateTime EndTime { get; set; }
-
-        /// <summary>
-        /// 活动时间
-        /// </summary>
-        [DataMember]
-        public DateTime ActivityDate { get; private set; }
+        public DateTime ActivityEndTime { get; set; }
 
         /// <summary>
         /// 活动地点
@@ -83,23 +77,28 @@ namespace Together.Activity.API.Applications.Commands
         [DataMember]
         public decimal? Funds { get; set; }
 
+        /// <summary>
+        /// 活动类别
+        /// </summary>
+        public int CategoryId { get; set; }
+
         public CreateActivityCommand()
         {
             _participants = new List<ParticipantDto>();
         }
 
-        public CreateActivityCommand(CurrentUser owner, string description, string details, DateTime endRegisterTime, DateTime activityDate, DateTime startTime, DateTime endTime, Address address, int? limitsNum = null)
+        public CreateActivityCommand(CurrentUser owner, string description, string details, DateTime endRegisterTime, DateTime startTime, DateTime endTime, Address address, int categoryId, int? limitsNum = null)
             : this()
         {
             Owner = owner;
             Description = description;
             Details = details;
             EndRegisterTime = endRegisterTime;
-            ActivityDate = activityDate;
-            StartTime = startTime;
-            EndTime = endTime;
+            ActivityStartTime = startTime;
+            ActivityEndTime = endTime;
             Address = address;
             LimitsNum = limitsNum;
+            CategoryId = categoryId;
         }
 
     }

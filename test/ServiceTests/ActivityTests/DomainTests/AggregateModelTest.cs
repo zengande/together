@@ -13,7 +13,7 @@ namespace DomainTests
             var userId = "1564646";
             var desc = "这是一个测试的活动";
             var details = "详细信息";
-            var activity = new Activity(userId, desc, details, DateTime.Now.AddDays(7), DateTime.Now.AddDays(10), DateTime.Now.AddDays(10), DateTime.Now.AddDays(10).AddHours(2), new Address("Beijing","Beijing","","鸟巢",""), 1);
+            var activity = new Activity(userId, desc, details, DateTime.Now.AddDays(7), DateTime.Now.AddDays(10), DateTime.Now.AddDays(10).AddHours(4), new Address("Beijing", "Beijing", "", "鸟巢", ""), 0, 1);
 
             Assert.Equal(0, activity.Participants.Count);
 

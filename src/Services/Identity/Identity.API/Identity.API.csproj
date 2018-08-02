@@ -29,4 +29,6 @@
     <ProjectReference Include="..\..\..\BuildingBlocks\Nutshell.Resilience.HttpRequest\Nutshell.Resilience.HttpRequest.csproj" />
   </ItemGroup>
 
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JSONSchema="" /></VisualStudio></ProjectExtensions>
+
 </Project>

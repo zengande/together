@@ -32,7 +32,6 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         /// </summary>
         public string Details { get; private set; }
 
-
         /// <summary>
         /// 创建时间
         /// </summary>
@@ -41,12 +40,12 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         /// <summary>
         /// 截止报名时间
         /// </summary>
-        public DateTime EndRegisterDate { get; private set; }
+        public DateTime EndRegisterTime { get; private set; }
 
         /// <summary>
-        /// 活动日期
+        /// 活动开始时间
         /// </summary>
-        public DateTime ActivitDate { get; private set; }
+        public DateTime ActivityStartTime { get; private set; }
 
         /// <summary>
         /// 活动地点
@@ -64,13 +63,14 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         public decimal? Funds { get; private set; }
 
         /// <summary>
-        /// 开始时间
+        /// 活动结束时间
         /// </summary>
-        public DateTime StartTime { get; private set; }
+        public DateTime ActivityEndTime { get; private set; }
+
         /// <summary>
-        /// 结束时间
+        /// 活动类别
         /// </summary>
-        public DateTime EndTime { get; private set; }
+        public int CategoryId { get; private set; }
 
         /// <summary>
         /// 参与者
@@ -97,7 +97,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         /// <param name="activityDate"></param>
         /// <param name="address"></param>
         /// <param name="limitsNum"></param>
-        public Activity(string userId, string description, string details, DateTime endRegisterTime, DateTime activityDate, DateTime startTime, DateTime endTime, Address address, int? limitsNum = null, decimal? funds = null)
+        public Activity(string userId, string description, string details, DateTime endRegisterTime, DateTime startTime, DateTime endTime, Address address, int categoryId, int? limitsNum = null, decimal? funds = null)
             : this()
         {
             // 截止报名时间早于当前时间（活动在过去）
@@ -106,7 +106,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
                 throw new ActivityDomainException("截止报名时间不能早于当前时间");
             }
             // 活动时间早于截止报名时间
-            if (activityDate < endRegisterTime)
+            if (startTime < endRegisterTime)
             {
                 throw new ActivityDomainException("截止报名时间不能晚于活动时间");
             }
@@ -118,13 +118,13 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
             OwnerId = userId;
             Description = description;
             Details = details;
-            EndRegisterDate = endRegisterTime;
-            ActivitDate = activityDate;
-            StartTime = startTime;
-            EndTime = endTime;
+            EndRegisterTime = endRegisterTime;
+            ActivityStartTime = startTime;
+            ActivityEndTime = endTime;
             Address = address;
             LimitsNum = limitsNum;
             Funds = funds;
+            CategoryId = categoryId;
             _activityStatusId = ActivityStatus.Draft.Id;
         }
 
@@ -152,7 +152,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
             }
 
             // 判断是否已经截止了报名
-            if (DateTimeOffset.Now > EndRegisterDate)
+            if (DateTimeOffset.Now > EndRegisterTime)
             {
                 throw new ActivityDomainException("已经截止了报名");
             }

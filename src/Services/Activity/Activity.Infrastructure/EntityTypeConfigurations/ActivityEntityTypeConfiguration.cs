@@ -21,7 +21,9 @@ namespace Together.Activity.Infrastructure.EntityTypeConfigurations
             builder.Property(a => a.Id)
                 .ForSqlServerUseSequenceHiLo("activityseq");
 
-            builder.Property(a => a.ActivitDate)
+            builder.Property(a => a.ActivityStartTime)
+                .IsRequired();
+            builder.Property(a => a.ActivityEndTime)
                 .IsRequired();
             builder.Property(a => a.CreateTime)
                 .IsRequired();
@@ -34,8 +36,10 @@ namespace Together.Activity.Infrastructure.EntityTypeConfigurations
                 .IsRequired(false);
             builder.Property(a => a.Details)
                 .IsRequired(false);
-            builder.Property(a => a.EndRegisterDate)
+            builder.Property(a => a.EndRegisterTime)
                 .IsRequired();
+            builder.Property(a => a.CategoryId)
+               .IsRequired();
             builder.Property(a => a.LimitsNum);
 
             builder.HasOne(a => a.ActivityStatus)

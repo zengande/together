@@ -10,24 +10,21 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using Nutshell.Resilience.HttpRequest.abstracts;
 using WebMVC.Models;
+using WebMVC.Services;
 
 namespace WebMVC.Controllers
 {
-    public class HomeController : BaseController
+    public class HomeController : Controller
     {
-        private readonly IHttpClient _httpClient;
-        private readonly IOptions<AppSettings> _appSettings;
+        private readonly ICategoriesService _categoriesService;
 
-        public HomeController(IHttpClient httpClient, 
-            IHttpContextAccessor httpContextAccessor,
-            IOptions<AppSettings> appSettings)
-            : base(httpContextAccessor)
+        public HomeController(ICategoriesService categoriesService)
         {
-            _appSettings = appSettings;
-            _httpClient = httpClient;
+            _categoriesService = categoriesService;
         }
         public IActionResult Index()
         {
+            
             return View();
         }
 

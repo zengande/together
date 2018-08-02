@@ -3,8 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Together.Activity.Infrastructure.Data;
 
 namespace Together.Activity.Infrastructure.Migrations
@@ -16,7 +15,8 @@ namespace Together.Activity.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.0-preview2-30571")
+                .HasAnnotation("ProductVersion", "2.1.0-rtm-30799")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("Relational:Sequence:.activityseq", "'activityseq', '', '1', '10', '', '', 'Int64', 'False'")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -27,9 +27,13 @@ namespace Together.Activity.Infrastructure.Migrations
                         .HasAnnotation("SqlServer:HiLoSequenceName", "activityseq")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
-                    b.Property<DateTime>("ActivitDate");
+                    b.Property<DateTime>("ActivityEndTime");
+
+                    b.Property<DateTime>("ActivityStartTime");
 
                     b.Property<int>("ActivityStatusId");
+
+                    b.Property<int>("CategoryId");
 
                     b.Property<DateTime>("CreateTime");
 
@@ -37,9 +41,7 @@ namespace Together.Activity.Infrastructure.Migrations
 
                     b.Property<string>("Details");
 
-                    b.Property<DateTime>("EndRegisterDate");
-
-                    b.Property<DateTime>("EndTime");
+                    b.Property<DateTime>("EndRegisterTime");
 
                     b.Property<decimal?>("Funds");
 
@@ -47,8 +49,6 @@ namespace Together.Activity.Infrastructure.Migrations
 
                     b.Property<string>("OwnerId")
                         .HasMaxLength(200);
-
-                    b.Property<DateTime>("StartTime");
 
                     b.HasKey("Id");
 

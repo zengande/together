@@ -5,6 +5,7 @@
       "Host": "consul",
       "Port": 8500,
       "Type": "Consul"
-    }
+    },
+    "RequestIdKey": "OcRequestId"
   }
 }
