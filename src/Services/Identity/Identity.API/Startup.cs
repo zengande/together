@@ -52,16 +52,16 @@ namespace Together.Identity.API
                     sql => sql.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name));
             });
 
-            services.AddDataProtection()
-                .PersistKeysToRedis(ConnectionMultiplexer.Connect(configuration: "nosql.redis.data"), "DataProtection-Key")
-                //.PersistKeysToRedis(ConnectionMultiplexer.Connect(configuration: "localhost:6379"), "DataProtection-Key")
-                .SetApplicationName("IdentityAPI");
-            services.AddDistributedRedisCache(options =>
-            {
-                options.Configuration = "nosql.redis.data";
-                //options.Configuration = "localhost:6379";
-                options.InstanceName = "DataProtection";
-            });
+            //services.AddDataProtection()
+            //    .PersistKeysToRedis(ConnectionMultiplexer.Connect(configuration: "nosql.redis.data"), "DataProtection-Key")
+            //    //.PersistKeysToRedis(ConnectionMultiplexer.Connect(configuration: "localhost:6379"), "DataProtection-Key")
+            //    .SetApplicationName("IdentityAPI");
+            //services.AddDistributedRedisCache(options =>
+            //{
+            //    options.Configuration = "nosql.redis.data";
+            //    //options.Configuration = "localhost:6379";
+            //    options.InstanceName = "DataProtection";
+            //});
             services.AddSession();
             services.ConfigureApplicationCookie(options =>
             {

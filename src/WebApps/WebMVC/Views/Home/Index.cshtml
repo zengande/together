@@ -4,44 +4,71 @@
 
 @section Styles{
     <style>
-        .big-pic{
-            position:relative;
-            min-height:460px;
-            overflow:hidden;
+        ul, li {
+            list-style: none;
         }
-        .video-bg {
-            min-height:100%;
-            min-width:100%;
-            position: absolute;
-            top: -150px;
-            z-index:0;
+
+        a, a:link, a:hover {
+            text-decoration: none;
         }
-        .head-btn-tip{
-            position:relative;
-            margin-top:150px;
+
+        .hots-block {
+            padding-top: 20px;
+            min-height: 675px;
         }
-        .head-btn-tip *{
-            color:#ffffff;
+
+        .block-header {
+            padding: 5px 0px;
         }
-        .head-btn-tip p{
-            margin:25px 0px 35px 0px;
-        }
+
+            .block-header b {
+                float: left;
+                margin-right:20px;
+            }
+            .block-header .nav-link {
+                padding: 0px;
+                margin-right: 12px;
+                font-size: .8em;
+                padding: 2px 4px;
+            }
+            .block-header .nav-pills .nav-link.active {
+                
+            }
     </style>
 }
 
-<div class="big-pic">
-    <video class="video-bg" loop autoplay src="~/media/dddafbfe4574fc19c6718950691dcb78.mp4"></video>
-    <div class="text-center head-btn-tip">
-        <h1>你想找什么样的伙伴？</h1>
-        <p>让“一起”帮你寻找志同道合的朋友吧。</p>
-        <a href="#" class="btn btn-primary btn-lg">一起开始</a>
+<div class="row">
+    <div class="col-md-8" style="padding:0px;">
+        <div class="hots-block">
+            <div class="block-header">
+                <b class="block-header-title">音乐</b>
+                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="block-content">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="pills-home" role="tabpanel" aria-labelledby="home-tab">1</div>
+                    <div class="tab-pane" id="pills-profile" role="tabpanel" aria-labelledby="profile-tab">2</div>
+                    <div class="tab-pane" id="pills-contact" role="tabpanel" aria-labelledby="messages-tab">3</div>
+                </div>
+            </div>
+        </div>
+
     </div>
+    <div class="col-md-4"></div>
 </div>
 
-<div class="row">
-    <div class="col-md-2"></div>
-    <div class="col-md-8 col-sm-12">
-        sss
-    </div>
-    <div class="col-md-2"></div>
-</div>
+@section Scripts{
+    <script>
+        
+    </script>
+}

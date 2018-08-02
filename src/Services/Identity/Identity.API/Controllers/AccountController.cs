@@ -111,6 +111,18 @@ namespace Together.Identity.API.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> SignOut(string returnUrl)
+        {
+            await _signInManager.SignOutAsync();
+            if (_interaction.IsValidReturnUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+
+            return Redirect("~/");
+        }
+
+        [HttpGet]
         [AllowAnonymous]
         public IActionResult Register(string returnUrl = null)
         {

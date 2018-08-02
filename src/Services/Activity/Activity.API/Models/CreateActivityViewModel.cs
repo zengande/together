@@ -27,20 +27,15 @@ namespace Together.Activity.API.Models
         public DateTime EndRegisterDate { get; set; }
 
         /// <summary>
-        /// 活动日期
-        /// </summary>
-        [Required]
-        public DateTime ActivitDate { get; set; }
-        /// <summary>
         /// 开始时间
         /// </summary>
         [Required]
-        public DateTime StartTime { get; set; }
+        public DateTime ActivityStartTime { get; set; }
         /// <summary>
         /// 结束时间
         /// </summary>
         [Required]
-        public DateTime EndTime { get; set; }
+        public DateTime ActivityEndTime { get; set; }
 
         /// <summary>
         /// 活动地址
@@ -57,5 +52,7 @@ namespace Together.Activity.API.Models
         /// 参与经费
         /// </summary>
         public decimal? Funds { get; set; }
+
+        public int CategoryId { get; set; }
     }
 }

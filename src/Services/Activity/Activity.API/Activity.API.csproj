@@ -7,7 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Applications\Models\" />
+    <Compile Remove="Applications\Models\**" />
+    <Content Remove="Applications\Models\**" />
+    <EmbeddedResource Remove="Applications\Models\**" />
+    <None Remove="Applications\Models\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

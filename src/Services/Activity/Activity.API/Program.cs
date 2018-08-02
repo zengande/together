@@ -24,9 +24,8 @@ namespace Together.Activity.API
                     var configurations = services.GetService<IConfiguration>();
                     var logger = services.GetService<ILogger<ActivityDbContextSeed>>();
 
-                    new ActivityDbContextSeed()
-                        .SeedAsync(context, logger)
-                        .Wait();
+                    await new ActivityDbContextSeed()
+                        .SeedAsync(context, logger);
                 })
                 .Run();
         }

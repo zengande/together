@@ -26,10 +26,10 @@ namespace Together.Activity.API.Applications.Commands
                 request.Description,
                 request.Details,
                 request.EndRegisterTime,
-                request.ActivityDate,
-                request.StartTime,
-                request.EndTime,
+                request.ActivityStartTime,
+                request.ActivityEndTime,
                 request.Address,
+                request.CategoryId,
                 request.LimitsNum);
 
             foreach (var participant in request.Participants)
