@@ -21,6 +21,20 @@ services:
     ports:
       - "8500:8500"
       - "8600:8600"
+  influxdb:
+    ports:
+      - "8086:8086"
+      - "8083:8083"
+    environment:
+      - INFLUXDB_DB=TogetherAppMetricsDB
+      - INFLUXDB_ADMIN_ENABLED=true
+      - INFLUXDB_ADMIN_USER=admin
+      - INFLUXDB_ADMIN_PASSWORD=admin
+  grafana:
+    ports:
+      - "3000:3000"
+    # environment:
+    #   - GF_SECURITY_ADMIN_PASSWORD=secret
 
   identity.api:
     environment:

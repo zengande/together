@@ -11,6 +11,7 @@ namespace WebMVC.ViewModels
         public ActivityCreateViewModel()
         {
             IsFree = true;
+            Fee = 0;
         }
         [Required]
         public string Title { get; set; }
@@ -20,6 +21,8 @@ namespace WebMVC.ViewModels
         public string Remarks { get; set; }
         public string Details { get; set; }
         public bool IsFree { get; set; }
+        public decimal? Fee { get; set; }
+        public string Address_Details { get; set; }
 
         [Required]
         public int CategoryId

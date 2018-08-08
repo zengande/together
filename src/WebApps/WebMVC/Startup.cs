@@ -110,11 +110,20 @@ namespace WebMVC
 
         public static IServiceCollection AddHttpClientServices(this IServiceCollection services, IConfiguration configuration)
         {
+            //services.Configure<BaiDuMapOptions>(configuration.GetSection("BaiduMap"));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddHttpClient<ICategoriesService, CategoriesService>()
                    .AddPolicyHandler(GetRetryPolicy())
                    .AddPolicyHandler(GetCircuitBreakerPolicy());
+
+            services.AddHttpClient<IActivityService, ActivityService>()
+                   .AddPolicyHandler(GetRetryPolicy())
+                   .AddPolicyHandler(GetCircuitBreakerPolicy());
+
+            //services.AddHttpClient<IBaiDuMapApiClient, BaiDuMapApiClient>()
+            //        .AddPolicyHandler(GetRetryPolicy())
+            //        .AddPolicyHandler(GetCircuitBreakerPolicy());
 
             return services;
         }
