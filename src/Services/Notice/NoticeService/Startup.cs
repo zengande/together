@@ -32,7 +32,7 @@ namespace Together.Notice
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), sql =>
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"), sql =>
                     sql.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name));
             });
 

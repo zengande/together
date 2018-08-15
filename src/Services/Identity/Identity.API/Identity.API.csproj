@@ -7,15 +7,17 @@
 
   <ItemGroup>
     <PackageReference Include="DnsClient" Version="1.0.7" />
-    <PackageReference Include="DotNetCore.CAP" Version="2.2.2" />
-    <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="2.2.2" />
-    <PackageReference Include="DotNetCore.CAP.SqlServer" Version="2.2.2" />
+    <PackageReference Include="DotNetCore.CAP" Version="2.2.5" />
+    <PackageReference Include="DotNetCore.CAP.PostgreSql" Version="2.2.5" />
+    <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="2.2.5" />
     <PackageReference Include="IdentityServer4" Version="2.2.0" />
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.Redis" Version="0.4.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.1.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.1" />
     <PackageReference Include="zipkin4net" Version="1.2.1" />
     <PackageReference Include="zipkin4net.middleware.aspnetcore" Version="1.2.1" />
   </ItemGroup>

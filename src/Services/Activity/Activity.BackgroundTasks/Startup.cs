@@ -37,12 +37,12 @@ namespace Together.Activity.BackgroundTasks
             {
                 var connectionString = Configuration.GetConnectionString("DefaultConnection") ??
                     throw new ArgumentNullException("Section ConnectionString");
-                options.UseSqlServer(connectionString);
+                options.UseNpgsql(connectionString);
             });
 
             services.AddCap(options =>
             {
-                
+
                 options.UseEntityFramework<TasksDbContext>()
                     .UseRabbitMQ("rabbitmq")
                     .UseDashboard();

@@ -1,9 +1,9 @@
 ﻿{
   "ReRoutes": [
     {
-      "DownstreamPathTemplate": "/api/v1/activities/{activityId}",
+      "DownstreamPathTemplate": "/api/v1/activities/{url}",
       "DownstreamScheme": "http",
-      "UpstreamPathTemplate": "/api/activities/{activityId}",
+      "UpstreamPathTemplate": "/api/activities/{url}",
       "UpstreamHttpMethod": [ "GET" ],
       "ServiceName": "activity_api",
       "LoadBalancerOptions": {

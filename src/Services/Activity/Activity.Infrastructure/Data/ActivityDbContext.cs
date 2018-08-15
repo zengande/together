@@ -52,18 +52,19 @@ namespace Together.Activity.Infrastructure.Data
 
     public class ActivityDbContextDesignFactory : IDesignTimeDbContextFactory<ActivityDbContext>
     {
-        private readonly IConfiguration _configuration;
-        public ActivityDbContextDesignFactory(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
+        //private readonly IConfiguration _configuration;
+        //public ActivityDbContextDesignFactory(IConfiguration configuration)
+        //{
+        //    _configuration = configuration;
+        //}
 
         public ActivityDbContext CreateDbContext(string[] args)
         {
-            var connectionString = _configuration.GetValue<string>("ConnectionString") ??
-                throw new ArgumentNullException("ConnectionString");
+            var connectionString = "User ID=postgres;Password=Pass@word;Host=127.0.0.1;Port=5432;Database=Together.ActivityDb;Pooling=true";
+            //_configuration.GetValue<string>("ConnectionString") ??
+            //    throw new ArgumentNullException("ConnectionString");
             var optionsBuilder = new DbContextOptionsBuilder<ActivityDbContext>()
-                .UseSqlServer(connectionString);
+                .UseNpgsql(connectionString);
 
             return new ActivityDbContext(optionsBuilder.Options, new NoMediator());
         }

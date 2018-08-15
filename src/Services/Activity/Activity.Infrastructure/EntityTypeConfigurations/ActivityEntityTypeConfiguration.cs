@@ -19,7 +19,7 @@ namespace Together.Activity.Infrastructure.EntityTypeConfigurations
             builder.Ignore(a => a.DomainEvents);
 
             builder.Property(a => a.Id)
-                .ForSqlServerUseSequenceHiLo("activityseq");
+                .ForNpgsqlUseSequenceHiLo("activityseq");
 
             builder.Property(a => a.ActivityStartTime)
                 .IsRequired();

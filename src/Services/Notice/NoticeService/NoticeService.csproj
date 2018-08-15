@@ -10,11 +10,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetCore.CAP" Version="2.2.3-preview-43309801" />
-    <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="2.2.3-preview-43309801" />
-    <PackageReference Include="DotNetCore.CAP.SqlServer" Version="2.2.3-preview-43309801" />
+    <PackageReference Include="DotNetCore.CAP" Version="2.2.5" />
+    <PackageReference Include="DotNetCore.CAP.PostgreSql" Version="2.2.5" />
+    <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="2.2.5" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.1.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.1.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.1" />
     <PackageReference Include="Sendgrid" Version="9.9.0" />
   </ItemGroup>
 

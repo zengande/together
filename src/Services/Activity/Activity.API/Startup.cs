@@ -47,7 +47,7 @@ namespace Together.Activity.API
 
             services.AddDbContext<ActivityDbContext>(options =>
             {
-                options.UseSqlServer(connectionString, sql =>
+                options.UseNpgsql(connectionString, sql =>
                     sql.MigrationsAssembly(typeof(ActivityDbContext).GetTypeInfo().Assembly.GetName().Name));
             });
 
@@ -58,9 +58,9 @@ namespace Together.Activity.API
 
             services.AddCap(options =>
             {
-                options.UseDashboard();
-                options.UseRabbitMQ("rabbitmq");
-                options.UseSqlServer(connectionString);
+                options.UseEntityFramework<ActivityDbContext>()
+                    .UseDashboard()
+                    .UseRabbitMQ("rabbitmq");
             });
 
             ConfigureAuthService(services);

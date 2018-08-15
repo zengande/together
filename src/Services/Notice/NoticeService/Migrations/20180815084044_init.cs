@@ -1,11 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Together.Notice.Migrations
 {
-    public partial class AddEmailTemplate : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,9 +12,10 @@ namespace Together.Notice.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    KeyWord = table.Column<string>(maxLength: 200, nullable: true),
-                    Template = table.Column<string>(maxLength: 2147483647, nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    Title = table.Column<string>(maxLength: 200, nullable: false),
+                    Template = table.Column<string>(maxLength: 2147483647, nullable: false),
+                    KeyWord = table.Column<string>(maxLength: 200, nullable: true)
                 },
                 constraints: table =>
                 {

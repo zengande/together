@@ -48,7 +48,7 @@ namespace Together.Identity.API
                 throw new ArgumentNullException("ConnectionString");
             services.AddDbContext<IdentityDbContext>(options =>
             {
-                options.UseSqlServer(connectionString,
+                options.UseNpgsql(connectionString,
                     sql => sql.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name));
             });
 
