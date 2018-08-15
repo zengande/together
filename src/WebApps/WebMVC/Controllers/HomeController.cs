@@ -16,15 +16,14 @@ namespace WebMVC.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ICategoriesService _categoriesService;
+        private readonly IActivityService _activityService;
 
-        public HomeController(ICategoriesService categoriesService)
+        public HomeController(IActivityService activityService)
         {
-            _categoriesService = categoriesService;
+            _activityService = activityService;
         }
         public IActionResult Index()
         {
-            
             return View();
         }
 

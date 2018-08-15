@@ -15,7 +15,11 @@ services:
 
   consul:
     image: consul
+  influxdb:
+    image: influxdb
 
+  grafana:
+    image: grafana/grafana
 
   
   identity.api:
