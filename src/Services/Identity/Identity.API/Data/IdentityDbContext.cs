@@ -19,19 +19,19 @@ namespace Together.Identity.API.Data
         }
     }
 
-    public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<IdentityDbContext>
-    {
-        private readonly IConfiguration _configuration;
-        public DesignTimeDbContextFactory(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
+    //public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<IdentityDbContext>
+    //{
+    //    private readonly IConfiguration _configuration;
+    //    public DesignTimeDbContextFactory(IConfiguration configuration)
+    //    {
+    //        _configuration = configuration;
+    //    }
 
-        public IdentityDbContext CreateDbContext(string[] args)
-        {
-            var optionsBuilder = new DbContextOptionsBuilder<IdentityDbContext>()
-                .UseSqlServer(_configuration.GetValue<string>("ConnectionString"));
-            return new IdentityDbContext(optionsBuilder.Options);
-        }
-    }
+    //    public IdentityDbContext CreateDbContext(string[] args)
+    //    {
+    //        var optionsBuilder = new DbContextOptionsBuilder<IdentityDbContext>()
+    //            .UseNpgsql(_configuration.GetValue<string>("ConnectionString"));
+    //        return new IdentityDbContext(optionsBuilder.Options);
+    //    }
+    //}
 }

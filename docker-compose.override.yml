@@ -1,12 +1,20 @@
 version: '3.4'
 
 services:
+  # sql.data:
+  #   environment:
+  #     - SA_PASSWORD=Pass@word
+  #     - ACCEPT_EULA=Y
+  #   ports:
+  #     - "1433:1433"
   sql.data:
     environment:
-      - SA_PASSWORD=Pass@word
-      - ACCEPT_EULA=Y
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Pass@word
     ports:
-      - "1433:1433"
+      - "5432:5432"
+    volumes:
+      - /F:/Docker/npg/data:/var/lib/postgresql/data
   nosql.redis.data:
     ports:
       - "6379:6379"
@@ -40,7 +48,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - ConnectionString=Data Source=sql.data;Initial Catalog=Together.IdentityDb;Persist Security Info=True;User ID=sa;Password=Pass@word
+      - ConnectionString=User ID=postgres;Password=Pass@word;Host=sql.data;Port=5432;Database=Together.IdentityDb;Pooling=true;
     ports:
       - "5000:80"
 
@@ -48,7 +56,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - ConnectionString=Data Source=sql.data;Initial Catalog=Together.ActivityDb;Persist Security Info=True;User ID=sa;Password=Pass@word
+      - ConnectionString=Host=sql.data;Port=5432;Database=Together.ActivityDb;User ID=postgres;Password=Pass@word;Pooling=true;
       - IdentityUrl=http://10.0.1.46:5000
 #      - IdentityUrlExternal=http://${EXTERNAL_DNS_NAME_OR_IP}:5000
       - ServiceRegisterUrl=http://activity.api:80

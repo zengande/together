@@ -1,19 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Together.Activity.Infrastructure.Migrations
 {
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateSequence(
                 name: "activityseq",
-                incrementBy: 10);
-
-            migrationBuilder.CreateSequence(
-                name: "participantseq",
                 incrementBy: 10);
 
             migrationBuilder.CreateTable(
@@ -33,15 +28,22 @@ namespace Together.Activity.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false),
-                    OwnerId = table.Column<int>(nullable: true),
+                    OwnerId = table.Column<string>(maxLength: 200, nullable: true),
                     ActivityStatusId = table.Column<int>(nullable: false),
                     Description = table.Column<string>(nullable: true),
                     Details = table.Column<string>(nullable: true),
-                    CreateTime = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2018, 4, 28, 9, 38, 36, 460, DateTimeKind.Local)),
-                    EndTime = table.Column<DateTime>(nullable: false),
-                    ActivityTime = table.Column<DateTime>(nullable: false),
-                    Address = table.Column<string>(maxLength: 200, nullable: false),
-                    LimitsNum = table.Column<int>(nullable: true)
+                    CreateTime = table.Column<DateTime>(nullable: false),
+                    EndRegisterTime = table.Column<DateTime>(nullable: false),
+                    ActivityStartTime = table.Column<DateTime>(nullable: false),
+                    Address_DetailAddress = table.Column<string>(nullable: true),
+                    Address_City = table.Column<string>(nullable: true),
+                    Address_County = table.Column<string>(nullable: true),
+                    Address_Province = table.Column<string>(nullable: true),
+                    Address_Location = table.Column<string>(nullable: true),
+                    LimitsNum = table.Column<int>(nullable: true),
+                    Funds = table.Column<decimal>(nullable: true),
+                    ActivityEndTime = table.Column<DateTime>(nullable: false),
+                    CategoryId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -58,15 +60,16 @@ namespace Together.Activity.Infrastructure.Migrations
                 name: "participant",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false),
-                    UserId = table.Column<int>(nullable: false),
+                    UserId = table.Column<string>(maxLength: 200, nullable: false),
                     Nickname = table.Column<string>(maxLength: 100, nullable: false),
                     Avatar = table.Column<string>(maxLength: 200, nullable: true),
-                    ActivityId = table.Column<int>(nullable: false)
+                    ActivityId = table.Column<int>(nullable: false),
+                    Sex = table.Column<int>(nullable: false, defaultValue: 0),
+                    JoinTime = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_participant", x => x.Id);
+                    table.PrimaryKey("PK_participant", x => new { x.UserId, x.ActivityId });
                     table.ForeignKey(
                         name: "FK_participant_activities_ActivityId",
                         column: x => x.ActivityId,
@@ -99,9 +102,6 @@ namespace Together.Activity.Infrastructure.Migrations
 
             migrationBuilder.DropSequence(
                 name: "activityseq");
-
-            migrationBuilder.DropSequence(
-                name: "participantseq");
         }
     }
 }

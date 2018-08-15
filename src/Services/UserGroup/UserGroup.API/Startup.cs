@@ -43,7 +43,7 @@ namespace Together.UserGroup.API
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<UserGroupDbContext>(options =>
             {
-                options.UseSqlServer(connectionString, sql =>
+                options.UseNpgsql(connectionString, sql =>
                     sql.MigrationsAssembly(assembly));
             });
 
@@ -81,7 +81,7 @@ namespace Together.UserGroup.API
 
             services.AddCap(options =>
             {
-                options.UseSqlServer(connectionString)
+                options.UseEntityFramework<UserGroupDbContext>()
                     .UseRabbitMQ("rabbitmq")
                     .UseDashboard();
             });
