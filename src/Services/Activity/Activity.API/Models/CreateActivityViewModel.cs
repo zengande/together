@@ -23,18 +23,16 @@ namespace Together.Activity.API.Models
         /// <summary>
         /// 截止报名时间
         /// </summary>
-        [Required]
-        public DateTime EndRegisterDate { get; set; }
+        public DateTime RegisterEndTime { get; set; }
 
         /// <summary>
         /// 开始时间
         /// </summary>
-        [Required]
         public DateTime ActivityStartTime { get; set; }
+
         /// <summary>
         /// 结束时间
         /// </summary>
-        [Required]
         public DateTime ActivityEndTime { get; set; }
 
         /// <summary>
@@ -54,5 +52,21 @@ namespace Together.Activity.API.Models
         public decimal? Funds { get; set; }
 
         public int CategoryId { get; set; }
+
+        public ActivityAddress ActivityAddress { get; set; }
+    }
+
+    public class ActivityAddress
+    {
+        public string City { get; set; }
+        public string Detail { get; set; }
+        /// <summary>
+        /// 经度
+        /// </summary>
+        public double Longitude { get; set; }
+        /// <summary>
+        /// 纬度
+        /// </summary>
+        public double Latitude { get; set; }
     }
 }

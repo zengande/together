@@ -28,11 +28,13 @@ namespace Together.Identity.API.Services
             if (user == null)
                 throw new ArgumentException("Invalid subject identifier");
 
+            var roleClaims = context.Subject.FindAll(JwtClaimTypes.Role);
             var claims = GetClaimsFromUser(user);
-            context.IssuedClaims = claims.ToList();
+            claims.AddRange(roleClaims);
+            context.IssuedClaims = claims;
         }
 
-        private IEnumerable<Claim> GetClaimsFromUser(ApplicationUser user)
+        private List<Claim> GetClaimsFromUser(ApplicationUser user)
         {
             var claims = new List<Claim>
             {
@@ -40,10 +42,8 @@ namespace Together.Identity.API.Services
                 new Claim(JwtClaimTypes.PreferredUserName, user.UserName)
             };
 
-            if (!string.IsNullOrWhiteSpace(user.Nickname))
-            {
-                claims.Add(new Claim("nickname", user.Nickname));
-            }
+            claims.Add(new Claim(nameof(ApplicationUser.Nickname), user.Nickname ?? ""));
+            claims.Add(new Claim(nameof(ApplicationUser.Avatar), user.Avatar ?? ""));
 
             if (_userManager.SupportsUserEmail)
             {

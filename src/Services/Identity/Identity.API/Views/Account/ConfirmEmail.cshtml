@@ -1,11 +1,11 @@
 ﻿
+@model Together.Identity.API.Models.AccountViewModels.SendCodeViewModel
 @{
-    ViewData["Title"] = "Confirm Email";
+    ViewData["Title"] = "Send Verification Code";
 }
 
-<h2>@ViewData["Title"].</h2>
-<div>
-    <p>
-        Thank you for confirming your email. Please <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]">Click here to Log in</a>.
-    </p>
-</div>
+<h2>验证邮件已发送到你的邮箱，请注意查收</h2>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial"/>
+}

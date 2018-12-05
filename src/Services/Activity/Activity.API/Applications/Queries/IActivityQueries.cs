@@ -2,16 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Together.Activity.API.Applications.Dtos;
 using Together.Activity.API.Models;
 
 namespace Together.Activity.API.Applications.Queries
 {
     public interface IActivityQueries
     {
-        Task<ActivityViewModel> GetActivityAsync(int id);
+        Task<ActivityDetailDto> GetActivityAsync(int id);
 
-        Task<IEnumerable<ActivitySummaryViewModel>> GetActivitiesAsync(int pageIndex, int pageSize, int status = 2);
+        Task<IEnumerable<ActivitySummaryDto>> GetActivitiesAsync(int pageIndex, int pageSize, int status = 2);
 
-        Task<IEnumerable<ActivitySummaryViewModel>> GetActivitiesByUserAsync(string userId);
+        Task<IEnumerable<ActivitySummaryDto>> GetLatestActivitiesNearby(int pageIndex, int pageSize, string location);
+
+        Task<IEnumerable<ActivitySummaryDto>> GetActivitiesByUserAsync(string userId);
+
+        Task<bool> AlreadyJoined(int activityId, string userId);
     }
 }

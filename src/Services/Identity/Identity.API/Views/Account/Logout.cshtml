@@ -1,0 +1,23 @@
+﻿@model Together.Identity.API.Models.AccountViewModels.LogoutViewModel
+@{ 
+    ViewData["Title"] = "注销";
+}
+<div class="container logout-page">
+    <div class="page-header">
+        <h1>Log out</h1>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <p>您确定要退出登录吗?</p>
+            <form asp-action="Logout">
+                <input type="hidden" asp-for="LogoutId" />
+                <fieldset>
+                    <div class="form-group">
+                        <button class="btn btn-primary">退出</button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+

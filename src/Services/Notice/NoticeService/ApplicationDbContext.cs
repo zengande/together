@@ -1,19 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Together.Notice.Models;
 
 namespace Together.Notice
 {
     public class ApplicationDbContext
-        :DbContext
+        : DbContext
     {
         public DbSet<EmailTemplate> EmailTemplates { get; set; }
+        public DbSet<NoticeRecord> NoticeRecords { get; set; }
 
         public ApplicationDbContext(DbContextOptions options)
-            :base(options)
+            : base(options)
         {
         }
     }

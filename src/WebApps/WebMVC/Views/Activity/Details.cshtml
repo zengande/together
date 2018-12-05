@@ -1,0 +1,183 @@
+﻿@model WebMVC.ViewModels.Activity.ActivityDetailViewModel
+@inject IViewLocalizer Localizer
+@{
+    ViewData["Title"] = Model.Title;
+    var isAuthenticated = User.Identity.IsAuthenticated;
+}
+@section Styles{
+    <link href="~/css/activity.detail.css" rel="stylesheet" />
+}
+<div class="activity-header header">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <time class="act-time">@Model.ActivityStartTime.ToLongDateString()</time>
+                <h2 class="act-title">@Model.Title</h2>
+            </div>
+            <div class="col-md-4">
+                <partial name="_JoinActivityPartial" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="fixed-header header">
+    <div class="container p-0">
+        <div class="row m-0">
+            <div class="col-md-8">
+                <time class="act-time">@Model.ActivityStartTime.ToLongDateString()</time>
+                <h2 class="act-title-sec">@Model.Title</h2>
+            </div>
+            <div class="col-md-4">
+                <partial name="_JoinActivityPartial" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 order-md-1">
+            <div class="activity-right">
+                <div class="activity-time">
+                    <i class="fa fa-clock-o"></i>
+                    <time>
+                        @{
+                            var days = Model.ActivityEndTime - Model.ActivityStartTime;
+                            if (days.TotalDays >= 1)
+                            {
+                                @($"{Model.ActivityStartTime.ToLongDateString()} {Model.ActivityStartTime.ToString("h:mm tt")} 至 {Model.ActivityEndTime.ToLongDateString()} {Model.ActivityEndTime.ToString("h:mm tt")}")
+                            }
+                            else
+                            {
+                                @($"{Model.ActivityStartTime.ToLongDateString()} {Model.ActivityStartTime.ToString("h:mm tt")} 至 {Model.ActivityEndTime.ToString("h:mm tt")}")
+                            }
+                        }
+                    </time>
+                </div>
+                @if (Model.AddressVisibleRule == WebMVC.Infrastructure.Enums.AddressVisibleRules.PublicVisible ||
+                   Model.IsJoined)
+                {
+                    <div class="activity-location">
+                        <i class="fa fa-map-marker"></i>
+                        <address>
+                            <p>@Model.DetailAddress, @Model.City</p>
+                            <p>Shop C, 5/F, 2 Carnarvon Road, Tsim Sha Tsui</p>
+                        </address>
+                    </div>
+                    <div class="activity-map">
+                        @{
+                            var location = $"{Model.Longitude},{Model.Latitude}";
+                        }
+                        <img id="actmap" class="map-img" src="http://api.map.baidu.com/staticimage/v2?ak=Xb4fMK6cZ6AjSpG92fh9gWaaFmenC3La&center=@location&markers=@location&zoom=16" />
+                    </div>
+                }
+                else
+                {
+                    <div class="activity-location">
+                        <i class="fa fa-map-marker"></i>
+                        <address>
+                            <p>加入后才能查看地址</p>
+                        </address>
+                    </div>
+                }
+
+            </div>
+        </div>
+        <div class="col-md-8 pr-md-5 order-md-0 content">
+            <h3>@Localizer["detail_title_text"]</h3>
+            <div class="activity-content">
+                @Html.Raw(Model.Details)
+            </div>
+
+            <h3>@Localizer["participants_title_text"] (@Model.NumberOfParticipants)<a asp-action="participant" asp-controller="activity" asp-route-id="@Model.Id" class="float-right">@Localizer["see_all_link_text"]</a></h3>
+
+            <div class="row participants">
+                @foreach (var participant in Model.Participants)
+                {
+                    <div class="col-6 col-md-3 mb-4">
+                        <a href="#">
+                            <div class="participant">
+                                <p><img src="@participant.Avatar" /></p>
+                                <p class="nickname">@participant.Nickname</p>
+                                @if (participant.IsOwner)
+                                {
+                                    <p class="label">Creator</p>
+                                }
+                                else
+                                {
+                                    <p class="label">Member</p>
+                                }
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@section FooterStripes{
+    <partial name="_FooterMainStripe" />
+}
+@section Scripts{
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=Xb4fMK6cZ6AjSpG92fh9gWaaFmenC3La"></script>
+    <script>
+        function join(id) {
+            $.ajax({
+                url: '/activity/join',
+                type: 'put',
+                data: {
+                    activityId: id
+                },
+                success: function (response) {
+                    console.log(response);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            })
+        }
+
+        function initMap() {
+            // 百度地图API功能
+            var map = new BMap.Map("actmap");    // 创建Map实例
+            var point = new BMap.Point(116.404, 39.915);
+            map.centerAndZoom(point, 11);  // 初始化地图,设置中心点坐标和地图级别
+            var marker = new BMap.Marker(point);
+            map.addOverlay(marker);
+            //添加地图类型控件
+            map.addControl(new BMap.MapTypeControl({
+                mapTypes: [
+                    BMAP_NORMAL_MAP,
+                    BMAP_HYBRID_MAP
+                ]
+            }));
+            map.setCurrentCity("北京");          // 设置地图显示的城市 此项是必须设置的
+            map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+        }
+
+        $(function () {
+
+            initMap();
+
+            var limit = document.getElementsByClassName('activity-header')[0].scrollTop + 71;
+
+            if ($(window).scrollTop() >= limit) {
+                $('.fixed-header').stop(false, false);
+                $('.fixed-header').fadeIn(0);
+            }
+
+            $(window).on("scroll", function (e) {
+                var top = $(window).scrollTop();
+
+
+                $('.fixed-header').stop(false, false);
+                if (top >= limit) {
+                    $('.fixed-header').fadeIn(0);
+                } else {
+                    $('.fixed-header').fadeOut(0);
+                }
+            });
+        })
+    </script>
+}

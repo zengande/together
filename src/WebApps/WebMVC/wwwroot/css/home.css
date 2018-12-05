@@ -1,0 +1,229 @@
+﻿ul, li {
+    list-style: none;
+}
+
+a, a:link, a:hover {
+    text-decoration: none;
+}
+
+.section {
+    padding-bottom: 45px;
+}
+
+.section-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #404040;
+    margin-bottom: 20px;
+}
+
+    .section-title a {
+        font-size: 1rem;
+        color: var(--primary-color);
+        transition: all ease-out .3s;
+    }
+
+        .section-title a:hover {
+            color: var(--primary-color-hover)
+        }
+
+.activity-item {
+    display: inline-block;
+    width: 330px;
+}
+
+
+.activity-card {
+    margin-right: 15px;
+    box-shadow: 0 0 2px 0 rgba(46,62,72,.12), 0 2px 4px 0 rgba(46,62,72,.12);
+    border-radius: 5px;
+    overflow: hidden;
+    transition: all ease-out .2s;
+}
+
+    .activity-card:hover {
+        box-shadow: 0 0 4px 0 rgba(46,62,72,.12), 0 4px 12px 0 rgba(46,62,72,.12);
+        transform: translateY(-1px);
+    }
+
+
+.activity-card-header {
+    padding: 0px 10px;
+    height: 165px;
+    background: #808080;
+}
+
+.activity-card-body {
+    padding: 10px;
+    height: 80px;
+}
+
+    .activity-card-body .activity-start {
+        color: #808080;
+        line-height: 30px;
+        font-size: .95rem;
+    }
+
+    .activity-card-body .activity-title {
+        color: #000000;
+        font-size: 1rem;
+        font-weight: bold;
+        line-height: 25px;
+        text-overflow: ellipsis;
+        height: 50px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+    }
+
+.activity-card-footer {
+    padding-top: 10px;
+    height: 70px;
+    line-height: 60px;
+}
+
+.new-container {
+    margin: -5px;
+    position: relative;
+    height: 325px;
+}
+
+.cards-container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    padding: 5px;
+}
+
+.circle-btn {
+    position: absolute;
+    z-index: 99;
+    background: #ffffff;
+    box-shadow: 0px 0px 5px 1px rgba(0,0,0,.3);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+    color: #000000;
+}
+
+    .circle-btn.pre-btn {
+        top: 50%;
+        margin-top: -20px;
+        left: -15px;
+        display: none;
+    }
+
+    .circle-btn.next-btn {
+        top: 50%;
+        margin-top: -20px;
+        right: -20px;
+    }
+
+.cards {
+    width: 3335px;
+    transition: transform .25s cubic-bezier(.4,0,.2,1),-webkit-transform .25s cubic-bezier(.4,0,.2,1);
+}
+
+    .cards.page-0 {
+        transform: translateX(0)
+    }
+
+    .cards.page-1 {
+        transform: translateX(-335px)
+    }
+
+    .cards.page-2 {
+        transform: translateX(-667px)
+    }
+
+    .cards.page-3 {
+        transform: translateX(-1002px)
+    }
+
+    .cards.page-4 {
+        transform: translateX(-1337px)
+    }
+
+    .cards.page-5 {
+        transform: translateX(-1672px)
+    }
+
+    .cards.page-6 {
+        transform: translateX(-2003px)
+    }
+
+    .cards.page-7 {
+        transform: translateX(-2208px)
+    }
+
+
+.category_imgdiv {
+    background-position: center;
+    background-size: 100% 100%;
+    height: 150px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+
+.category_a {
+    color: black;
+}
+
+    .category_a:hover {
+        color: black;
+        text-decoration: none;
+    }
+
+.activity-card-footer .avatar-40 {
+    margin: 0px 10px;
+}
+
+.big-picture {
+    width: 100%;
+    height: 500px;
+    margin-top: 8px;
+    margin-bottom: 30px;
+    background: url('https://together-1251959546.cos.ap-chengdu.myqcloud.com/wallhaven-449086.jpg');
+    background-position: center center;
+    padding: 30px;
+}
+
+    .big-picture h1 {
+        text-align: center;
+        padding-top: 50px;
+        color: #ffffff;
+        font-size: 2.8rem;
+        letter-spacing: 3px;
+        text-transform: uppercase
+    }
+
+    .big-picture p {
+        text-align: center;
+        font-size: 1.3rem;
+        color: #ffffff;
+        margin-top: 15px;
+    }
+
+#slogan span {
+    color: var(--primary-color)
+}
+
+@media(max-width:756px) {
+    .big-picture {
+        height: 300px;
+    }
+}
+
+header .dropdown-menu {
+    margin-top: 10px;
+}
+
+.dropdown-menu-right {
+    right: 0px !important;
+    left: auto;
+}

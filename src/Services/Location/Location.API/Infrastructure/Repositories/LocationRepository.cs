@@ -1,13 +1,11 @@
-﻿using System;
+﻿using Location.API.Data;
+using Location.API.Models;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Location.API.Data;
-using Location.API.Models;
-using Microsoft.Extensions.Options;
-using MongoDB.Bson;
-using MongoDB.Driver;
 
 namespace Location.API.Infrastructure.Repositories
 {
@@ -37,6 +35,15 @@ namespace Location.API.Infrastructure.Repositories
         public async Task<List<Locations>> GetChildLocationListAsync(string parentCode, CancellationToken cancellationToken)
         {
             var filter = Builders<Locations>.Filter.Eq(l => l.ParentCode, parentCode);
+            var sort = Builders<Locations>.Sort.Ascending(l => l.LocationCode);
+            var result = _context.Locations.Find(filter)
+                .Sort(sort);
+            return await result?.ToListAsync();
+        }
+
+        public async Task<List<Locations>> GetLocationsAsync(int level)
+        {
+            var filter = Builders<Locations>.Filter.Eq(l => l.Level, level);
             var sort = Builders<Locations>.Sort.Ascending(l => l.LocationCode);
             var result = _context.Locations.Find(filter)
                 .Sort(sort);

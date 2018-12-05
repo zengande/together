@@ -1,0 +1,14 @@
+﻿{
+  "ReRoutes": [
+    {
+      "DownstreamPathTemplate": "/api/{version}/search/{everything}",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/api/{version}/search/{everything}",
+      "ServiceName": "searching_api",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      "UseServiceDiscovery": true
+    }
+  ]
+}

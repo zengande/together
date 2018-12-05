@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Polly;
 using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,6 +25,11 @@ namespace Together.Activity.API.Infrastructure
                     if (!context.ActivityStatuses.Any())
                     {
                         context.ActivityStatuses.AddRange(ActivityStatus.List());
+                    }
+
+                    if (!context.AddressVisibleRules.Any())
+                    {
+                        context.AddressVisibleRules.AddRange(AddressVisibleRule.List());
                     }
 
                     await context.SaveChangesAsync();

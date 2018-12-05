@@ -5,31 +5,110 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="wwwroot\fonts\**" />
-    <Content Remove="wwwroot\fonts\**" />
-    <EmbeddedResource Remove="wwwroot\fonts\**" />
-    <None Remove="wwwroot\fonts\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="DnsClient" Version="1.0.7" />
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.2" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.1.0" />
+    <PackageReference Include="AspectCore.Extensions.DependencyInjection" Version="1.0.1" />
+    <PackageReference Include="AutoMapper" Version="7.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="5.0.1" />
+    <PackageReference Include="DnsClient" Version="1.2.0" />
+    <PackageReference Include="IdentityModel" Version="3.10.1" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.5" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.1.2" />
     <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="2.1.1" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.5" />
+    <PackageReference Include="Refit" Version="4.6.48" />
+    <PackageReference Include="Refit.HttpClientFactory" Version="4.6.48" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\Nutshell.Common.Cache\Nutshell.Common.Cache.csproj" />
-    <ProjectReference Include="..\..\BuildingBlocks\Nutshell.Resilience.HttpRequest\Nutshell.Resilience.HttpRequest.csproj" />
+    <ProjectReference Include="..\..\BuildingBlocks\Together.Extensions\Together.Extensions.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Infrastructure\" />
+    <Folder Include="Infrastructure\Extensions\" />
+    <Folder Include="Models\Activities\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\lib\font-awesome-4.7.0\fonts\fontawesome-webfont.svg" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\fonts\fontawesome-webfont.woff2" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\less\animated.less" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\less\bordered-pulled.less" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\less\core.less" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\less\fixed-width.less" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\less\font-awesome.less" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\less\icons.less" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\less\larger.less" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\less\list.less" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\less\mixins.less" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\less\path.less" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\less\rotated-flipped.less" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\less\screen-reader.less" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\less\stacked.less" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\less\variables.less" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\scss\font-awesome.scss" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\scss\_animated.scss" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\scss\_bordered-pulled.scss" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\scss\_core.scss" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\scss\_fixed-width.scss" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\scss\_icons.scss" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\scss\_larger.scss" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\scss\_list.scss" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\scss\_mixins.scss" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\scss\_path.scss" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\scss\_rotated-flipped.scss" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\scss\_screen-reader.scss" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\scss\_stacked.scss" />
+    <None Include="wwwroot\lib\font-awesome-4.7.0\scss\_variables.scss" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-ar-AR.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-bg-BG.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-ca-ES.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-cs-CZ.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-da-DK.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-de-DE.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-el-GR.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-es-ES.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-es-EU.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-fa-IR.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-fi-FI.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-fr-FR.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-gl-ES.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-he-IL.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-hr-HR.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-hu-HU.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-id-ID.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-it-IT.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-ja-JP.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-ko-KR.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-lt-LT.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-lt-LV.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-mn-MN.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-nb-NO.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-nl-NL.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-pl-PL.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-pt-BR.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-pt-PT.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-ro-RO.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-ru-RU.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-sk-SK.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-sl-SI.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-sr-RS-Latin.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-sr-RS.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-sv-SE.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-ta-IN.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-th-TH.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-tr-TR.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-uk-UA.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-vi-VN.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-zh-CN.js" />
+    <None Include="wwwroot\lib\summernote\dist\lang\summernote-zh-TW.js" />
+    <None Include="wwwroot\lib\summernote\dist\plugin\databasic\summernote-ext-databasic.js" />
+    <None Include="wwwroot\lib\summernote\dist\plugin\hello\summernote-ext-hello.js" />
+    <None Include="wwwroot\lib\summernote\dist\plugin\specialchars\summernote-ext-specialchars.js" />
+    <None Include="wwwroot\lib\summernote\dist\summernote-bs4.js" />
+    <None Include="wwwroot\lib\summernote\dist\summernote-bs4.min.js" />
+    <None Include="wwwroot\lib\summernote\dist\summernote-lite.js" />
+    <None Include="wwwroot\lib\summernote\dist\summernote.js" />
+    <None Include="wwwroot\lib\summernote\dist\summernote.min.js" />
+  </ItemGroup>
 </Project>

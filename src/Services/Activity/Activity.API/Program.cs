@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Together.Activity.Infrastructure.Data;
-using Nutshell.Extensions.WebHost;
+using Together.Extensions.WebHost;
 using Together.Activity.API.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 

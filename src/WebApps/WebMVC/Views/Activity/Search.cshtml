@@ -1,0 +1,32 @@
+﻿@model WebMVC.ViewModels.Activity.ActivitySearchResultViewModel
+@{
+    ViewData["Title"] = "Search";
+}
+@section Styles{
+    <style>
+        .search-result {
+            box-shadow: 0px 0px 5px 0px rgba(0,0,0,.3);
+            margin:20px -15px;
+            padding:10px;
+        }
+    </style>
+}
+<div class="container pt-3">
+    <form method="get">
+        <div class="form-group row">
+            <input type="text" asp-for="Keyword" class="form-control col-10" />
+            <input type="submit" value="搜索" class="btn btn-primary col-2" />
+        </div>
+    </form>
+    @if (Model.Results != null)
+    {
+        foreach (var result in Model.Results)
+        {
+            <div class="search-result">
+                <a asp-controller="activity" asp-action="details" asp-route-id="@result.Id">@result.Title</a>
+                <p>@result.Detail</p>
+                <time>@result.CreateTime</time>
+            </div>
+        }
+    }
+</div>

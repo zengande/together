@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Together.Identity.API.Data;
+using Together.Identity.API.Models;
 
 namespace Together.Identity.API.Migrations
 {
@@ -16,7 +17,7 @@ namespace Together.Identity.API.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
-                .HasAnnotation("ProductVersion", "2.1.1-rtm-30846")
+                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -133,6 +134,9 @@ namespace Together.Identity.API.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
+                    b.Property<string>("Avatar")
+                        .HasMaxLength(512);
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
@@ -141,11 +145,17 @@ namespace Together.Identity.API.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
+                    b.Property<int>("Gender")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(0);
+
                     b.Property<bool>("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
 
-                    b.Property<string>("Nickname");
+                    b.Property<string>("Nickname")
+                        .HasMaxLength(100)
+                        .IsUnicode(true);
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256);

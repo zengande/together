@@ -7,7 +7,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Nutshell.Extensions.WebHost;
+using Together.Extensions.WebHost;
 
 namespace Together.Notice
 {
@@ -16,7 +16,19 @@ namespace Together.Notice
         public static void Main(string[] args)
         {
             CreateWebHostBuilder(args).Build()
-                .MigrateDbContext<ApplicationDbContext>((_, __) => { }).Run();
+                .MigrateDbContext<ApplicationDbContext>(async (context, provider) =>
+                {
+                    if (!context.EmailTemplates.Any())
+                    {
+                        await context.EmailTemplates.AddAsync(new Models.EmailTemplate
+                        {
+                            Id = 1,
+                            Template = "点击<a href='[$link]'>这里</a>激活您的邮箱，如果不能跳转",
+                            Title = "激活您的邮箱"
+                        });
+                        await context.SaveChangesAsync();
+                    }
+                }).Run();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>

@@ -1,34 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Together.Identity.API.Configurations;
+﻿using DnsClient;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using DnsClient;
 using Microsoft.Extensions.Options;
-using Together.Identity.API.Services;
-using Together.Identity.API.Models;
-using Nutshell.Resilience.HttpRequest.abstracts;
-using Nutshell.Resilience.HttpRequest;
-using Together.Identity.API.Data;
-using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Reflection;
-using Microsoft.AspNetCore.Identity;
+using Together.Identity.API.Configurations;
+using Together.Identity.API.Data;
+using Together.Identity.API.Models;
+using Together.Identity.API.Services;
 using zipkin4net;
-using Microsoft.AspNetCore.Hosting.Internal;
 using zipkin4net.Middleware;
-using zipkin4net.Transport.Http;
-using zipkin4net.Tracers.Zipkin;
 using zipkin4net.Tracers;
-using Microsoft.AspNetCore.DataProtection;
-using StackExchange.Redis;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using IdentityServer4.Services;
+using zipkin4net.Tracers.Zipkin;
+using zipkin4net.Transport.Http;
 
 namespace Together.Identity.API
 {
@@ -44,7 +36,7 @@ namespace Together.Identity.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionString = Configuration.GetValue<string>("ConnectionString") ?? 
+            var connectionString = Configuration.GetConnectionString("DefaultConnection") ??
                 throw new ArgumentNullException("ConnectionString");
             services.AddDbContext<IdentityDbContext>(options =>
             {
@@ -62,11 +54,11 @@ namespace Together.Identity.API
             //    //options.Configuration = "localhost:6379";
             //    options.InstanceName = "DataProtection";
             //});
-            services.AddSession();
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.Cookie.Name = ".AspNet.SharedCookie";
-            });
+            //services.AddSession();
+            //services.ConfigureApplicationCookie(options =>
+            //{
+            //    options.Cookie.Name = ".AspNet.SharedCookie";
+            //});
 
             services.AddIdentity<ApplicationUser, IdentityRole>(config =>
             {
@@ -75,26 +67,48 @@ namespace Together.Identity.API
                 .AddEntityFrameworkStores<IdentityDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddIdentityServer()
+            var clients = new Dictionary<string, string>
+            {
+                { "mvc", Configuration.GetValue("MvcClientUrl", "") },
+                { "manage_portal", Configuration.GetValue("ManagePortalUrl", "") },
+                { "notice_dashboard", Configuration.GetValue("NoticeDashboard", "") },
+                { "activity_api", Configuration.GetValue("ActivityApiUrl", "") }
+            };
+            services.AddIdentityServer(x =>
+            {
+                x.IssuerUri = "null";
+                x.Authentication.CookieLifetime = TimeSpan.FromHours(2);
+            })
                 .AddDeveloperSigningCredential()
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryApiResources(Config.GetApiResources())
-                .AddInMemoryClients(Config.GetClients())
+                .AddInMemoryClients(Config.GetClients(clients))
                 .AddAspNetIdentity<ApplicationUser>()
-                .Services.AddTransient<IProfileService, ProfileService>();
+                .AddProfileService<ProfileService>();
 
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
+            //services.Configure<CookiePolicyOptions>(options =>
+            //{
+            //    // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+            //    options.CheckConsentNeeded = context => true;
+            //    options.MinimumSameSitePolicy = SameSiteMode.None;
+            //});
 
             services.AddCap(options =>
             {
                 options.UseEntityFramework<IdentityDbContext>()
                     .UseRabbitMQ("rabbitmq")
                     .UseDashboard();
+            });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("ManagePortalCors", policy =>
+                {
+                    policy.WithOrigins("http://localhost:8000")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
+                });
             });
 
             services.AddMvc()
@@ -124,13 +138,12 @@ namespace Together.Identity.API
 
             // RegisterZipkinTracer(app, logger, lifetime);
 
-            app.UseSession();
-
+            //app.UseSession();
+            app.UseCors("ManagePortalCors");
             app.UseIdentityServer();
-            app.UseCap();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
+            //app.UseCookiePolicy();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -139,8 +152,8 @@ namespace Together.Identity.API
             });
         }
 
-        private static void RegisterZipkinTracer(IApplicationBuilder app, 
-            ILoggerFactory logger, 
+        private static void RegisterZipkinTracer(IApplicationBuilder app,
+            ILoggerFactory logger,
             IApplicationLifetime lifetime)
         {
             lifetime.ApplicationStarted.Register(() =>

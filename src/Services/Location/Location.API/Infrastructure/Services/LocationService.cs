@@ -27,6 +27,11 @@ namespace Location.API.Infrastructure.Services
             return await _locationRepository.GetChildLocationListAsync(parentCode, default(CancellationToken));
         }
 
+        public async Task<List<Locations>> GetLocationsAsync(int level)
+        {
+            return await _locationRepository.GetLocationsAsync(level);
+        }
+
         public async Task<List<Locations>> Search(string keyword)
         {
             return await _locationRepository.Search(keyword);

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
-using DotNetCore.CAP;
+﻿using DotNetCore.CAP;
+using IdentityModel;
+using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
@@ -12,7 +8,13 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
+using System.Security.Claims;
+using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 using Together.Identity.API.Data;
 using Together.Identity.API.IntegrationEvents;
 using Together.Identity.API.Models;
@@ -30,13 +32,17 @@ namespace Together.Identity.API.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ICapPublisher _publisher;
         private readonly IdentityDbContext _context;
+        private readonly ILogger<AccountController> _logger;
+        private readonly IConfiguration _configuration;
         public AccountController(IIdentityServerInteractionService interaction,
             InMemoryClientStore clientStore,
             IUserService userService,
             UserManager<ApplicationUser> userManager,
             ICapPublisher publisher,
             IdentityDbContext context,
-            SignInManager<ApplicationUser> signInManager)
+            ILogger<AccountController> logger,
+            SignInManager<ApplicationUser> signInManager,
+            IConfiguration configuration)
         {
             _context = context;
             _userService = userService;
@@ -45,6 +51,8 @@ namespace Together.Identity.API.Controllers
             _userManager = userManager;
             _publisher = publisher;
             _signInManager = signInManager;
+            _logger = logger;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -74,7 +82,7 @@ namespace Together.Identity.API.Controllers
                         await SendConfirmEmaileAddressNotice(user, model.ReturnUrl);
 
                         // ModelState.AddModelError(string.Empty, "You must have a confirmed email to log in.");
-                        return RedirectToAction(nameof(Verification));
+                        return RedirectToAction(nameof(ConfirmEmail));
                     }
 
                     AuthenticationProperties props = null;
@@ -87,14 +95,13 @@ namespace Together.Identity.API.Controllers
                         };
                     };
 
-                    await _userService.SignIn(user, props);
+                    await _userService.SignInAsync(user, props);
 
                     // make sure the returnUrl is still valid, and if yes - redirect back to authorize endpoint
                     if (_interaction.IsValidReturnUrl(model.ReturnUrl))
                     {
                         return Redirect(model.ReturnUrl);
                     }
-
 
                     return Redirect("~/");
                 }
@@ -110,16 +117,71 @@ namespace Together.Identity.API.Controllers
             return View(vm);
         }
 
+        /// <summary>
+        /// Show logout page
+        /// </summary>
         [HttpGet]
-        public async Task<IActionResult> SignOut(string returnUrl)
+        public async Task<IActionResult> Logout(string logoutId)
         {
-            await _signInManager.SignOutAsync();
-            if (_interaction.IsValidReturnUrl(returnUrl))
+            var vm = new LogoutViewModel { LogoutId = logoutId };
+            if (User.Identity.IsAuthenticated == false)
             {
-                return Redirect(returnUrl);
+                // if the user is not authenticated, then just show logged out page
+                return await Logout(vm);
             }
 
-            return Redirect("~/");
+            // show the logout prompt. this prevents attacks where the user
+            // is automatically signed out by another malicious web page.
+
+            return View(vm);
+        }
+
+        /// <summary>
+        /// Handle logout page postback
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout(LogoutViewModel model)
+        {
+            var idp = User?.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
+
+            if (idp != null && idp != IdentityServerConstants.LocalIdentityProvider)
+            {
+                if (model.LogoutId == null)
+                {
+                    // if there's no current logout context, we need to create one
+                    // this captures necessary info from the current logged in user
+                    // before we signout and redirect away to the external IdP for signout
+                    model.LogoutId = await _interaction.CreateLogoutContextAsync();
+                }
+
+                string url = "/Account/Logout?logoutId=" + model.LogoutId;
+
+                try
+                {
+
+                    // hack: try/catch to handle social providers that throw
+                    await HttpContext.SignOutAsync(idp, new AuthenticationProperties
+                    {
+                        RedirectUri = url
+                    });
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogCritical(ex.Message);
+                }
+            }
+
+            // delete authentication cookie
+            await _userService.SignOutAsync();
+
+            // set this so UI rendering sees an anonymous user
+            HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity());
+
+            // get context information (client name, post logout redirect URI and iframe for federated signout)
+            var logout = await _interaction.GetLogoutContextAsync(model.LogoutId);
+
+            return Redirect(logout?.PostLogoutRedirectUri ?? "/");
         }
 
         [HttpGet]
@@ -143,6 +205,7 @@ namespace Together.Identity.API.Controllers
                     Nickname = model.Nickname,
                     UserName = model.Email,
                     Email = model.Email,
+                    Avatar = _configuration.GetValue("OriginalAvatar", string.Empty)
                 };
                 using (var trans = _context.Database.BeginTransaction())
                 {
@@ -156,7 +219,7 @@ namespace Together.Identity.API.Controllers
                     if (result.Succeeded)
                     {
                         // 发送验证邮箱地址的邮件
-                        await SendConfirmEmaileAddressNotice(user);
+                        await SendConfirmEmaileAddressNotice(user, returnUrl);
 
                         // 创建账户成功，发送消息给用户服务初始化用户信息
                         await AccountCreatedEvent(new AccountCreatedIntegrationEvent
@@ -166,27 +229,12 @@ namespace Together.Identity.API.Controllers
                             Email = user.Email
                         });
                         trans.Commit();
+
+                        return RedirectToAction(nameof(ConfirmEmail));
                     }
                 }
             }
-
-            if (returnUrl != null)
-            {
-                if (HttpContext.User.Identity.IsAuthenticated)
-                {
-                    return Redirect(returnUrl);
-                }
-                else if (ModelState.IsValid)
-                {
-                    return RedirectToAction("login", "account", new { returnUrl });
-                }
-                else
-                {
-                    return View(model);
-                }
-            }
-
-            return RedirectToAction("index", "home");
+            return View(model);
         }
 
         /// <summary>
@@ -212,7 +260,7 @@ namespace Together.Identity.API.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult Verification()
+        public ActionResult ConfirmEmail()
         {
             return View();
         }
@@ -221,7 +269,7 @@ namespace Together.Identity.API.Controllers
         /// 确认邮箱地址
         /// </summary>
         /// <returns></returns>
-        public async Task<IActionResult> ConfirmEmail(string userId, string code, string returnUrl = "")
+        public async Task<IActionResult> Verification(string userId, string code, string returnUrl = "")
         {
             if (string.IsNullOrEmpty(userId) ||
                 string.IsNullOrEmpty(code))
@@ -234,13 +282,16 @@ namespace Together.Identity.API.Controllers
                 return View("Error");
             }
             var result = await _userManager.ConfirmEmailAsync(user, code);
-            if (string.IsNullOrEmpty(returnUrl))
+            if (result.Succeeded)
             {
-                returnUrl = "/";
+                await _userService.SignInAsync(user, null);
+                if (_interaction.IsValidReturnUrl(returnUrl))
+                {
+                    return Redirect(returnUrl);
+                }
+                return Redirect("/");
             }
-            ViewData["ReturnUrl"] = returnUrl;
-
-            return View(result.Succeeded ? "ConfirmEmail" : "Error");
+            return View("Error");
         }
 
         private async Task<LoginViewModel> BuildLoginViewModelAsync(string returnUrl, AuthorizationRequest context)
@@ -288,7 +339,7 @@ namespace Together.Identity.API.Controllers
         {
             // 发送确认邮箱的邮件
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var callbackUrl = Url.Action(nameof(ConfirmEmail), "Account",
+            var callbackUrl = Url.Action(nameof(Verification), "Account",
                 new { userId = user.Id, code, returnUrl }, protocol: HttpContext.Request.Scheme);
 
             await _publisher.PublishAsync("Together.Notice.Email.Confirm.EmailAddress", new VerifyAccountEmailNoticeEvent { To = user.Email, Link = callbackUrl });

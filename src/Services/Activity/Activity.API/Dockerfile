@@ -2,6 +2,9 @@ FROM microsoft/dotnet:2.1-aspnetcore-runtime AS base
 WORKDIR /app
 EXPOSE 80
 
+ENV TZ=Asia/Shanghai
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 FROM microsoft/dotnet:2.1-sdk AS build
 WORKDIR /src
 COPY src/Services/Activity/Activity.API/Activity.API.csproj src/Services/Activity/Activity.API/
