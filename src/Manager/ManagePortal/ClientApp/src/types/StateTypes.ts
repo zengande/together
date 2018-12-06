@@ -1,8 +1,7 @@
-﻿export interface IUserState {
+﻿import { IUserInfo } from './IUserInfo';
+export interface IUserState {
     isAuthenticated: boolean;
-    id: string | null;
-    username: string | null;
-    nickname: string | null
+    userInfo:IUserInfo
 }
 
 export interface IState {

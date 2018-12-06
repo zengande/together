@@ -1,0 +1,9 @@
+.header{
+    height: 50px;
+    background: red;
+}
+
+.header h1{
+    padding: 0px;
+    margin-top: 0px;
+}

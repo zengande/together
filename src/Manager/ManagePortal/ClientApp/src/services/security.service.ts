@@ -1,4 +1,5 @@
 ﻿import { storeService } from './storage.service';
+import { IUserInfo } from 'src/types/IUserInfo';
 
 export class SecurityService {
     public IsAuthorized = false;
@@ -11,11 +12,18 @@ export class SecurityService {
         }
     }
 
-    public Authorize(): void {
+    public Authorize(): IUserInfo {
         this.ResetAuthorizationData();
 
+        const userInfo: IUserInfo = {
+            id: '100000',
+            username: 'zengande',
+            nickname: 'zeng ande'
+        }
+
         storeService.store('IsAuthorized', true);
-        storeService.store('userData', { username: 'zengande' });
+        storeService.store('userData', userInfo);
+        return userInfo;
     }
 
     public GetToken(): any {

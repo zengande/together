@@ -8,7 +8,7 @@
     public retrieve(key: string, defValue: any = null) {
         let item = this.storage.getItem(key);
 
-        if (item && item !== 'undefined') {
+        if (item && item !== '') {
             return JSON.parse(item);
         }
         return defValue;
