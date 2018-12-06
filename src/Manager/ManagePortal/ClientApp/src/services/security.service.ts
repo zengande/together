@@ -29,6 +29,10 @@ export class SecurityService {
         this.IsAuthorized = false;
         storeService.store('IsAuthorized', false);
     }
+
+    public AuthorizedCallback(): void {
+        console.log('call back');
+    }
 }
 
 export const securityService = new SecurityService();

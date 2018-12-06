@@ -5,7 +5,7 @@
         this.storage = localStorage;
     }
 
-    public retrieve(key: string, defValue = null) {
+    public retrieve(key: string, defValue: any = null) {
         let item = this.storage.getItem(key);
 
         if (item && item !== 'undefined') {

@@ -27,31 +27,26 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ClientApp\src\App.js" />
-    <None Remove="ClientApp\src\App.test.js" />
-    <None Remove="ClientApp\src\components\Authorized\index.js" />
-    <None Remove="ClientApp\src\components\Authorized\PrivateRoute.js" />
-    <None Remove="ClientApp\src\components\Counter.js" />
-    <None Remove="ClientApp\src\components\FetchData.js" />
-    <None Remove="ClientApp\src\components\Home.js" />
-    <None Remove="ClientApp\src\components\Layout.js" />
-    <None Remove="ClientApp\src\components\NavMenu.js" />
-    <None Remove="ClientApp\src\index.js" />
-    <None Remove="ClientApp\src\services\security.service.ts" />
-    <None Remove="ClientApp\src\services\storage.service.ts" />
+    <Content Include="ClientApp\package-lock.json" />
+    <Content Include="ClientApp\package.json" />
+    <Content Include="ClientApp\public\manifest.json" />
+    <Content Include="ClientApp\tsconfig.json" />
+    <Content Include="ClientApp\tsconfig.prod.json" />
+    <Content Include="ClientApp\tsconfig.test.json" />
+    <Content Include="ClientApp\tslint.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="ClientApp\src\App.test.js" />
-    <TypeScriptCompile Include="ClientApp\src\App.js" />
+    <TypeScriptCompile Include="ClientApp\src\App.tsx" />
     <TypeScriptCompile Include="ClientApp\src\components\Authorized\index.js" />
-    <TypeScriptCompile Include="ClientApp\src\components\Authorized\PrivateRoute.js" />
-    <TypeScriptCompile Include="ClientApp\src\pages\Counter.js" />
-    <TypeScriptCompile Include="ClientApp\src\pages\FetchData.js" />
-    <TypeScriptCompile Include="ClientApp\src\pages\Home.js" />
+    <TypeScriptCompile Include="ClientApp\src\components\Authorized\Authorize.ts" />
+    <TypeScriptCompile Include="ClientApp\src\pages\Counter.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\pages\FetchData.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\pages\Home.tsx" />
     <TypeScriptCompile Include="ClientApp\src\components\Shared\Layout.js" />
     <TypeScriptCompile Include="ClientApp\src\components\Shared\NavMenu.js" />
-    <TypeScriptCompile Include="ClientApp\src\index.js" />
+    <TypeScriptCompile Include="ClientApp\src\index.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\pages\Login.tsx" />
     <TypeScriptCompile Include="ClientApp\src\services\security.service.ts" />
     <TypeScriptCompile Include="ClientApp\src\services\storage.service.ts" />
   </ItemGroup>

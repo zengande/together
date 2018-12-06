@@ -1,7 +1,7 @@
 ﻿import React from 'react';
 import PropTypes from 'prop-types';
 import { securityService } from '../../services/security.service';
-import PrivateRoute from './PrivateRoute';
+import { Authorize } from './Authorize';
 
 class Authorized extends React.Component {
 
@@ -31,6 +31,6 @@ Authorized.propTypes = {
 };
 
 export {
-    PrivateRoute,
+    Authorize,
     Authorized
 }
