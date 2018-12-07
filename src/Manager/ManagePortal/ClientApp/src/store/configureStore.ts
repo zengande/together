@@ -6,7 +6,7 @@ import { History } from 'history';
 
 export default function configureStore(history: History<any>) {
     const reducers = {
-        user: userStore.reducer
+        identity: userStore.reducer
     };
 
     const middleware = [

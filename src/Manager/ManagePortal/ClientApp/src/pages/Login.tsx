@@ -15,13 +15,12 @@ class Login extends React.Component<any, any> {
      * render
      */
     public render() {
-        const { user } = this.props;
-        console.log(user);
+        const { identity } = this.props;
         return (
             <div>
-                <h1>{JSON.stringify(user)}</h1>
+                <h1>{JSON.stringify(identity)}</h1>
                 {
-                    user.isAuthenticated ? (
+                    identity.isAuthenticated ? (
                         <Link to={"/home"}>已登录</Link>
                     ) : (
                             <button onClick={this.login}>登录</button>
@@ -42,6 +41,6 @@ class Login extends React.Component<any, any> {
 const mapDispatchToProps = (dispatch: any) => bindActionCreators(actionCreators, dispatch)
 
 export default connect(
-    (state: any) => ({ user: state.user }),
+    (state: any) => ({ identity: state.identity }),
     mapDispatchToProps
 )(Login)

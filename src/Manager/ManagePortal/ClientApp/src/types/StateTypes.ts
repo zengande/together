@@ -1,9 +1,9 @@
 ﻿import { IUserInfo } from './IUserInfo';
-export interface IUserState {
+export interface IIdentityState {
     isAuthenticated: boolean;
     userInfo:IUserInfo
 }
 
 export interface IState {
-    user: IUserState
+    identity: IIdentityState
 }

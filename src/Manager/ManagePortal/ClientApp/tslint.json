@@ -13,5 +13,8 @@
         "no-console": false,
         "ordered-imports": false,
         "prefer-const": false
+    },
+    "jsRules": {
+        "object-literal-sort-keys": false 
     }
 }

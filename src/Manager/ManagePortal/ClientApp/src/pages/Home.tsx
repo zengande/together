@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { Button } from 'antd';
 
 const Home = (props: any) => {
 
@@ -23,6 +24,7 @@ const Home = (props: any) => {
             <p>The <code>ClientApp</code> subdirectory is a standard React application based on the <code>create-react-app</code> template. If you open a command prompt in that directory, you can run <code>npm</code> commands such as <code>npm test</code> or <code>npm install</code>.</p>
 
             <p>{JSON.stringify(user)}</p>
+            <Button type="primary">Button</Button>
         </div>
     );
 }

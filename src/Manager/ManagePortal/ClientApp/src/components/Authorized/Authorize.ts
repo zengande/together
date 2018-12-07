@@ -4,6 +4,6 @@ import { IState } from '../../types'
 
 export const Authorize = connectedRouterRedirect<any, IState>({
     redirectPath: '/login',
-    authenticatedSelector: state => state.user.isAuthenticated,
+    authenticatedSelector: state => state.identity.isAuthenticated,
     wrapperDisplayName: 'UserIsAuthenticated'
 })
