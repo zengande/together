@@ -1,0 +1,31 @@
+.main-container{
+    
+    background: #faf9f8;
+}
+.main-content{
+    margin: 0px auto;
+    max-width: 1128px;
+}
+
+@media (min-width: 1024px){
+    .main-content{
+        width: 84%;
+    }
+}
+
+@media (max-width: 1023px) and (min-width: 640px){
+    .main-content{
+        width: 90%;
+    }
+}
+
+@media (max-width: 639px) and (min-width: 480px){
+    .main-content{
+        width: 92%;
+    }
+}
+@media (max-width: 479px){
+    .main-content{
+        width: 90%;
+    }
+}

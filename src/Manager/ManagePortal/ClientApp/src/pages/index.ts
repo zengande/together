@@ -1,4 +1,4 @@
-import Home from './Home';
+import Home from './home/Home';
 import Login from './Login';
 import Exception404 from './Exception/404'
 
