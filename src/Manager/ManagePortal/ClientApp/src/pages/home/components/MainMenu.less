@@ -1,17 +1,14 @@
-.apps-container{
+@import "../../../components/style/color/colors.less";
+
+.menus-container{
     margin: 20px 0px;
 }
-.apps-heading{
-    font-size: 22px;
-    color: #605e5c;
-    line-height: 36px;
-}
 
-.apps{
+.menus{
     display: inline-block
 }
 
-.apps .app-item{
+.menus .menu-item{
     float: left;
     display: inline-block;
     width: 96px;
@@ -22,28 +19,31 @@
     color: #000000;
 }
 
-.apps .app-item:hover{
+.menus .menu-item:hover{
     background: #ffffff;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,.1);
-    color: rgb(0,120,215)
+    color: @primary-color
 }
-.apps .app-item:hover > div{
-    
+// .menus .menu-item:hover .menu-item-text{
+//     color: @primary-color
+// }
+.menus .menu-item:focus{
+    text-decoration: none;
 }
 
-.apps .app-item > span{
+.menus .menu-item .menu-item-icon{
     line-height: 51px;
     font-size: 24px;
     font-weight: 600;
     display: block
 }
 
-.apps .app-item > div{
+.menus .menu-item > div{
     height: 45px;
     font-size: 13px;
 }
 
-.apps .app-item .app-item-text{
+.menus .menu-item .menu-item-text{
     position: relative;
     overflow-wrap: break-word;
     white-space: normal;
