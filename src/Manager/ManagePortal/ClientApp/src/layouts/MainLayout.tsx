@@ -6,7 +6,7 @@ import './MainLayout.css';
 
 const { Content } = Layout;
 
-export default class MainLayout extends React.PureComponent<any, any>{
+export default class MainLayout extends React.Component<any, any>{
 
     public render() {
         const { children } = this.props;

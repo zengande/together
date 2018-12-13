@@ -5,10 +5,9 @@ import { IMenu } from 'src/types/IMenu';
 import DrawerMenuItem from './DrawerMenuItem';
 import { Icon } from 'antd';
 
-class DrawerMenu extends React.Component<any> {
+class DrawerMenu extends React.PureComponent<any> {
     public render() {
         const { menus } = this.props;
-
         return (
             <div>
                 <h2>主菜单</h2>
@@ -31,5 +30,5 @@ class DrawerMenu extends React.Component<any> {
 }
 
 export default connect(
-    (state: IState) => ({ ...state.menu })
+    (state: IState) => ({ menus: state.menu.menus })
 )(DrawerMenu);

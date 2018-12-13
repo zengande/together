@@ -17,7 +17,6 @@ class Login extends React.Component<any> {
     }
 
     public render() {
-        console.log(this.props.location.search);
         return (
             <button onClick={this.login}>登录</button>
         );

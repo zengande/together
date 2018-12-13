@@ -1,7 +1,7 @@
 import * as React from 'react';
 import DocumentTitle from 'react-document-title';
 import LoadingSpinner from '../components/LoadingSpinner/index';
-import Header from './Header';
+import Header from '../components/Header/Header';
 import LeftDrawer from 'src/components/LeftDrawer';
 import { connect } from 'react-redux';
 import { IState } from '../types/StateTypes';

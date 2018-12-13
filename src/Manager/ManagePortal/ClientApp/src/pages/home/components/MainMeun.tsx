@@ -3,6 +3,8 @@ import './MainMenu.css';
 import { Link } from 'react-router-dom';
 import { Icon } from 'antd';
 import { IMenu } from 'src/types/IMenu';
+import { IState } from 'src/types';
+import { connect } from 'react-redux';
 
 class MenuItem extends React.PureComponent<{ menu: IMenu }>{
     public render() {
@@ -18,7 +20,7 @@ class MenuItem extends React.PureComponent<{ menu: IMenu }>{
     }
 }
 
-export default class MainMenu extends React.Component<{ menus: IMenu[] }> {
+class MainMenu extends React.PureComponent<any> {
     public render() {
         const { menus } = this.props;
         return (
@@ -40,3 +42,6 @@ export default class MainMenu extends React.Component<{ menus: IMenu[] }> {
     }
 }
 
+export default connect(
+    (state: IState) => ({ menus: state.menu.menus })
+)(MainMenu);
