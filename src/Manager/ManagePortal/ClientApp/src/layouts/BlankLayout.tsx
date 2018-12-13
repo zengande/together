@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
+import BasicLayout from './BasicLayout';
 
 export default class BlankLayout extends React.PureComponent {
     public static propTypes = {
@@ -9,9 +10,9 @@ export default class BlankLayout extends React.PureComponent {
     public render() {
         const { children } = this.props;
         return (
-            <div>
+            <BasicLayout>
                 {children}
-            </div>
+            </BasicLayout>
         )
     }
 }

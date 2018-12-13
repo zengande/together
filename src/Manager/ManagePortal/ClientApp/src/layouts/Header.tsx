@@ -16,7 +16,7 @@ class Header extends React.Component<any, any> {
 
         const menu = (
             <Menu>
-                <Menu.Item><Link to="">我的资料</Link></Menu.Item>
+                <Menu.Item><Link to="/account/center">我的资料</Link></Menu.Item>
                 <Menu.Item><Link to="">退出</Link></Menu.Item>
             </Menu >
         );
@@ -24,7 +24,7 @@ class Header extends React.Component<any, any> {
         return (
             <nav className="fix-header">
                 <div className="header-left">
-                    <Icon type={collapsed ? 'menu-unfold' : 'menu-fold'} onClick={this.toggle} />
+                    <Icon type={collapsed ? 'menu-fold' : 'menu-unfold'} onClick={this.toggle} />
                     <Link to="/">TOGETHER</Link></div>
                 <div className="header-right">
                     {identity.isAuthenticated ? (
@@ -57,7 +57,7 @@ class Header extends React.Component<any, any> {
 }
 
 export default connect(
-    (state: any) => {
-        return { identity: state.identity }
-    }
+    (state: any) => ({
+        identity: state.identity
+    })
 )(Header);

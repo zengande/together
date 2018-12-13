@@ -42,8 +42,8 @@ namespace Together.Identity.API.Services
                 new Claim(JwtClaimTypes.PreferredUserName, user.UserName)
             };
 
-            claims.Add(new Claim(nameof(ApplicationUser.Nickname), user.Nickname ?? ""));
-            claims.Add(new Claim(nameof(ApplicationUser.Avatar), user.Avatar ?? ""));
+            claims.Add(new Claim("nickname", user.Nickname ?? ""));
+            claims.Add(new Claim("avatar", user.Avatar ?? ""));
 
             if (_userManager.SupportsUserEmail)
             {

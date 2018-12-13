@@ -2,7 +2,7 @@ import * as React from 'react';
 import './App.css';
 import { Route, Switch, Redirect } from 'react-router';
 import { Authorize } from './components/Authorized';
-import { Login, Home, Exception404 } from './pages';
+import { Login, Home, Exception404, Center } from './pages';
 import UserManagement from './pages/usermanagement/UserManagement';
 
 class App extends React.Component<{}> {
@@ -18,11 +18,19 @@ class App extends React.Component<{}> {
             )
         };
 
+        const accountRoutes = ({ match }: { match: any }) => (
+            <Switch>
+                <Route path={`${match.url}/center`} component={Authorize(Center)} />
+                <Route path={`${match.url}/login`} component={Login} />
+                <Redirect from='*' to='/account/login' />
+            </Switch>
+        );
+
         const routes = (
             <Switch>
                 <Route exact={true} path="/" component={Authorize(Home)} />
                 <Route path="/management" component={managementRoutes} />
-                <Route path="/login" component={Login} />
+                <Route path="/account" component={accountRoutes} />
                 <Route path="/404" component={Exception404} />
                 <Redirect from='*' to='/404' />
             </Switch>

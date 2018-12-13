@@ -1,9 +1,17 @@
 ﻿import { IUserInfo } from './IUserInfo';
+import { IMenu } from './IMenu';
+
 export interface IIdentityState {
     isAuthenticated: boolean;
-    userInfo:IUserInfo
+    userInfo: IUserInfo
+}
+
+export interface IMenuState {
+    menus: IMenu[];
+    drawerVisible: boolean
 }
 
 export interface IState {
-    identity: IIdentityState
+    identity: IIdentityState,
+    menu: IMenuState
 }

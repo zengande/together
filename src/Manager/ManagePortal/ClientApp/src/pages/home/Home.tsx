@@ -6,18 +6,12 @@ import Statistics from './components/Statistics';
 import './Home.css';
 import WorkList from './components/WorkList';
 import MainLayout from '../../layouts/MainLayout';
+import { IState } from 'src/types';
 
 const Home = (props: any) => {
 
-    // const { user } = props;
-    const menus = [
-        { Icon: "user", Text: '用户管理', Link: '/management/user' },
-        { Icon: "audit", Text: '活动管理', Link: '/management/activity' },
-        { Icon: "setting", Text: '系统维护', Link: '/system' },
-        { Icon: "line-chart", Text: '统计信息', Link: '/statistics' },
-        { Icon: "notification", Text: '消息通知', Link: '/logs' },
-        { Icon: "exception", Text: '日志', Link: '/logs' }
-    ]
+    const { menus } = props;
+
     return (
         <MainLayout>
             <Hero />
@@ -29,5 +23,5 @@ const Home = (props: any) => {
 }
 
 export default connect(
-    (state: any) => ({ user: state.user })
+    (state: IState) => ({ menus: state.menu.menus })
 )(Home);

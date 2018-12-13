@@ -1,17 +1,17 @@
 import * as React from 'react';
 import './MainMenu.css';
 import { Link } from 'react-router-dom';
-import { IMenu } from '../types/IMenu';
 import { Icon } from 'antd';
+import { IMenu } from 'src/types/IMenu';
 
 class MenuItem extends React.PureComponent<{ menu: IMenu }>{
     public render() {
         const { menu } = this.props;
         return (
-            <Link to={menu.Link} className="menu-item" target="_blank">
-                <Icon className="menu-item-icon" type={menu.Icon} />
+            <Link to={menu.link} className="menu-item">
+                <Icon className="menu-item-icon" type={menu.icon} />
                 <div>
-                    <div className="menu-item-text">{menu.Text}</div>
+                    <div className="menu-item-text">{menu.text}</div>
                 </div>
             </Link>
         );
@@ -23,7 +23,7 @@ export default class MainMenu extends React.Component<{ menus: IMenu[] }> {
         const { menus } = this.props;
         return (
             <div className="menus-container">
-                <h2 className="block-heading">菜单</h2>
+                <h2 className="block-heading">主菜单</h2>
                 <div className="menus">
                     {
                         (menus && menus.length > 0) ?
