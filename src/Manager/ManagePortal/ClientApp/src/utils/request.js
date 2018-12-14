@@ -44,11 +44,7 @@ export default function request(url, options) {
         .catch(e => {
             const status = e.name;
             if (status === 401) {
-                // @HACK
-                /* eslint-disable no-underscore-dangle */
-                window.g_app._store.dispatch({
-                    type: 'login/logout',
-                });
+                this.props.history.push('/account/login');
                 return;
             }
             // environment should not be used

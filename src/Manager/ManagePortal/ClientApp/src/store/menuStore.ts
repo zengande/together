@@ -8,12 +8,7 @@ const initialState: IMenuState = {
         { icon: "audit", text: '活动管理', link: '/management/activity', children: null },
         { icon: "setting", text: '系统维护', link: '/system', children: null },
         { icon: "line-chart", text: '统计信息', link: '/statistics', children: null },
-        {
-            icon: "notification", text: '消息通知', link: '/messages', children: [
-                { icon: '', text: '通知', link: '/messages/notification', children: null },
-                { icon: '', text: '消息', link: '/messages/news', children: null }
-            ]
-        },
+        { icon: "notification", text: '消息通知', link: '/messages', children: null },
         { icon: "exception", text: '日志', link: '/logs', children: null }
     ],
     drawerVisible: false

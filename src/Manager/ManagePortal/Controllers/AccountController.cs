@@ -1,12 +1,13 @@
-﻿using System;
+﻿using ManagePortal.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using ManagePortal.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ManagePortal.Controllers
 {
@@ -14,10 +15,12 @@ namespace ManagePortal.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
+        private readonly string _identityUrl;
         private readonly HttpClient _http;
-        public AccountController()
+        public AccountController(IConfiguration configuration)
         {
             _http = HttpClientFactory.Create();
+            _identityUrl = configuration.GetValue("IdentityUrl", "");
         }
 
         [HttpPost]
@@ -31,11 +34,11 @@ namespace ManagePortal.Controllers
             parame.Add("password", model.Password);
 
             var content = new FormUrlEncodedContent(parame);
-            var response = await _http.PostAsync("http://localhost:5000/connect/token", content);
+            var response = await _http.PostAsync($"{_identityUrl}/connect/token", content);
             if (response.IsSuccessStatusCode)
             {
-                var result = await response.Content.ReadAsStringAsync();
-                // todo : has role admin
+                var json = await response.Content.ReadAsStringAsync();
+                var result = DeserializeObject<TokenResult>(json);
                 return Ok(result);
             }
             return BadRequest();
@@ -45,13 +48,36 @@ namespace ManagePortal.Controllers
         public async Task<IActionResult> UserInfo([FromHeader(Name = "Authorization")]string token)
         {
             _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            var response = await _http.GetAsync("http://localhost:5000/connect/userinfo");
+            var response = await _http.GetAsync($"{_identityUrl}/connect/userinfo");
             if (response.IsSuccessStatusCode)
             {
-                var userinfo = await response.Content.ReadAsStringAsync();
-                return Ok(userinfo);
+                var json = await response.Content.ReadAsStringAsync();
+
+                var userInfo = DeserializeObject<UserInfo>(json);
+                var roles = userInfo?.role.Split(",", StringSplitOptions.RemoveEmptyEntries);
+                if (roles?.Any(r => r.Equals(Constants.Admin, StringComparison.CurrentCultureIgnoreCase)) == true)
+                {
+                    return Ok(userInfo);
+                }
             }
             return BadRequest();
         }
+
+        private T DeserializeObject<T>(string json)
+        {
+            try
+            {
+                return JsonConvert.DeserializeObject<T>(json);
+            }
+            catch (Exception)
+            {
+                return default(T);
+            }
+        }
+    }
+
+    public class Constants
+    {
+        public const string Admin = "Administrator";
     }
 }

@@ -1,10 +1,7 @@
 import * as React from 'react';
+import { ExceptionTypes } from 'src/types/ExceptionTypes';
 
-class Exception extends React.Component<any> {
-    constructor(props: any) {
-        super(props);
-
-    }
+class Exception extends React.Component<{ type: ExceptionTypes }> {
 
     public render() {
         const { type } = this.props;

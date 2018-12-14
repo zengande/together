@@ -1,7 +1,7 @@
 .main-container{
     padding-top: 48px; 
     background: #faf9f8;
-    height: 100vh;
+    min-height: 100vh;
 }
 .main-content{
     margin: 0px auto;

@@ -4,17 +4,20 @@ import { Route, Switch, Redirect } from 'react-router';
 import { Authorize } from './components/Authorized';
 import { Login, Home, Exception404, Center } from './pages';
 import UserManagement from './pages/usermanagement/UserManagement';
+import ManagementLayout from './layouts/ManagementLayout';
 
 class App extends React.Component<{}> {
     public render() {
 
         const managementRoutes = ({ match }: { match: any }) => {
             return (
-                <Switch>
-                    <Route path={`${match.url}/user`} component={Authorize(UserManagement)} />
-                    <Route path={`${match.url}/activity`} component={Authorize(() => (<div>activity</div>))} />
-                    <Redirect from='*' to='/404' />
-                </Switch>
+                <ManagementLayout>
+                    <Switch>
+                        <Route path={`${match.url}/user`} component={Authorize(UserManagement)} />
+                        <Route path={`${match.url}/activity`} component={Authorize(() => (<div>activity</div>))} />
+                        <Redirect from='*' to='/404' />
+                    </Switch>
+                </ManagementLayout>
             )
         };
 

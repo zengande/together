@@ -28,13 +28,13 @@ namespace Together.Identity.API.Services
             if (user == null)
                 throw new ArgumentException("Invalid subject identifier");
 
-            var roleClaims = context.Subject.FindAll(JwtClaimTypes.Role);
-            var claims = GetClaimsFromUser(user);
-            claims.AddRange(roleClaims);
+            //var roleClaims = context.Subject.FindAll(JwtClaimTypes.Role);
+            var claims = await GetClaimsFromUser(user);
+            //claims.AddRange(roleClaims);
             context.IssuedClaims = claims;
         }
 
-        private List<Claim> GetClaimsFromUser(ApplicationUser user)
+        private async Task<List<Claim>> GetClaimsFromUser(ApplicationUser user)
         {
             var claims = new List<Claim>
             {
@@ -61,6 +61,16 @@ namespace Together.Identity.API.Services
                     new Claim(JwtClaimTypes.PhoneNumberVerified, user.PhoneNumberConfirmed ? "true" : "false", ClaimValueTypes.Boolean)
                 });
             }
+
+            if (_userManager.SupportsUserRole)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                if (roles != null)
+                {
+                    claims.Add(new Claim(JwtClaimTypes.Role, string.Join(",", roles)));
+                }
+            }
+
             return claims;
         }
 
