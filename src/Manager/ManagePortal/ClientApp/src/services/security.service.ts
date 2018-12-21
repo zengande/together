@@ -49,6 +49,7 @@ export class SecurityService {
     public ResetAuthorizationData(): void {
         storeService.store('authorizationData', '');
         storeService.store('authorizationDataIdToken', '');
+        storeService.store('userData', '');
 
         this.IsAuthorized = false;
         storeService.store('IsAuthorized', false);

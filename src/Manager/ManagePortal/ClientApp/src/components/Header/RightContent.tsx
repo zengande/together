@@ -1,31 +1,57 @@
 import * as React from 'react';
-import { Icon } from 'antd';
-import { Link } from 'react-router-dom';
-export default class RightContent extends React.PureComponent<any> {
-    constructor(props: any) {
-        super(props);
-        this.toggle = this.toggle.bind(this);
+import { connect } from 'react-redux';
+import { IState } from 'src/types';
+import { Dropdown, Avatar, Spin, Menu } from 'antd';
+import { Link, withRouter } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+import { actionCreators } from 'src/store/userStore';
+
+export class RightContent extends React.Component<any> {
+    public shouldComponentUpdate(nextProps: any) {
+        if (this.props.identity !== nextProps.props) {
+            return true;
+        }
+        return false;
     }
 
     public render() {
-        const { collapsed } = this.props;
+        const { identity } = this.props;
+        const menu = (
+            <Menu>
+                <Menu.Item><Link to="/account/center">我的资料</Link></Menu.Item>
+                <Menu.Item><a href="javascript:;" onClick={() => { this.logout() }}>退出登录</a></Menu.Item>
+            </Menu >
+        );
         return (
-            <div className="header-left">
-                <Icon type={collapsed ? 'menu-fold' : 'menu-unfold'} onClick={this.toggle} />
-                <Link to="/">TOGETHER</Link>
+            <div className="header-right">
+                {
+                    identity.isAuthenticated ? (
+                        <Dropdown overlay={menu}>
+                            <span>
+                                <Avatar
+                                    size="small"
+                                    alt="avatar"
+                                />
+                                <span className="name">{identity.userInfo.nickname}</span>
+                            </span>
+                        </Dropdown>
+                    ) : (<Spin size="small" style={{ marginLeft: 8, marginRight: 8 }} />)
+                }
             </div>
         );
     }
 
-    private triggerResizeEvent() {
-        const event = document.createEvent('HTMLEvents');
-        event.initEvent('resize', true, false);
-        window.dispatchEvent(event);
+    private logout() {
+        const { logout, history } = this.props;
+        logout();
+        history.push('/account/login')
     }
 
-    private toggle() {
-        const { collapsed, onCollapse } = this.props;
-        onCollapse(!collapsed);
-        this.triggerResizeEvent();
-    }
 }
+
+export default connect(
+    (state: IState) => ({
+        identity: state.identity
+    }),
+    (dispatch: any) => bindActionCreators(actionCreators, dispatch)
+)(withRouter(RightContent));

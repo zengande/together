@@ -10,9 +10,9 @@ export default class Header extends React.Component<any, any> {
 
         return (
             <nav className="fix-header">
-                <LeftContent />
-                <RightContent collapsed={collapsed}
+                <LeftContent  collapsed={collapsed}
                     onCollapse={onCollapse} />
+                <RightContent/>
             </nav>
         )
     }

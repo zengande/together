@@ -4,12 +4,14 @@ import { AT } from 'src/types';
 
 const initialState: IMenuState = {
     menus: [
-        { icon: "user", text: '用户管理', link: '/management/user', children: null },
-        { icon: "audit", text: '活动管理', link: '/management/activity', children: null },
-        { icon: "setting", text: '系统维护', link: '/system', children: null },
-        { icon: "line-chart", text: '统计信息', link: '/statistics', children: null },
-        { icon: "notification", text: '消息通知', link: '/messages', children: null },
-        { icon: "exception", text: '日志', link: '/logs', children: null }
+        { icon: 'dashboard', text: '分析页', link: '/analysis' },
+        { icon: 'schedule', text: '工作台', link: '/workplace' },
+        { icon: "user", text: '用户管理', link: '/management/user' },
+        { icon: "audit", text: '活动管理', link: '/management/activity' },
+        { icon: "setting", text: '系统维护', link: '/system' },
+        { icon: "notification", text: '消息通知', link: '/messages' },
+        { icon: "exception", text: '日志', link: '/logs' },
+        { icon: "message", text: 'IM', link: '/im' }
     ],
     drawerVisible: false
 };

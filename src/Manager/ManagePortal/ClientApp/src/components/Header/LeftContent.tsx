@@ -1,48 +1,32 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { IState } from 'src/types';
-import { Dropdown, Avatar, Spin, Menu } from 'antd';
+import { Icon } from 'antd';
 import { Link } from 'react-router-dom';
-class LeftContent extends React.Component<any> {
+export default class LeftContent extends React.PureComponent<any> {
 
-    public shouldComponentUpdate(nextProps: any) {
-        console.log(nextProps);
-        if (this.props.identity !== nextProps.props) {
-            return true;
-        }
-        return false;
+    constructor(props: any) {
+        super(props);
+        this.toggle = this.toggle.bind(this);
     }
 
     public render() {
-        const { identity } = this.props;
-        const menu = (
-            <Menu>
-                <Menu.Item><Link to="/account/center">我的资料</Link></Menu.Item>
-                <Menu.Item><Link to="">退出</Link></Menu.Item>
-            </Menu >
-        );
+        const { collapsed } = this.props;
         return (
-            <div className="header-right">
-                {
-                    identity.isAuthenticated ? (
-                        <Dropdown overlay={menu}>
-                            <span>
-                                <Avatar
-                                    size="small"
-                                    alt="avatar"
-                                />
-                                <span className="name">{identity.userInfo.nickname}</span>
-                            </span>
-                        </Dropdown>
-                    ) : (<Spin size="small" style={{ marginLeft: 8, marginRight: 8 }} />)
-                }
+            <div className="header-left">
+                <Icon type={collapsed ? 'menu-fold' : 'menu-unfold'} onClick={this.toggle} />
+                <Link to="/">TOGETHER</Link>
             </div>
         );
     }
-}
 
-export default connect(
-    (state: IState) => ({
-        identity: state.identity
-    })
-)(LeftContent);
+    private triggerResizeEvent() {
+        const event = document.createEvent('HTMLEvents');
+        event.initEvent('resize', true, false);
+        window.dispatchEvent(event);
+    }
+
+    private toggle() {
+        const { collapsed, onCollapse } = this.props;
+        onCollapse(!collapsed);
+        this.triggerResizeEvent();
+    }
+}

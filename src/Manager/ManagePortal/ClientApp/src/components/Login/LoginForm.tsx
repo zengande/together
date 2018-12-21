@@ -14,6 +14,9 @@ class LoginForm extends React.Component<any, any> {
     constructor(props: any) {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.state = {
+            inProcessing: false
+        }
     }
 
     public componentWillMount() {
@@ -48,8 +51,8 @@ class LoginForm extends React.Component<any, any> {
                         <Checkbox>Remember me</Checkbox>
                     )}
                     <a className="login-form-forgot" href="">Forgot password</a>
-                    <Button type="primary" htmlType="submit" className="login-form-button">
-                        Log in
+                    <Button disabled={this.state.inProcessing} type="primary" htmlType="submit" className="login-form-button">
+                        {this.state.inProcessing ? '登录中' : '登录'}
                     </Button>
                 </FormItem>
             </Form>
@@ -58,10 +61,12 @@ class LoginForm extends React.Component<any, any> {
 
     private handleSubmit(e: any) {
         e.preventDefault();
+        this.setState({ inProcessing: true });
         this.props.form.validateFields((err: any, values: any) => {
             if (!err) {
-                console.log('Received values of form: ', values);
                 this.login(values);
+            } else {
+                this.setState({ inProcessing: false });
             }
         });
     }
@@ -69,13 +74,17 @@ class LoginForm extends React.Component<any, any> {
     private login(values: any) {
 
         const { login } = this.props;
-        let result = securityService.Authorize(values.username, values.password);
-        if (result) {
-            const userInfo = securityService.GetUserInfo();
-            login(userInfo);
-            const redirect = this.getRedirect();
-            this.props.history.push(redirect)
-        }
+        setTimeout(() => {
+            let result = securityService.Authorize(values.username, values.password);
+            this.setState({ inProcessing: false });
+            if (result) {
+                const userInfo = securityService.GetUserInfo();
+                login(userInfo);
+                const redirect = this.getRedirect();
+                this.props.history.push(redirect)
+            }
+        }, 3000)
+
         // todo : login failed!
     }
 

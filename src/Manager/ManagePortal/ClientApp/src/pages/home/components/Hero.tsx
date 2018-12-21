@@ -2,12 +2,13 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IState } from 'src/types';
 import { CustomIcon } from 'src/components/Icons';
+import { getWelcomeSpeech } from 'src/utils/common';
 class Hero extends React.PureComponent<any> {
 
     public render() {
 
         const { userInfo } = this.props;
-        const welcome = this.getWelcomeSpeech();
+        const welcome = getWelcomeSpeech();
 
         return (
             <div style={{ paddingTop: "30px" }}>
@@ -16,41 +17,7 @@ class Hero extends React.PureComponent<any> {
         )
     }
 
-    private getWelcomeSpeech(): any {
-        let message = '';
-        let emotion = null;
-        let now = new Date();
-        let hour = now.getHours()
-        if (hour < 6) {
-            message = "凌晨好";
-            emotion = 'icon-siliao';
-        }
-        else if (hour < 9) {
-            message = "早上好";
-            emotion = 'icon-shuixing';
-        }
-        else if (hour < 12) {
-            message = "上午好";
-            emotion = 'icon-mengbi';
-        }
-        else if (hour < 14) {
-            message = "中午好";
-            emotion = 'icon-lengku';
-        }
-        else if (hour < 17) {
-            message = "下午好";
-            emotion = 'icon-xiaolian';
-        }
-        else if (hour < 19) {
-            message = "傍晚好";
-            emotion = 'icon-kaixin';
-        }
-        else {
-            message = "晚上好";
-            emotion = 'icon-shuizhao';
-        }
-        return { message, emotion }
-    }
+    
 
 }
 

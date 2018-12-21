@@ -7,7 +7,6 @@ import { createBrowserHistory } from 'history'
 import configureStore from './store/configureStore';
 import { Provider } from 'react-redux';
 // import { Router } from 'react-router';
-import { BrowserRouter } from 'react-router-dom'
 // import { ConnectedRouter } from 'react-router-redux';
 
 const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href') || undefined;
@@ -19,9 +18,7 @@ const store = configureStore(history);
 
 ReactDOM.render(
     <Provider store={store}>
-        <BrowserRouter>
             <App />
-        </BrowserRouter>
     </Provider>,
     rootElement);
 registerServiceWorker();
