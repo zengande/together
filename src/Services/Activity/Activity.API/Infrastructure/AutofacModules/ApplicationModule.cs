@@ -2,13 +2,10 @@
 using Consul;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using Together.Activity.API.Applications.Commands;
 using Together.Activity.API.Applications.Queries;
 using Together.Activity.Domain.AggregatesModel.ActivityAggregate;
+using Together.Activity.Domain.AggregatesModel.CategoryAggregate;
+using Together.Activity.Infrastructure.Idempotency;
 using Together.Activity.Infrastructure.Repositories;
 
 namespace Together.Activity.API.Infrastructure.AutofacModules
@@ -30,9 +27,20 @@ namespace Together.Activity.API.Infrastructure.AutofacModules
                 .As<IActivityQueries>()
                 .InstancePerLifetimeScope();
 
+            builder.Register(c => new CategoryQueries(QueriesConnectionString))
+                .As<ICategoryQueries>()
+                .InstancePerLifetimeScope();
+
             builder.RegisterType<ActivityRepository>()
                 .As<IActivityRepository>()
                 .InstancePerLifetimeScope();
+            builder.RegisterType<CategoryRepository>()
+                .As<ICategoryRepository>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<RequestManager>()
+               .As<IRequestManager>()
+               .InstancePerLifetimeScope();
 
             //builder.RegisterAssemblyTypes(typeof(CreateActivityCommandHandler).GetTypeInfo().Assembly)
             //    .AsClosedTypesOf(typeof(IIntegrationEventHandler<>));
@@ -42,10 +50,10 @@ namespace Together.Activity.API.Infrastructure.AutofacModules
                 .WithParameter("configOverride", new Action<ConsulClientConfiguration>(cfg =>
                 {
                     var serviceConfiguration = _serviceOptions.Value;
-                    if (!string.IsNullOrEmpty(serviceConfiguration.Consul.HttpEndpoint))
+                    if (!string.IsNullOrEmpty(serviceConfiguration.ConsulHttpEndpoint))
                     {
                         // if not configured, the client will use the default value "127.0.0.1:8500"
-                        cfg.Address = new Uri(serviceConfiguration.Consul.HttpEndpoint);
+                        cfg.Address = new Uri(serviceConfiguration.ConsulHttpEndpoint);
                     }
                 }))
                 .SingleInstance();

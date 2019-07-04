@@ -1,15 +1,14 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Together.Activity.Domain.AggregatesModel.ActivityAggregate;
+using Together.Activity.Domain.AggregatesModel.CategoryAggregate;
 using Together.Activity.Domain.SeedWork;
 using Together.Activity.Infrastructure.EntityTypeConfigurations;
+using Together.Activity.Infrastructure.Idempotency;
 
 namespace Together.Activity.Infrastructure.Data
 {
@@ -18,8 +17,10 @@ namespace Together.Activity.Infrastructure.Data
     {
         public DbSet<Domain.AggregatesModel.ActivityAggregate.Activity> Activities { get; set; }
         public DbSet<ActivityStatus> ActivityStatuses { get; set; }
+        public DbSet<AddressVisibleRule> AddressVisibleRules { get; set; }
         public DbSet<Participant> Participants { get; set; }
-        //public DbSet<Address> Addresses { get; set; }
+        public DbSet<ClientRequest> ClientRequests { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         private readonly IMediator _mediator;
 
@@ -39,7 +40,9 @@ namespace Together.Activity.Infrastructure.Data
             modelBuilder.ApplyConfiguration(new ActivityStatusEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ActivityEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ParticipantEntityTypeConfiguration());
-            //modelBuilder.ApplyConfiguration(new AddressEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new CategoryEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new ClientRequestEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new AddressVisibleRuleEntityTypeConfiguration());
         }
 
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default(CancellationToken))

@@ -1,0 +1,25 @@
+stages:
+  - build
+  #- test
+  - deploy
+
+before_script:
+  - "dotnet --version"
+
+restore:
+  only:
+    - master
+    - schedules
+  stage: build
+  script: 
+    - "dotnet restore TogetherProject.sln"
+    #- "dotnet build TogetherProject.sln"
+    - "docker-compose build"
+
+publish:
+  only:
+    - master
+    - schedules
+  stage: deploy
+  script:
+    - "docker-compose up -d"

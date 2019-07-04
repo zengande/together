@@ -1,9 +1,8 @@
 ﻿using DotNetCore.CAP;
 using Microsoft.AspNetCore.SignalR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Together.Notice.Hubs;
+using Together.Notice.IntegrationEvents;
 
 namespace Together.Notice.IntegrationEventHandlers
 {
@@ -17,11 +16,11 @@ namespace Together.Notice.IntegrationEventHandlers
         }
 
         [CapSubscribe("Together.Notice.Realtime.NewUserJoined")]
-        public async Task NotifiyHasNewUserJoined()
+        public async Task NotifiyHasNewUserJoined(NewUserJoinedActivityIntegrationEvent @event)
         {
             await _hubContext.Clients
-                .Group("zengande")
-                .SendAsync("NewUserJoined", "测试活动", "张三");
+                .Group(@event.OwnerId)
+                .SendAsync("NewUserJoined", new { title = @event.ActivityTitle, @event.Who, @event.JoinTime });
         }
     }
 }

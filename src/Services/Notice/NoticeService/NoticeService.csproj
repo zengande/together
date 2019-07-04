@@ -5,24 +5,28 @@
     <RootNamespace>Together.Notice</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetCore.CAP" Version="2.2.5" />
-    <PackageReference Include="DotNetCore.CAP.PostgreSql" Version="2.2.5" />
-    <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="2.2.5" />
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.1.0" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.1.0" />
+    <PackageReference Include="Dapper" Version="1.50.5" />
+    <PackageReference Include="DotNetCore.CAP" Version="2.3.1" />
+    <PackageReference Include="DotNetCore.CAP.PostgreSql" Version="2.3.1" />
+    <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="2.3.1" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.5" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.1.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.5" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.1.2" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.1" />
-    <PackageReference Include="Sendgrid" Version="9.9.0" />
+    <PackageReference Include="Sendgrid" Version="9.10.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\BuildingBlocks\Nutshell.Common.Cache\Nutshell.Common.Cache.csproj" />
-    <ProjectReference Include="..\..\..\BuildingBlocks\Nutshell.Extensions.WebHost\Nutshell.Extensions.WebHost.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\Together.Attributes\Together.Attributes.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\Together.Extensions\Together.Extensions.csproj" />
   </ItemGroup>
 
 </Project>

@@ -13,5 +13,6 @@ namespace Location.API.Infrastructure.Services
         Task<List<Locations>> Search(string keyword);
 
         Task<Locations> GetAsync(string locationCode);
+        Task<List<Locations>> GetLocationsAsync(int level);
     }
 }

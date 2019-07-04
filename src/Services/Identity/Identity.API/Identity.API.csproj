@@ -6,20 +6,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DnsClient" Version="1.0.7" />
-    <PackageReference Include="DotNetCore.CAP" Version="2.2.5" />
-    <PackageReference Include="DotNetCore.CAP.PostgreSql" Version="2.2.5" />
-    <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="2.2.5" />
-    <PackageReference Include="IdentityServer4" Version="2.2.0" />
-    <PackageReference Include="IdentityServer4.AspNetIdentity" Version="2.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection.Redis" Version="0.4.0" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.1.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.0" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.1.0" />
+    <PackageReference Include="Com.Ctrip.Framework.Apollo.Configuration" Version="1.4.0" />
+    <PackageReference Include="DnsClient" Version="1.2.0" />
+    <PackageReference Include="DotNetCore.CAP" Version="2.3.1" />
+    <PackageReference Include="DotNetCore.CAP.PostgreSql" Version="2.3.1" />
+    <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="2.3.1" />
+    <PackageReference Include="IdentityServer4" Version="2.3.2" />
+    <PackageReference Include="IdentityServer4.AspNetIdentity" Version="2.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.5" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.Redis" Version="0.4.1" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.1.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.5" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.1.2" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.1" />
-    <PackageReference Include="zipkin4net" Version="1.2.1" />
-    <PackageReference Include="zipkin4net.middleware.aspnetcore" Version="1.2.1" />
+    <PackageReference Include="zipkin4net" Version="1.2.3" />
+    <PackageReference Include="zipkin4net.middleware.aspnetcore" Version="1.2.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,10 +28,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\BuildingBlocks\Nutshell.Extensions.WebHost\Nutshell.Extensions.WebHost.csproj" />
-    <ProjectReference Include="..\..\..\BuildingBlocks\Nutshell.Resilience.HttpRequest\Nutshell.Resilience.HttpRequest.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\Together.Extensions\Together.Extensions.csproj" />
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JSONSchema="" /></VisualStudio></ProjectExtensions>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>

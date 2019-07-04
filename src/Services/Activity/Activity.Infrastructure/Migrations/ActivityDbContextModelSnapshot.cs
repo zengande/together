@@ -16,9 +16,10 @@ namespace Together.Activity.Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
-                .HasAnnotation("ProductVersion", "2.1.0-rtm-30799")
+                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("Relational:Sequence:.activityseq", "'activityseq', '', '1', '10', '', '', 'Int64', 'False'");
+                .HasAnnotation("Relational:Sequence:.activityseq", "'activityseq', '', '1', '10', '', '', 'Int64', 'False'")
+                .HasAnnotation("Relational:Sequence:.categoryseq", "'categoryseq', '', '1', '10', '', '', 'Int64', 'False'");
 
             modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.ActivityAggregate.Activity", b =>
                 {
@@ -33,26 +34,30 @@ namespace Together.Activity.Infrastructure.Migrations
 
                     b.Property<int>("ActivityStatusId");
 
-                    b.Property<int>("CategoryId");
+                    b.Property<int>("AddressVisibleRuleId");
+
+                    b.Property<int?>("CategoryId");
 
                     b.Property<DateTime>("CreateTime");
-
-                    b.Property<string>("Description");
 
                     b.Property<string>("Details");
 
                     b.Property<DateTime>("EndRegisterTime");
-
-                    b.Property<decimal?>("Funds");
 
                     b.Property<int?>("LimitsNum");
 
                     b.Property<string>("OwnerId")
                         .HasMaxLength(200);
 
+                    b.Property<string>("Title");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ActivityStatusId");
+
+                    b.HasIndex("AddressVisibleRuleId");
+
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("activities");
                 });
@@ -71,6 +76,20 @@ namespace Together.Activity.Infrastructure.Migrations
                     b.ToTable("activitystatus");
                 });
 
+            modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.ActivityAggregate.AddressVisibleRule", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasDefaultValue(1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("addressvisiblerules");
+                });
+
             modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.ActivityAggregate.Participant", b =>
                 {
                     b.Property<string>("UserId")
@@ -80,6 +99,10 @@ namespace Together.Activity.Infrastructure.Migrations
 
                     b.Property<string>("Avatar")
                         .HasMaxLength(200);
+
+                    b.Property<bool>("IsOwner")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(false);
 
                     b.Property<DateTime>("JoinTime");
 
@@ -98,6 +121,56 @@ namespace Together.Activity.Infrastructure.Migrations
                     b.ToTable("participant");
                 });
 
+            modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.CategoryAggregate.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("Npgsql:HiLoSequenceName", "categoryseq")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SequenceHiLo);
+
+                    b.Property<string>("CoverImage")
+                        .HasMaxLength(512);
+
+                    b.Property<bool>("Enabled")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("Key")
+                        .HasMaxLength(150);
+
+                    b.Property<int?>("ParentId");
+
+                    b.Property<int>("Sort")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(0);
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .IsUnicode(true);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
+
+                    b.ToTable("categories");
+                });
+
+            modelBuilder.Entity("Together.Activity.Infrastructure.Idempotency.ClientRequest", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.Property<DateTime>("Time");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("requests");
+                });
+
             modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.ActivityAggregate.Activity", b =>
                 {
                     b.HasOne("Together.Activity.Domain.AggregatesModel.ActivityAggregate.ActivityStatus", "ActivityStatus")
@@ -105,19 +178,44 @@ namespace Together.Activity.Infrastructure.Migrations
                         .HasForeignKey("ActivityStatusId")
                         .OnDelete(DeleteBehavior.Cascade);
 
+                    b.HasOne("Together.Activity.Domain.AggregatesModel.ActivityAggregate.AddressVisibleRule", "AddressVisibleRule")
+                        .WithMany()
+                        .HasForeignKey("AddressVisibleRuleId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Together.Activity.Domain.AggregatesModel.CategoryAggregate.Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId");
+
                     b.OwnsOne("Together.Activity.Domain.AggregatesModel.ActivityAggregate.Address", "Address", b1 =>
                         {
                             b1.Property<int?>("ActivityId");
 
-                            b1.Property<string>("City");
+                            b1.Property<string>("City")
+                                .IsRequired()
+                                .HasColumnName("City")
+                                .HasMaxLength(200)
+                                .IsUnicode(true);
 
-                            b1.Property<string>("County");
+                            b1.Property<string>("DetailAddress")
+                                .HasColumnName("DetailAddress")
+                                .HasMaxLength(512)
+                                .IsUnicode(true);
 
-                            b1.Property<string>("DetailAddress");
+                            b1.Property<double>("Latitude")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnName("Latitude")
+                                .HasDefaultValue(0.0);
 
-                            b1.Property<string>("Location");
+                            b1.Property<double>("Longitude")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnName("Longitude")
+                                .HasDefaultValue(0.0);
 
-                            b1.Property<string>("Province");
+                            b1.Property<string>("Province")
+                                .HasColumnName("Province")
+                                .HasMaxLength(200)
+                                .IsUnicode(true);
 
                             b1.ToTable("activities");
 
@@ -134,6 +232,14 @@ namespace Together.Activity.Infrastructure.Migrations
                         .WithMany("Participants")
                         .HasForeignKey("ActivityId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.CategoryAggregate.Category", b =>
+                {
+                    b.HasOne("Together.Activity.Domain.AggregatesModel.CategoryAggregate.Category")
+                        .WithMany()
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618
         }

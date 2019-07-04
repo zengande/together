@@ -1,17 +1,15 @@
-﻿using IdentityServer4;
+﻿using IdentityModel;
+using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace Together.Identity.API.Configurations
 {
     public class Config
     {
-        public static IEnumerable<Client> GetClients() => new List<Client>
+        public static IEnumerable<Client> GetClients(Dictionary<string, string> clients) => new List<Client>
         {
             new Client{
                 ClientId = "mvc",
@@ -19,37 +17,44 @@ namespace Together.Identity.API.Configurations
                 ClientSecrets = new List<Secret>{
                     new Secret("secret".Sha256())
                 },
+                AllowAccessTokensViaBrowser = false,
                 RequireConsent = false,
                 RefreshTokenExpiration = TokenExpiration.Sliding,
                 AllowOfflineAccess = true,
+                AlwaysIncludeUserClaimsInIdToken=true,
                 RequireClientSecret = false,
-                AllowedGrantTypes = GrantTypes.Implicit,
-                RedirectUris = { "http://localhost:5001/signin-oidc" },
-                PostLogoutRedirectUris = { "http://localhost:5001/signout-callback-oidc" },
+                AllowedGrantTypes = GrantTypes.Hybrid,
+                RedirectUris = { $"{clients["mvc"]}/signin-oidc" },
+                PostLogoutRedirectUris = { $"{clients["mvc"]}/signout-callback-oidc" },
                 AllowedScopes = {
-                    "api_gateway",
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
-                    IdentityServerConstants.StandardScopes.OfflineAccess
+                    IdentityServerConstants.StandardScopes.OfflineAccess,
+                    "activities",
+                    "user_group_api",
+                    "noticeservice"
                 }
             },
-            new Client
-                {
-                    ClientId = "together_spa",
-                    ClientName = "React SPA Client",
-                    AllowedGrantTypes = GrantTypes.Implicit,
-                    AllowAccessTokensViaBrowser = true,
-                    RequireConsent = false,
-                    RedirectUris = { "http://localhost:3000/account/callback" },
-                    PostLogoutRedirectUris = { "http://localhost:3000/logout" },
-                    AllowedCorsOrigins = { "http://localhost:3000" },
-
-                    AllowedScopes =
-                    {
-                        IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile
-                    },
+            new Client{
+                ClientId = "manage_portal",
+                ClientName = "Manage Portal SPA",
+                ClientSecrets = new List<Secret>{
+                    new Secret("B8604369-C6CE-424C-9DC7-88FFDAB928AA".Sha256())
                 },
+                AllowAccessTokensViaBrowser = true,
+                RequireConsent = false,
+                RefreshTokenExpiration = TokenExpiration.Sliding,
+                AllowOfflineAccess = true,
+                AlwaysIncludeUserClaimsInIdToken=true,
+                AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                AllowedScopes = {
+                    IdentityServerConstants.StandardScopes.OpenId,
+                    IdentityServerConstants.StandardScopes.Profile,
+                    IdentityServerConstants.StandardScopes.OfflineAccess,
+                    "activities",
+                    "user_group_api"
+                }
+            },
             new Client
                 {
                     ClientId = "activityswaggerui",
@@ -57,8 +62,8 @@ namespace Together.Identity.API.Configurations
                     AllowedGrantTypes = GrantTypes.Implicit,
                     AllowAccessTokensViaBrowser = true,
                     RequireConsent=false,
-                    RedirectUris = { $"http://localhost:5100/swagger/oauth2-redirect.html" },
-                    PostLogoutRedirectUris = { $"http://localhost:5100/swagger/" },
+                    RedirectUris = { $"{clients["activity_api"]}/swagger/oauth2-redirect.html" },
+                    PostLogoutRedirectUris = { $"{clients["activity_api"]}/swagger/" },
 
                     AllowedScopes =
                     {
@@ -79,7 +84,8 @@ namespace Together.Identity.API.Configurations
         public static IEnumerable<ApiResource> GetApiResources() => new List<ApiResource>
         {
             new ApiResource("user_group_api", "User Group Service"),
-            new ApiResource("activities", "Activity Service")
+            new ApiResource("activities", "Activity Service"),
+            new ApiResource("noticeservice", "Notification Service")
         };
 
         public static IEnumerable<IdentityResource> GetIdentityResources() => new List<IdentityResource>

@@ -1,0 +1,31 @@
+﻿@model IEnumerable<WebMVC.ViewModels.Activity.ActivitySummaryViewModel>
+@inject IViewLocalizer Localizer
+
+<div class="new-container">
+    <a onclick="rollPre();" href="javascript:;" class="circle-btn pre-btn"><i class="fa fa-angle-left"></i></a>
+    <div class="cards-container">
+        <div class="cards page-0">
+            @foreach (var activity in Model)
+            {
+                <div class="activity-item">
+                    <a asp-controller="activity" asp-action="details" asp-route-id="@activity.Id">
+                        <div class="activity-card">
+                            <div class="activity-card-header">
+                                <time>@activity.ActivityStartTime.ToString("MMM dd")</time>
+                            </div>
+                            <div class="activity-card-body">
+                                <time class="activity-start">@activity.ActivityStartTime.ToLongDateString(),@activity.ActivityStartTime.ToLongTimeString()</time>
+                                <h3 class="activity-title">@activity.Title</h3>
+                            </div>
+                            <div class="activity-card-footer">
+                                <img class="avatar-40" src="@activity.Avatar" />
+                                @activity.Nickname
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+    <a onclick="rollNext();" href="javascript:;" class="circle-btn next-btn"><i class="fa fa-angle-right"></i></a>
+</div>

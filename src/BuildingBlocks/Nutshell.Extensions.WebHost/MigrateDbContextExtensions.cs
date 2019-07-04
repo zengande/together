@@ -23,7 +23,7 @@ namespace Nutshell.Extensions.WebHost
                 try
                 {
                     logger.LogInformation($"执行数据库初始化操作：context {typeof(TContext).Name}");
-                    var retry = Policy.Handle<SqlException>()
+                    var retry = Policy.Handle<Exception>()
                             .WaitAndRetry(new TimeSpan[]
                             {
                              TimeSpan.FromSeconds(5),

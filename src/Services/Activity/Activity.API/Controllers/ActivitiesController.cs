@@ -1,62 +1,70 @@
-﻿using System;
+﻿using AutoMapper;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Together.Activity.API.Applications.Commands;
-using Together.Activity.API.Models;
+using Together.Activity.API.Applications.Dtos;
 using Together.Activity.API.Applications.Queries;
-using Together.Activity.Domain.Exceptions;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Together.Activity.API.Controllers
 {
     [Route("api/v1/[controller]")]
     [Authorize]
+    [ApiController]
     public class ActivitiesController : BaseController
     {
-        private IMediator _mediator;
-        private IActivityQueries _activityQueries;
+        private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
+        private readonly IActivityQueries _activityQueries;
+        private readonly ILogger<ActivitiesController> _logger;
         public ActivitiesController(IMediator mediator,
-            IActivityQueries activityQueries)
+            IActivityQueries activityQueries,
+            ILogger<ActivitiesController> logger,
+            IMapper mapper)
         {
+            _logger = logger;
             _mediator = mediator;
             _activityQueries = activityQueries;
+            _mapper = mapper;
         }
 
-        [Route("create_activity")]
+        [Route("create")]
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> CreateActivity(CreateActivityViewModel model)
+        public async Task<IActionResult> Create([FromBody]CreateActivityCommand command, [FromHeader(Name = "x-requestid")] string requestId)
         {
-            if (ModelState.IsValid)
+            _logger.LogInformation($"创建活动：{JsonConvert.SerializeObject(command)}");
+            bool commandResult = false;
+            if (Guid.TryParse(requestId, out Guid guid) &&
+                guid != Guid.Empty)
             {
-                try
-                {
-                    var address = new Domain.AggregatesModel.ActivityAggregate.Address("ZheJiang", "HangZhou", "XiHu", "浙大科技园","");
-                    var result = await _mediator.Send(new CreateActivityCommand(CurrentUser, model.Title, model.Details, model.EndRegisterDate, model.ActivityStartTime, model.ActivityEndTime, address,model.CategoryId, model.LimitsNum));
-                    return result ? Ok() : (IActionResult)BadRequest();
-                }
-                catch (ActivityDomainException ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+                command.Owner = CurrentUser;
+                var request = new IdentifiedCommand<CreateActivityCommand, bool>(command, guid);
+                commandResult = await _mediator.Send(request);
             }
-            return BadRequest();
+
+            return commandResult ? Ok() : (IActionResult)BadRequest();
         }
+
 
         [Route("{activityId:int}")]
         [HttpGet]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(ActivityViewModel), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ActivityDetailDto), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Get(int activityId)
         {
             try
             {
                 var activity = await _activityQueries.GetActivityAsync(activityId);
+                activity.IsJoined = await _activityQueries.AlreadyJoined(activityId, CurrentUser?.UserId);
                 return Ok(activity);
             }
             catch (KeyNotFoundException)
@@ -68,7 +76,7 @@ namespace Together.Activity.API.Controllers
         [Route("")]
         [HttpGet]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(IEnumerable<ActivitySummaryViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<ActivitySummaryDto>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetActivities(int? pageIndex = 1, int? pageSize = 10)
         {
             pageIndex = pageIndex.HasValue ? (pageIndex.Value <= 0 ? 1 : pageIndex.Value) : 1;
@@ -77,25 +85,30 @@ namespace Together.Activity.API.Controllers
             return Ok(activities);
         }
 
+        [Route("nearby")]
+        [HttpGet]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(IEnumerable<ActivitySummaryDto>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> Nearby(string location)
+        {
+            var activities = await _activityQueries.GetLatestActivitiesNearby(1, 10, null);
+            return Ok(activities);
+        }
+
         [Route("join/{activityId:int}")]
         [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> JoinActivity(int activityId)
+        public async Task<IActionResult> JoinActivity(int activityId, [FromHeader(Name = "x-requestid")]string requestId)
         {
-            try
+            if (!Guid.TryParse(requestId, out var guid) ||
+                guid == Guid.Empty)
             {
-                await _mediator.Send(new JoinActivityCommand(activityId, CurrentUser));
-                return Ok();
+                return BadRequest();
             }
-            catch (ActivityDomainException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (KeyNotFoundException)
-            {
-                return BadRequest($"活动不存在");
-            }
+            var command = new IdentifiedCommand<JoinActivityCommand, bool>(new JoinActivityCommand(activityId, CurrentUser), guid);
+            var result = await _mediator.Send(command);
+            return result ? Ok() : (IActionResult)BadRequest();
         }
 
         [Route("joined_activities")]
@@ -106,5 +119,6 @@ namespace Together.Activity.API.Controllers
             var activities = await _activityQueries.GetActivitiesByUserAsync(CurrentUser.UserId);
             return Ok(activities);
         }
+
     }
 }

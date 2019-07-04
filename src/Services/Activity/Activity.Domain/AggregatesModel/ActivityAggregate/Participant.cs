@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Together.Activity.Domain.SeedWork;
 
 namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
@@ -20,12 +18,15 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
 
         public DateTime JoinTime { get; private set; }
 
-        public Participant(string userId, string nickname, string avatar, int sex)
+        public bool IsOwner { get; private set; }
+
+        public Participant(string userId, string nickname, string avatar, int sex, bool isOwner = false)
         {
             UserId = userId;
             Nickname = nickname;
             Avatar = avatar;
             Sex = sex;
+            IsOwner = isOwner;
 
             JoinTime = DateTimeOffset.Now.DateTime;
         }

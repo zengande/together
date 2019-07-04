@@ -1,119 +1,79 @@
-﻿using Dapper;
-using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Together.Activity.API.Applications.Queries
 {
-    using Together.Activity.API.Models;
-    using Together.Activity.Domain.AggregatesModel.ActivityAggregate;
+    using System;
+    using Together.Activity.API.Applications.Dtos;
 
     public class ActivityQueries
-        : IActivityQueries
+        : DapperQueries, IActivityQueries
     {
-        private string _connectionString = string.Empty;
-        public ActivityQueries(string constr)
+        public ActivityQueries(string constr) : base(constr) { }
+
+        public async Task<IEnumerable<ActivitySummaryDto>> GetActivitiesAsync(int pageIndex, int pageSize, int status = 2)
         {
-            _connectionString = !string.IsNullOrWhiteSpace(constr) ? constr : throw new ArgumentNullException(nameof(constr));
+            var sql = "SELECT \"a\".\"Id\",\"a\".\"OwnerId\",\"a\".\"Title\",\"a\".\"ActivityStartTime\",\"a\".\"LimitsNum\",b.\"Nickname\",b.\"Avatar\" FROM activities a LEFT JOIN participant b on a.\"Id\"=b.\"ActivityId\" WHERE \"ActivityStatusId\"=@status AND a.\"OwnerId\"=b.\"UserId\" ORDER BY \"CreateTime\" DESC LIMIT @limit OFFSET @offset";
+            return await SqlQuery<ActivitySummaryDto>(sql, new { limit = pageSize, offset = (pageIndex - 1) * pageSize, status });
         }
 
-        public async Task<IEnumerable<ActivitySummaryViewModel>> GetActivitiesAsync(int pageIndex, int pageSize, int status = 2)
+        public async Task<IEnumerable<ActivitySummaryDto>> GetLatestActivitiesNearby(int pageIndex, int pageSize, string location)
         {
-            var sql = @"SELECT TOP(@pageSize) * FROM (
-	                        SELECT a.Id as ActivityId, a.Description as Title,a.LimitsNum, s.Name as Status,ISNULL(c.Count,0) AS NumberOfParticipants
-	                        FROM [dbo].[activities] a
-	                        LEFT JOIN [dbo].[activitystatus] s ON a.ActivityStatusId=s.Id
-	                        LEFT JOIN (SELECT ActivityId, count(*) AS [Count]
-	                        FROM [dbo].[participant]
-	                        GROUP BY [ActivityId]
-	                        ) c on c.ActivityId=a.Id
-                            WHERE a.ActivityStatusId=@status
-                        ) r
-                        WHERE (r.ActivityId NOT IN
-                                  (SELECT TOP (@pageSize*(@pageIndex-1)) Id
-			                         FROM [dbo].[activities]
-                                     WHERE ActivityStatusId=@status
-			                         ORDER BY Id)
-                        )
-                        ORDER BY r.ActivityId";
-            return await SqlQuery<ActivitySummaryViewModel>(sql, new { pageSize, pageIndex, status });
+            var sql = "SELECT \"a\".\"Id\",\"a\".\"OwnerId\",\"a\".\"Title\",\"a\".\"ActivityStartTime\",\"a\".\"LimitsNum\",b.\"Nickname\",b.\"Avatar\" FROM activities a LEFT JOIN participant b on a.\"Id\"=b.\"ActivityId\" WHERE \"ActivityStatusId\" IN (1,2) AND a.\"OwnerId\"=b.\"UserId\" ORDER BY \"CreateTime\" DESC LIMIT @limit OFFSET @offset";
+            return await SqlQuery<ActivitySummaryDto>(sql, new { limit = pageSize, offset = (pageIndex - 1) * pageSize });
         }
 
-        public async Task<ActivityViewModel> GetActivityAsync(int id)
+        public async Task<ActivityDetailDto> GetActivityAsync(int id)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            var sql = "SELECT * FROM activities WHERE \"Id\" = @Id";
+
+            var result = await SqlQueryFirstOrDefaultAsync<ActivityDetailDto>(sql, new { id });
+            if (result == null)
             {
-                connection.Open();
-                var sql = @"SELECT a.OwnerId,a.Id as ActivityId, a.Description, a.Details, a.CreateTime,a.EndTime,a.StartTime, a.ActivitDate,a.LimitsNum, s.Name as Status,p.UserId, p.Nickname, p.JoinTime,p.Avatar,p.Sex
-	                        FROM[dbo].[activities] a
-	                        LEFT JOIN[dbo].[participant] p ON a.Id = p.ActivityId
-	                        LEFT JOIN[dbo].[activitystatus] s ON a.ActivityStatusId=s.Id
-	                        WHERE a.Id=@Id";
-                var result = await connection.QueryAsync<dynamic>(sql, new { id });
-                if (result.AsList().Count <= 0)
-                {
-                    throw new KeyNotFoundException();
-                }
-                return MapActivityAndParticipant(result);
+                throw new KeyNotFoundException();
             }
+            return await MapActivityAndParticipant(result);
         }
 
-        public async Task<IEnumerable<ActivitySummaryViewModel>> GetActivitiesByUserAsync(string userId)
+        public async Task<IEnumerable<ActivitySummaryDto>> GetActivitiesByUserAsync(string userId)
         {
-            var sql = @"SELECT a.Id as ActivityId, a.Description as Title,a.LimitsNum, s.Name as Status
-	                    FROM [dbo].[activities] a
-	                    LEFT JOIN [dbo].[activitystatus] s ON a.ActivityStatusId=s.Id
-	                    WHERE a.Id IN(
-		                    SELECT DISTINCT ActivityId FROM [dbo].[participant] p
-		                    WHERE p.UserId=@userId)";
-            return await SqlQuery<ActivitySummaryViewModel>(sql, new { userId });
+            throw new NotImplementedException();
         }
 
-        private ActivityViewModel MapActivityAndParticipant(dynamic result)
+
+        public async Task<bool> AlreadyJoined(int activityId, string userId)
         {
-            var activity = new ActivityViewModel
+            if (string.IsNullOrEmpty(userId))
             {
-                ActivityId = result[0].ActivityId,
-                Status = result[0].Status,
-                OwnerId = result[0].OwnerId,
-                Description = result[0].Description,
-                Details = result[0].Details,
-                EndTime = result[0].EndTime,
-                StartTime = result[0].StartTime,
-                CreateTime = result[0].CreateTime,
-                ActivityDate = result[0].ActivitDate,
-                //Address = result[0].Address,
-                LimitsNum = result[0].LimitsNum
-            };
-
-
-            foreach (dynamic item in result)
-            {
-                if (item.UserId != null)
-                {
-                    activity.Participants.Add(new ParticipantViewModel
-                    {
-                        UserId = item.UserId,
-                        Avatar = item.Avatar,
-                        JoinTime = item.JoinTime,
-                        Nickname = item.Nickname,
-                        Sex = item.Sex
-                    });
-                }
+                return false;
             }
-
-            return activity;
+            var sql = "SELECT COUNT(*) FROM participant WHERE \"ActivityId\"=@activityId AND \"UserId\"=@userId";
+            var result = await SqlQueryFirstOrDefaultAsync<int>(sql, new { activityId, userId });
+            return result > 0;
         }
 
-        private async Task<IEnumerable<T>> SqlQuery<T>(string sql, object args)
+        private async Task<ActivityDetailDto> MapActivityAndParticipant(ActivityDetailDto vm)
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                return await connection.QueryAsync<T>(sql, args);
-            }
+            vm.NumberOfParticipants = await GetNumberOfParticipantsAsync(vm.Id);
+
+            vm.Participants = await GetTopParticipantsAsync(vm.Id);
+
+            return vm;
+        }
+
+        private async Task<int> GetNumberOfParticipantsAsync(int activityId)
+        {
+            var sql = "SELECT COUNT(*) FROM participant WHERE \"ActivityId\"=@activityId";
+            return await SqlQueryFirstOrDefaultAsync<int>(sql, new { activityId });
+        }
+
+        private async Task<IEnumerable<ParticipantDto>> GetTopParticipantsAsync(int activityId)
+        {
+            var sql = "SELECT \"UserId\",\"Nickname\",\"Avatar\",\"Sex\",\"JoinTime\", \"IsOwner\" FROM participant WHERE \"ActivityId\"=@activityId ORDER BY \"JoinTime\" LIMIT 10";
+
+            return await SqlQuery<ParticipantDto>(sql, new { activityId });
         }
     }
+
+
 }

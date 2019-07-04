@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using App.Metrics;
-using IdentityServer4.AccessTokenValidation;
+﻿using App.Metrics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using System;
 
 namespace Api.Gateway
 {
@@ -30,7 +24,7 @@ namespace Api.Gateway
         public void ConfigureServices(IServiceCollection services)
         {
             var identityUrl = Configuration.GetValue<string>("IdentityUrl");
-            var authenticationProviderKey = "together";
+            var authenticationProviderKey = "IdentityApiKey";
 
             services.AddOptions();
             services.Configure<AppMetricsOptions>(Configuration.GetSection("AppMetrics"));
@@ -45,15 +39,30 @@ namespace Api.Gateway
             });
 
             services.AddAuthentication()
-                .AddJwtBearer(authenticationProviderKey, o =>
+                .AddJwtBearer(authenticationProviderKey, x =>
                 {
-                    o.Authority = identityUrl;
-                    o.RequireHttpsMetadata = false;
-                    o.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                    x.Authority = identityUrl;
+                    x.RequireHttpsMetadata = false;
+                    x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
                     {
-                        ValidAudiences = new[] { "" }
+                        ValidAudiences = new[] { "user_group_api", "activities" }
                     };
+                    x.Events = new Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerEvents()
+                    {
+                        OnAuthenticationFailed = async ctx =>
+                        {
+                            int i = 0;
+                        },
+                        OnTokenValidated = async ctx =>
+                        {
+                            int i = 0;
+                        },
 
+                        OnMessageReceived = async ctx =>
+                        {
+                            int i = 0;
+                        }
+                    };
                 });
 
             services.AddOcelot(Configuration);
@@ -82,6 +91,7 @@ namespace Api.Gateway
                 app.UseMetricsAllMiddleware();
             }
 
+            app.UseWebSockets();
             app.UseOcelot();
         }
     }

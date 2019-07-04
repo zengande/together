@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using System;
+using Together.Extensions.WebHost;
 using Together.Identity.API.Data;
-using Nutshell.Extensions.WebHost;
 
 namespace Together.Identity.API
 {
@@ -19,17 +15,36 @@ namespace Together.Identity.API
             CreateWebHostBuilder(args).Build()
                 .MigrateDbContext<IdentityDbContext>((context, service) =>
                 {
-                    // to do seed data
+                    // seed roles
+                    if (!context.Roles.Any())
+                    {
+                        context.Roles.Add(new Microsoft.AspNetCore.Identity.IdentityRole
+                        {
+                            Id = "6170c51e-1e4f-4f1f-bbcf-f4bd06937716",
+                            Name = "Administrator",
+                            NormalizedName = "ADMINISTRATOR",
+                            ConcurrencyStamp = Guid.NewGuid().ToString("D")
+                        });
+                        context.SaveChanges();
+                    }
                 })
                 .Run();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
+                //.ConfigureAppConfiguration((hostingContext, builder) =>
+                //{
+                //    builder
+                //    .AddApollo(builder.Build().GetSection("apollo"))
+                //    .AddDefault()
+                //    .AddNamespace("TEST1.TogetherShared")
+                //    .AddNamespace("ClientUrls");
+                //})
                 .ConfigureAppConfiguration((builderContext, config) =>
                 {
                     config.AddEnvironmentVariables();
-                });
+                })
+                .UseStartup<Startup>();
     }
 }

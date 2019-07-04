@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Together.Activity.Domain.Events;
 using Together.Activity.Domain.Exceptions;
 using Together.Activity.Domain.SeedWork;
@@ -22,10 +21,13 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         public ActivityStatus ActivityStatus { get; private set; }
         private int _activityStatusId;
 
+        public AddressVisibleRule AddressVisibleRule { get; private set; }
+        private int _addressVisibleRuleId;
+
         /// <summary>
-        /// 活动描述
+        /// 活动标题
         /// </summary>
-        public string Description { get; private set; }
+        public string Title { get; private set; }
 
         /// <summary>
         /// 活动详情
@@ -58,11 +60,6 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         public int? LimitsNum { get; private set; }
 
         /// <summary>
-        /// 参加经费
-        /// </summary>
-        public decimal? Funds { get; private set; }
-
-        /// <summary>
         /// 活动结束时间
         /// </summary>
         public DateTime ActivityEndTime { get; private set; }
@@ -70,7 +67,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         /// <summary>
         /// 活动类别
         /// </summary>
-        public int CategoryId { get; private set; }
+        public int? CategoryId { get; private set; }
 
         /// <summary>
         /// 参与者
@@ -97,7 +94,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         /// <param name="activityDate"></param>
         /// <param name="address"></param>
         /// <param name="limitsNum"></param>
-        public Activity(string userId, string description, string details, DateTime endRegisterTime, DateTime startTime, DateTime endTime, Address address, int categoryId, int? limitsNum = null, decimal? funds = null)
+        public Activity(string userId, string description, string details, DateTime endRegisterTime, DateTime startTime, DateTime endTime, Address address, int categoryId, AddressVisibleRule addressVisibleRule, int? limitsNum = null)
             : this()
         {
             // 截止报名时间早于当前时间（活动在过去）
@@ -116,28 +113,20 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
                 throw new ActivityDomainException("开始时间不能晚于结束结束时间");
             }
             OwnerId = userId;
-            Description = description;
+            Title = description;
             Details = details;
             EndRegisterTime = endRegisterTime;
             ActivityStartTime = startTime;
             ActivityEndTime = endTime;
             Address = address;
             LimitsNum = limitsNum;
-            Funds = funds;
             CategoryId = categoryId;
-            _activityStatusId = ActivityStatus.Draft.Id;
-        }
-
-        /// <summary>
-        /// 提交活动
-        /// </summary>
-        public void SubmitActivity()
-        {
-            if (_activityStatusId != ActivityStatus.Draft.Id)
+            _activityStatusId = ActivityStatus.Recruitment.Id;
+            if (addressVisibleRule == null)
             {
-                StatusChangeException(ActivityStatus.Normal);
+                addressVisibleRule = AddressVisibleRule.PublicVisible;
             }
-            _activityStatusId = ActivityStatus.Normal.Id;
+            _addressVisibleRuleId = addressVisibleRule.Id;
         }
 
         /// <summary>
@@ -145,38 +134,71 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         /// </summary>
         public void JoinActivity(string userId, string nickname, string avatar, int sex)
         {
-            // 已参加了此活动
-            if (_participants.Any(u => u.UserId == userId))
+            // 非活动所有者
+            if (OwnerId != userId)
             {
-                return;
-            }
-
-            // 判断是否已经截止了报名
-            if (DateTimeOffset.Now > EndRegisterTime)
-            {
-                throw new ActivityDomainException("已经截止了报名");
-            }
-
-            // 人数已满
-            if (LimitsNum.HasValue)
-            {
-                if (_participants.Count >= LimitsNum.Value)
+                // 招募状态才能加入
+                if (_activityStatusId != ActivityAggregate.ActivityStatus.Recruitment.Id)
                 {
-                    throw new ActivityDomainException("本次活动人数已满");
+                    throw new ActivityDomainException($"该活动当前状态不允许加入");
+                }
+
+                // 已参加了此活动
+                if (_participants.Any(u => u.UserId == userId))
+                {
+                    return;
+                }
+
+                // 判断是否已经截止了报名
+                if (DateTimeOffset.Now > EndRegisterTime)
+                {
+                    throw new ActivityDomainException("已经截止了报名");
+                }
+
+
+                // 人数已满
+                if (LimitsNum.HasValue)
+                {
+                    // 除本人外人数限制
+                    if (_participants.Count > LimitsNum.Value)
+                    {
+                        throw new ActivityDomainException("本次活动人数已满");
+                    }
                 }
             }
 
-            var participant = new Participant(userId, nickname, avatar, sex);
+            var participant = new Participant(userId, nickname, avatar, sex, userId == OwnerId);
             _participants.Add(participant);
 
             // 加入活动领域事件
             AddDomainEvent(new UserJoinedActivityDomainEvent { Participant = participant });
         }
 
-
         public void SetFinishedStatus()
         {
-            _activityStatusId = ActivityStatus.Finished.Id;
+            if (_activityStatusId == ActivityStatus.Processing.Id)
+            {
+                _activityStatusId = ActivityStatus.Finished.Id;
+            }
+        }
+
+        public void SetProcessingStatus()
+        {
+            if (_activityStatusId == ActivityStatus.Recruitment.Id)
+            {
+                _activityStatusId = ActivityStatus.Processing.Id;
+            }
+        }
+
+        /// <summary>
+        /// 作废
+        /// </summary>
+        public void Obsolete()
+        {
+            if (_activityStatusId == ActivityStatus.Recruitment.Id)
+            {
+                _activityStatusId = ActivityStatus.Obsoleted.Id;
+            }
         }
 
         /// <summary>

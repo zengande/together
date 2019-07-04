@@ -1,33 +1,26 @@
-﻿using System;
-using System.Reflection;
+﻿using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using AutoMapper;
+using Consul;
+using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Together.Activity.Infrastructure.Data;
-using MediatR;
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
-using Together.Activity.API.Infrastructure.AutofacModules;
-using Swashbuckle.AspNetCore.Swagger;
-using Consul;
-using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Hosting.Server.Features;
-using Microsoft.AspNetCore.Http.Features;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using Together.Activity.API.Applications.Filters;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Together.Activity.API.Applications.IntegrationEvents.EventHandlers;
-using Together.Activity.API.Extensions;
-using System.Net.NetworkInformation;
-using System.Net.Sockets;
-using System.Net;
 using Microsoft.Extensions.Logging;
-using System.Text;
+using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.Swagger;
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
+using Together.Activity.API.Applications.Filters;
+using Together.Activity.API.Applications.IntegrationEvents.EventHandlers;
+using Together.Activity.API.Infrastructure.AutofacModules;
+using Together.Activity.Infrastructure.Data;
 
 namespace Together.Activity.API
 {
@@ -55,6 +48,7 @@ namespace Together.Activity.API
             services.Configure<ServiceDiscoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
 
             services.AddScoped<ActivityExpiredIntegrationEventHandler>();
+            services.AddScoped<ActivityRecruitmentCompletedIntegrationEventHandler>();
 
             services.AddCap(options =>
             {
@@ -65,7 +59,12 @@ namespace Together.Activity.API
 
             ConfigureAuthService(services);
 
-            services.AddMvc()
+            services.AddAutoMapper();
+
+            services.AddMvc(options =>
+            {
+                //options.Filters.Add<ActionFilter>()
+            })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddControllersAsServices();
 
@@ -97,12 +96,11 @@ namespace Together.Activity.API
                     .AllowCredentials());
             });
 
-            services.AddMediatR(typeof(Startup));
             var container = new ContainerBuilder();
             container.Populate(services);
             var serviceConfiguration = services.BuildServiceProvider().GetRequiredService<IOptions<ServiceDiscoveryOptions>>();
-            container.RegisterModule(new ApplicationModule(connectionString, serviceConfiguration));
             container.RegisterModule(new MediatorModule());
+            container.RegisterModule(new ApplicationModule(connectionString, serviceConfiguration));
             return new AutofacServiceProvider(container.Build());
         }
 
@@ -129,8 +127,6 @@ namespace Together.Activity.API
             app.UseCors("CorsPolicy");
 
             ConfigureAuth(app);
-
-            app.UseCap();
 
             app.UseMvc();
 

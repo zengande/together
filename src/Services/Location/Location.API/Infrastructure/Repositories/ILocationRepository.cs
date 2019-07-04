@@ -15,5 +15,6 @@ namespace Location.API.Infrastructure.Repositories
         Task InsertLocationAsync(Locations locations, CancellationToken cancellationToken);
 
         Task<List<Locations>> Search(string keyword);
+        Task<List<Locations>> GetLocationsAsync(int level);
     }
 }

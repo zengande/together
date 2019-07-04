@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Together.Activity.Domain.SeedWork;
 
 namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
@@ -10,29 +8,34 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
     {
         public string DetailAddress { get; set; }
         public string City { get; private set; }
-        public string County { get; private set; }
         public string Province { get; private set; }
-        public string Location { get; private set; }
+
+        /// <summary>
+        /// 经度
+        /// </summary>
+        public double Longitude { get; set; }
+        /// <summary>
+        /// 纬度
+        /// </summary>
+        public double Latitude { get; set; }
+
         public Address(string province,
             string city,
-            string county,
             string detailAddress,
-            string location)
+            double longitude, double latitude)
         {
             Province = province;
             City = city;
-            County = county;
             DetailAddress = detailAddress;
-            Location = location;
+            Longitude = longitude;
+            Latitude = latitude;
         }
 
         protected override IEnumerable<object> GetAtomicValues()
         {
             yield return DetailAddress;
             yield return City;
-            yield return County;
             yield return Province;
-            yield return Location;
         }
     }
 }

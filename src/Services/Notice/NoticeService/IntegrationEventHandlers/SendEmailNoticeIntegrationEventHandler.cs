@@ -1,8 +1,5 @@
 ﻿using DotNetCore.CAP;
-using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Together.Notice.IntegrationEvents;
@@ -22,14 +19,13 @@ namespace Together.Notice.IntegrationEventHandlers
             _sender = sender;
         }
 
-        [CapSubscribe("Together.Notice.Email.Test")]
+        [CapSubscribe(Constants.EmailNoticeEventName)]
         public async Task SendTestEmailNotice(SendEmailNoticeIntegrationEvent @event)
         {
-            // TODO : 将记录添加到数据库
-            //var result = await _sender.Send(@event.To, @event.Subject, CleanHtml(@event.HtmlContent), @event.HtmlContent);
+            await _sender.Send(@event.To, @event.Subject, @event.HtmlContent);
         }
 
-        [CapSubscribe("Together.Notice.Email.Confirm.EmailAddress")]
+        [CapSubscribe(Constants.ConfirmEmailAddressEventName)]
         public async Task SendMailboxVerificationNotice(VerifyAccountEmailNoticeEvent @event)
         {
             var template = await _templateService.GetTemplate(1);

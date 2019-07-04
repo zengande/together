@@ -1,0 +1,14 @@
+﻿{
+  "ReRoutes": [
+    {
+      "DownstreamPathTemplate": "/{everything}",
+      "DownstreamScheme": "ws",
+      "UpstreamPathTemplate": "/hubs/{everything}",
+      "ServiceName": "noticeservice",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      "UseServiceDiscovery": true
+    }
+  ]
+}
