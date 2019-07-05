@@ -7,6 +7,10 @@
     xmlns:resources="clr-namespace:Together.UI.Resources">
     <Application.Resources>
 
+        <Style TargetType="Entry">
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
+
         <!--  Application resource dictionary  -->
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -14,6 +18,5 @@
                 <resources:Themes />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-
     </Application.Resources>
 </Application>

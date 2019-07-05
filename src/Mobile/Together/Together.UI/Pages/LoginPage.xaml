@@ -1,14 +1,56 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<local:NoNavigationBarContentPage x:TypeArguments="viewModels:LoginViewModel"
+<views:MvxContentPage 
+    x:TypeArguments="viewModels:LoginViewModel"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:Together.UI.Pages"
     xmlns:views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
     x:Class="Together.UI.Pages.LoginPage"
+    Style="{StaticResource NoNavigationBarStyle}"
     xmlns:viewModels="clr-namespace:Together.Core.ViewModels.Account;assembly=Together.Core">
-    <StackLayout>
-        <Label Text="Login"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-    </StackLayout>
-</local:NoNavigationBarContentPage>
+
+    <views:MvxContentPage.Resources>
+        <Style TargetType="Entry">
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+    </views:MvxContentPage.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="{OnPlatform UWP=*, Android=0,iOS=0}"/>
+            <ColumnDefinition Width="{OnPlatform UWP=480, Android=*,iOS=*}"/>
+            <ColumnDefinition Width="{OnPlatform UWP=*, Android=0,iOS=0}"/>
+        </Grid.ColumnDefinitions>
+        <StackLayout Grid.Column="{OnPlatform UWP=0, Android=1,iOS=1}">
+            <Label>返回</Label>
+        </StackLayout>
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackLayout Orientation="Vertical" Margin="0,0,0,20">
+                <Label Style="{StaticResource HeaderLabelStyle}">登录</Label>
+                <Label>
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span TextColor="{StaticResource PrimaryTextColor}">还没有账号？</Span>
+                            <Span TextColor="{StaticResource PrimaryColor}">去注册</Span>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </StackLayout>
+            <StackLayout Grid.Row="1" Orientation="Vertical">
+                <Entry Placeholder="输入您的用户名" Keyboard="Email"/>
+                <Entry Placeholder="输入您的密码" IsPassword="True"/>
+                <Label Margin="0,0,0,10" HorizontalOptions="End" TextColor="{StaticResource PrimaryTextColor}">忘记密码</Label>
+                <Button Text="立即登录" Style="{StaticResource PrimaryButton}"/>
+            </StackLayout>
+        </Grid>
+    </Grid>
+</views:MvxContentPage>
