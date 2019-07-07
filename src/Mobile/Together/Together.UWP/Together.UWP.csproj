@@ -102,6 +102,7 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="Assets\Fonts\materialdesignicons.ttf" />
     <None Include="Together.UWP_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

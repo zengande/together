@@ -7,7 +7,8 @@
     xmlns:views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
     x:Class="Together.UI.Pages.LoginPage"
     Style="{StaticResource NoNavigationBarStyle}"
-    xmlns:viewModels="clr-namespace:Together.Core.ViewModels.Account;assembly=Together.Core">
+    xmlns:viewModels="clr-namespace:Together.Core.ViewModels.Account;assembly=Together.Core"
+    xmlns:controls="clr-namespace:Together.UI.Components">
 
     <views:MvxContentPage.Resources>
         <Style TargetType="Entry">
@@ -26,7 +27,7 @@
             <ColumnDefinition Width="{OnPlatform UWP=*, Android=0,iOS=0}"/>
         </Grid.ColumnDefinitions>
         <StackLayout Grid.Column="{OnPlatform UWP=0, Android=1,iOS=1}">
-            <Label>返回</Label>
+            <controls:Icon TextColor="Red" Type="{StaticResource IconArrangeSendToBack}"/>
         </StackLayout>
         <Grid Grid.Row="1" Grid.Column="1">
             <Grid.RowDefinitions>
