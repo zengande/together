@@ -25,7 +25,7 @@ namespace WebMVC.Controllers
         {
             var model = new IndexViewModel();
             var activities = (await _activityService.GetActivitiesNearbyAsync(null))?.ToList() ??
-                new List<ActivitySummaryViewModel>();
+                new List<ViewModels.Activity.ActivitySummaryViewModel>();
             if (activities.Count() < 10)
             {
                 activities.AddRange(MockActivities(10 - activities.Count()));
@@ -34,7 +34,7 @@ namespace WebMVC.Controllers
             return View(model);
         }
 
-        private IEnumerable<ActivitySummaryViewModel> MockActivities(int count)
+        private IEnumerable<ViewModels.Activity.ActivitySummaryViewModel> MockActivities(int count)
         {
             if (count >= 1)
             {

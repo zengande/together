@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using System;
+using System.Threading.Tasks;
 
 namespace Api.Gateway
 {
@@ -49,18 +50,18 @@ namespace Api.Gateway
                     };
                     x.Events = new Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerEvents()
                     {
-                        OnAuthenticationFailed = async ctx =>
+                        OnAuthenticationFailed = ctx =>
                         {
-                            int i = 0;
+                            return Task.CompletedTask;
                         },
-                        OnTokenValidated = async ctx =>
+                        OnTokenValidated = ctx =>
                         {
-                            int i = 0;
+                            return Task.CompletedTask;
                         },
 
-                        OnMessageReceived = async ctx =>
+                        OnMessageReceived = ctx =>
                         {
-                            int i = 0;
+                            return Task.CompletedTask;
                         }
                     };
                 });
@@ -78,7 +79,6 @@ namespace Api.Gateway
                 app.UseDeveloperExceptionPage();
             }
 
-            loggerFactory.AddConsole();
 
             app.UseHsts();
 
@@ -122,7 +122,7 @@ namespace Api.Gateway
                 }).Build();
 
                 services.AddMetrics(metrics);
-                services.AddMetricsReportScheduler();
+                //services.AddMetricsReportScheduler();
                 services.AddMetricsTrackingMiddleware();
                 services.AddMetricsEndpoints();
             }

@@ -26,7 +26,7 @@ namespace Api.Gateway
                  config.SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
                      .AddJsonFile("appsettings.json", true, true)
                      .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", true, true)
-                     .AddOcelot()
+                     .AddOcelot(hostingContext.HostingEnvironment)
                      .AddEnvironmentVariables();
                  //var files = Directory.GetFiles($"{hostingContext.HostingEnvironment.ContentRootPath}/OcelotConfigurations");
                  //if (files != null)

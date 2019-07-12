@@ -4,6 +4,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Together.Activity.API.Applications.Filters
@@ -13,20 +14,22 @@ namespace Together.Activity.API.Applications.Filters
     {
         public void Apply(Operation operation, OperationFilterContext context)
         {
-            // Check for authorize attribute
-            var hasAuthorize = context.ApiDescription.ControllerAttributes().OfType<AuthorizeAttribute>().Any() ||
-                               context.ApiDescription.ActionAttributes().OfType<AuthorizeAttribute>().Any();
-
-            if (hasAuthorize)
+            if (context.ApiDescription.TryGetMethodInfo(out var methodInfo))
             {
-                operation.Responses.Add("401", new Response { Description = "Unauthorized" });
-                operation.Responses.Add("403", new Response { Description = "Forbidden" });
+                // Check for authorize attribute
+                var hasAuthorize = methodInfo.GetCustomAttributes().Any(t => t.GetType() == typeof(AuthorizeAttribute));
 
-                operation.Security = new List<IDictionary<string, IEnumerable<string>>>();
-                operation.Security.Add(new Dictionary<string, IEnumerable<string>>
+                if (hasAuthorize)
+                {
+                    operation.Responses.Add("401", new Response { Description = "Unauthorized" });
+                    operation.Responses.Add("403", new Response { Description = "Forbidden" });
+
+                    operation.Security = new List<IDictionary<string, IEnumerable<string>>>();
+                    operation.Security.Add(new Dictionary<string, IEnumerable<string>>
                 {
                     { "oauth2", new [] { "activity_api" } }
                 });
+                }
             }
         }
     }

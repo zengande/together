@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web;
 using WebMVC.Infrastructure.Dtos;
 using WebMVC.Services;
+using WebMVC.ViewModels;
 using WebMVC.ViewModels.Activity;
 
 namespace WebMVC.Controllers
@@ -74,7 +75,7 @@ namespace WebMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> Search(string keyword)
         {
-            var model = new ActivitySearchResultViewModel
+            var model = new ViewModels.Activity.ActivitySearchResultViewModel
             {
                 Keyword = keyword
             };

@@ -69,7 +69,6 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - ConnectionString=Host=sql.data;Port=5432;Database=Together.ActivityDb;User ID=postgres;Password=Pass@word;Pooling=true;
       - IdentityUrl=http://${EXTERNAL_DNS_NAME_OR_IP}:5000
-#      - IdentityUrlExternal=http://10.0.1.46:5000
       - ServiceRegisterUrl=http://activity.api:80
       - HealthCheckUrl=http://activity.api/HealthCheck
     ports:

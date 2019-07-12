@@ -65,7 +65,7 @@ namespace Together.Activity.API
             {
                 //options.Filters.Add<ActionFilter>()
             })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddControllersAsServices();
 
             services.AddSwaggerGen(options =>

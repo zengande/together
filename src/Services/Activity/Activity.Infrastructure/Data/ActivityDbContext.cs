@@ -52,42 +52,4 @@ namespace Together.Activity.Infrastructure.Data
             return true;
         }
     }
-
-    public class ActivityDbContextDesignFactory : IDesignTimeDbContextFactory<ActivityDbContext>
-    {
-        //private readonly IConfiguration _configuration;
-        //public ActivityDbContextDesignFactory(IConfiguration configuration)
-        //{
-        //    _configuration = configuration;
-        //}
-
-        public ActivityDbContext CreateDbContext(string[] args)
-        {
-            var connectionString = "User ID=postgres;Password=Pass@word;Host=127.0.0.1;Port=5432;Database=Together.ActivityDb;Pooling=true";
-            //_configuration.GetValue<string>("ConnectionString") ??
-            //    throw new ArgumentNullException("ConnectionString");
-            var optionsBuilder = new DbContextOptionsBuilder<ActivityDbContext>()
-                .UseNpgsql(connectionString);
-
-            return new ActivityDbContext(optionsBuilder.Options, new NoMediator());
-        }
-
-        class NoMediator : IMediator
-        {
-            public Task Publish<TNotification>(TNotification notification, CancellationToken cancellationToken = default(CancellationToken)) where TNotification : INotification
-            {
-                return Task.CompletedTask;
-            }
-
-            public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default(CancellationToken))
-            {
-                return Task.FromResult<TResponse>(default(TResponse));
-            }
-
-            public Task Send(IRequest request, CancellationToken cancellationToken = default(CancellationToken))
-            {
-                return Task.CompletedTask;
-            }
-        }
-    }
 }
