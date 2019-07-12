@@ -37,7 +37,7 @@ namespace Together.Activity.API.Infrastructure
             });
         }
 
-        private Policy CreatePolicy(ILogger<ActivityDbContextSeed> logger, string prefix, int reties = 3)
+        private AsyncPolicy CreatePolicy(ILogger<ActivityDbContextSeed> logger, string prefix, int reties = 3)
         {
             return Policy.Handle<SqlException>()
                 .WaitAndRetryAsync(retryCount: reties,

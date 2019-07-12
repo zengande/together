@@ -39,11 +39,11 @@ namespace Together.Searching.API.Controllers
         [Route("activities")]
         public IActionResult Activities([FromBody]Activity activity)
         {
-            if (_elasticClient.IndexExists(Indices.Index(IndexName.From<Activity>())).Exists == false)
-            {
-                _elasticClient.CreateIndex(IndexName.From<Activity>());
-            }
-            var response = _elasticClient.IndexDocument(activity);
+            //if (_elasticClient.IndexExists(Indices.Index(IndexName.From<Activity>())).Exists == false)
+            //{
+            //    _elasticClient.CreateIndex(IndexName.From<Activity>());
+            //}
+            //var response = _elasticClient.IndexDocument(activity);
             return Ok();
         }
 

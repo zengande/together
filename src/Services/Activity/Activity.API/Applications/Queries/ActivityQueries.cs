@@ -35,9 +35,9 @@ namespace Together.Activity.API.Applications.Queries
             return await MapActivityAndParticipant(result);
         }
 
-        public async Task<IEnumerable<ActivitySummaryDto>> GetActivitiesByUserAsync(string userId)
+        public Task<IEnumerable<ActivitySummaryDto>> GetActivitiesByUserAsync(string userId)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
 

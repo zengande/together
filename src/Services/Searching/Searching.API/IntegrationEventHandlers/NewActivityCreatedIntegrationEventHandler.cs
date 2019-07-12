@@ -16,11 +16,11 @@ namespace Together.Searching.API.IntegrationEventHandlers
         [CapSubscribe("Together.Searching.NewActivityCreated")]
         public void CreateActivityDocument(Activity activity)
         {
-            if (_esClient.IndexExists(Indices.Index(IndexName.From<Activity>())).Exists == false)
-            {
-                _esClient.CreateIndex(IndexName.From<Activity>());
-            }
-            _esClient.IndexDocument(activity);
+            //if (_esClient.IndexExists(Indices.Index(IndexName.From<Activity>())).Exists == false)
+            //{
+            //    _esClient.CreateIndex(IndexName.From<Activity>());
+            //}
+            //_esClient.IndexDocument(activity);
         }
     }
 }
