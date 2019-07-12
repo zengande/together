@@ -27,7 +27,8 @@
             <ColumnDefinition Width="{OnPlatform UWP=*, Android=0,iOS=0}"/>
         </Grid.ColumnDefinitions>
         <StackLayout Grid.Column="{OnPlatform UWP=0, Android=1,iOS=1}">
-            <controls:Icon TextColor="Red" Type="{StaticResource IconArrangeSendToBack}"/>
+            <controls:IconLabel Type="{StaticResource IconChevronLeft}" 
+                           Text="返回"/>
         </StackLayout>
         <Grid Grid.Row="1" Grid.Column="1">
             <Grid.RowDefinitions>
@@ -47,10 +48,10 @@
                 </Label>
             </StackLayout>
             <StackLayout Grid.Row="1" Orientation="Vertical">
-                <Entry Placeholder="输入您的用户名" Keyboard="Email"/>
-                <Entry Placeholder="输入您的密码" IsPassword="True"/>
+                <Entry Placeholder="输入您的用户名" Keyboard="Email" Text="{Binding Username}"/>
+                <Entry Placeholder="输入您的密码" IsPassword="True" Text="{Binding Password}"/>
                 <Label Margin="0,0,0,10" HorizontalOptions="End" TextColor="{StaticResource PrimaryTextColor}">忘记密码</Label>
-                <Button Text="立即登录" Style="{StaticResource PrimaryButton}"/>
+                <Button Text="立即登录" Style="{StaticResource PrimaryButton}" Command="{Binding LoginCommand}"/>
             </StackLayout>
         </Grid>
     </Grid>

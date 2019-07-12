@@ -3,6 +3,7 @@ using MvvmCross.ViewModels;
 using System.Threading.Tasks;
 using Together.Core.Data;
 using Together.Core.Services.Identity;
+using Together.Core.ViewModels;
 using Together.Core.ViewModels.Account;
 using Together.Core.ViewModels.Home;
 
@@ -29,7 +30,7 @@ namespace Together.Core
                 var isAuthenticated = await _authentication.IsAuthenticated();
                 if (isAuthenticated)
                 {
-                    await NavigationService.Navigate<HomeViewModel>();
+                    await NavigationService.Navigate<MainPageViewModel>();
                 }
                 else
                 {

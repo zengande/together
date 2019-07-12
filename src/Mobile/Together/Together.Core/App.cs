@@ -8,6 +8,7 @@ using Together.Core.Services.HttpRequest;
 using Together.Core.Services.Identity;
 using Together.Core.Services.Theme;
 using Together.Core.ViewModels.Home;
+using Xamarin.Forms;
 
 namespace Together.Core
 {

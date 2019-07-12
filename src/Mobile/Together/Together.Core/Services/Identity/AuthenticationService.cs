@@ -56,7 +56,7 @@ namespace Together.Core.Services.Identity
 
         public Task<bool> IsAuthenticated()
         {
-            return Task.FromResult(false);
+            return Task.FromResult(true);
         }
     }
 }
