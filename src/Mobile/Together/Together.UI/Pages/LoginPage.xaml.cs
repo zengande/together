@@ -13,7 +13,7 @@ namespace Together.UI.Pages
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
     [MvxContentPagePresentation(WrapInNavigationPage = true)]
-    public partial class LoginPage : NoNavigationBarContentPage<LoginViewModel>
+    public partial class LoginPage : MvxContentPage<LoginViewModel>
     {
 		public LoginPage ()
 		{

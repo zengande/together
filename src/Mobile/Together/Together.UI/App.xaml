@@ -7,13 +7,23 @@
     xmlns:resources="clr-namespace:Together.UI.Resources">
     <Application.Resources>
 
+        <Style TargetType="Entry">
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
+
+        <OnPlatform x:Key="MaterialFontFamily" x:TypeArguments="x:String">
+            <On Platform="iOS" Value="Material Design Icons" />
+            <On Platform="Android" Value="materialdesignicons.ttf#Material Design Icons" />
+            <On Platform="UWP" Value="Assets/Fonts/materialdesignicons.ttf#Material Design Icons" />
+        </OnPlatform>
+
         <!--  Application resource dictionary  -->
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <resources:Colors />
                 <resources:Themes />
+                <resources:Icons />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-
     </Application.Resources>
 </Application>
