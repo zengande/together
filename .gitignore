@@ -259,3 +259,5 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/src/Manager/ManagePortal/ClientApp/build/static
+/src/Manager/ManagePortal/ClientApp/build
