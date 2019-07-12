@@ -28,11 +28,13 @@ namespace Together.Identity.API.Services
             if (user == null)
                 throw new ArgumentException("Invalid subject identifier");
 
-            var claims = GetClaimsFromUser(user);
-            context.IssuedClaims = claims.ToList();
+            //var roleClaims = context.Subject.FindAll(JwtClaimTypes.Role);
+            var claims = await GetClaimsFromUser(user);
+            //claims.AddRange(roleClaims);
+            context.IssuedClaims = claims;
         }
 
-        private IEnumerable<Claim> GetClaimsFromUser(ApplicationUser user)
+        private async Task<List<Claim>> GetClaimsFromUser(ApplicationUser user)
         {
             var claims = new List<Claim>
             {
@@ -40,10 +42,8 @@ namespace Together.Identity.API.Services
                 new Claim(JwtClaimTypes.PreferredUserName, user.UserName)
             };
 
-            if (!string.IsNullOrWhiteSpace(user.Nickname))
-            {
-                claims.Add(new Claim("nickname", user.Nickname));
-            }
+            claims.Add(new Claim("nickname", user.Nickname ?? ""));
+            claims.Add(new Claim("avatar", user.Avatar ?? ""));
 
             if (_userManager.SupportsUserEmail)
             {
@@ -61,6 +61,16 @@ namespace Together.Identity.API.Services
                     new Claim(JwtClaimTypes.PhoneNumberVerified, user.PhoneNumberConfirmed ? "true" : "false", ClaimValueTypes.Boolean)
                 });
             }
+
+            if (_userManager.SupportsUserRole)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                if (roles != null)
+                {
+                    claims.Add(new Claim(JwtClaimTypes.Role, string.Join(",", roles)));
+                }
+            }
+
             return claims;
         }
 

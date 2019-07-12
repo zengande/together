@@ -13,8 +13,9 @@ services:
       - POSTGRES_PASSWORD=Pass@word
     ports:
       - "5432:5432"
-    volumes:
-      - /F:/Docker/npg/data:/var/lib/postgresql/data
+    # volumes:
+    #  - ./volumes/postgresql/data:/var/lib/postgresql/data
+
   nosql.redis.data:
     ports:
       - "6379:6379"
@@ -44,21 +45,30 @@ services:
     # environment:
     #   - GF_SECURITY_ADMIN_PASSWORD=secret
 
+  elasticsearch:
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - discovery.type=single-node
+
   identity.api:
+    ports:
+      - "5000:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - ConnectionString=User ID=postgres;Password=Pass@word;Host=sql.data;Port=5432;Database=Together.IdentityDb;Pooling=true;
-    ports:
-      - "5000:80"
+      - MvcClientUrl=http://${EXTERNAL_DNS_NAME_OR_IP}:5001
+      - ManagePortalUrl=http://${EXTERNAL_DNS_NAME_OR_IP}:8001
+      - ActivityApiUrl=http://${EXTERNAL_DNS_NAME_OR_IP}:5100
+      - NoticeDashboard=http://${EXTERNAL_DNS_NAME_OR_IP}:5104
 
   activity.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - ConnectionString=Host=sql.data;Port=5432;Database=Together.ActivityDb;User ID=postgres;Password=Pass@word;Pooling=true;
-      - IdentityUrl=http://10.0.1.46:5000
-#      - IdentityUrlExternal=http://${EXTERNAL_DNS_NAME_OR_IP}:5000
+      - IdentityUrl=http://${EXTERNAL_DNS_NAME_OR_IP}:5000
       - ServiceRegisterUrl=http://activity.api:80
       - HealthCheckUrl=http://activity.api/HealthCheck
     ports:
@@ -89,31 +99,31 @@ services:
   webmvc:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
-      - IdentityUrl=http://10.0.1.46:5000
+      - ASPNETCORE_URLS=http://+:80;http://+:443
+      - IdentityUrl=http://${EXTERNAL_DNS_NAME_OR_IP}:5000
+      - APIGatewayEndpoint=http://${EXTERNAL_DNS_NAME_OR_IP}:8000
+      - NoticeHttpEndpoint=http://${EXTERNAL_DNS_NAME_OR_IP}:5104
     ports:
       - "5001:80"
+      - "5002:443"
+    volumes:
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
   api.gateway:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
+      - IdentityUrl=http://${EXTERNAL_DNS_NAME_OR_IP}:5000
     ports:
       - "8000:80"
-
-
-  topic.api:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
-    ports:
-      - "5103:80"
 
   noticeservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - RedisConnectionString=nosql.redis.data:6379
+      - IdentityUrl=http://${EXTERNAL_DNS_NAME_OR_IP}:5000
     ports:
       - "5104:80"
   activity.backgroundtasks:
@@ -125,4 +135,23 @@ services:
     volumes:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+ 
+  manageportal:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - IdentityUrl=http://${EXTERNAL_DNS_NAME_OR_IP}:5000
+      - APIGatewayEndpoint=http://${EXTERNAL_DNS_NAME_OR_IP}:8000
+      - NoticeHttpEndpoint=http://${EXTERNAL_DNS_NAME_OR_IP}:5104
+    ports:
+      - "8001:80"
 
+  searching.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - RabbitmqHost=rabbitmq
+      - ElasticSearchUrl=http://elasticsearch:9200
+      - ConnectionString=Host=sql.data;Port=5432;Database=Together.Searching;Persist Security Info=True;User ID=postgres;Password=Pass@word;Pooling=true;
+    ports:
+      - "5555:80"

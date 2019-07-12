@@ -1,213 +1,156 @@
-﻿@model ActivityCreateViewModel
+﻿@model WebMVC.ViewModels.Activity.ActivityCreateViewModel
+@inject IViewLocalizer Localizer
 @{
     ViewData["Title"] = "创建活动";
 }
 
 @section Styles{
-    <style>
-        .radio-block {
-            padding: 5px 20px !important;
-            font-size: 12px;
-            position: relative;
-            cursor: pointer
-        }
-
-            .radio-block input[type='radio'] {
-                display: none;
-            }
-
-        .r-b-check {
-            opacity: 0;
-        }
-
-        .m-border {
-            /* 尺寸永远和容器一样大，假装是容器 */
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            z-index: -1;
-            border: 1px solid #bbb;
-            margin: -1px;
-            border-radius: 3px;
-        }
-
-        .r-b-check:before {
-            content: "";
-            position: absolute;
-            right: -1px;
-            bottom: -1px;
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 0 0 12px 12px;
-            border-color: transparent transparent #4db4be;
-        }
-
-        .r-b-check:after {
-            content: "";
-            position: absolute;
-            right: 1px;
-            bottom: 2px;
-            width: 4px;
-            height: 2px;
-            border: 1px solid #fff;
-            border-top: 0;
-            border-right: 0;
-            -webkit-transform: rotate(-45deg);
-            -ms-transform: rotate(-45deg);
-            transform: rotate(-45deg);
-        }
-
-        .radio-block input[type='radio']:checked + .r-b-check {
-            opacity: 1;
-        }
-
-        .radio-block input[type='radio']:checked ~ .m-border {
-            border-color: #4db4be;
-        }
-
-        .was-validated .form-control:valid, .form-control.is-valid, .was-validated .custom-select:valid, .custom-select.is-valid {
-            border-color: #4db4be !important
-        }
-
-        .words {
-            background: rgba(255,171,45,0.05);
-            border: 1px solid rgba(255,171,45,0.2);
-        }
-
-            .words p {
-                line-height: 22px;
-            }
-
-        .font-sm {
-            font-size: .9em;
-        }
-
-        .font-min {
-            font-size: .8em;
-        }
-    </style>
+    <link href="~/lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+    <link href="~/css/activity.create.css" rel="stylesheet" />
 }
 
 
-<div class="py-5">
-    <h2>创建活动</h2>
-</div>
-
-<div class="row">
-    <div class="col-md-4 order-md-3 mb-4">
-        <div class="p-3 mb-3 words">
-            <p class="m-0 font-min">相关法律规定，营业性演出活动需取得国家行政部门审批。请确保你的活动已经获得相关资质及许可。未获上述批准的活动将被依法删除，且由此造成的后果须由活动举办方自行承担。</p>
-        </div>
-        <div>
-            <p class="font-sm">什么是合适的同城活动？</p>
-            <ol class="pl-3 font-min">
-                <li>有能最终确定的活动起止日期</li>
-                <li>具备现实中能集体参与的活动地点</li>
-                <li>是多人在现实中能碰面的活动</li>
-            </ol>
-        </div>
+<div class="container">
+    <div class="py-5">
+        <h2>@Localizer["Create An Activity"]</h2>
     </div>
-    <div class="order-md-2 col-md-1"></div>
-    <div class="col-md-7 order-md-1">
-        <form class="needs-validation" novalidate asp-controller="activity" asp-action="create" method="post">
-            <div class="form-group row">
-                <label class="col-sm-12 col-md-2 col-form-label text-sm-left text-md-right col-form-label-sm" for="category_parent">活动类型</label>
-                <div class="col-sm-12 col-md-10">
-                    <div class="row">
-                        <div class="col-md-4 pr-md-0 col-sm-12 mr-md-2">
-                            @await Component.InvokeAsync("Categories", new CategorySelect { Name = "ParentCategory", Id = "parentCategories", ClassName = "custom-select form-control-sm", SelectedCategory = Model?.ParentCategory })
-                        </div>
-                        <div class="col-md-4 pl-md-0 col-sm-12 pt-md-0 pt-2" id="childCategoryContainer">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-sm-12 col-md-2 col-form-label text-sm-left text-md-right col-form-label-sm" for="title">活动标题</label>
-                <div class="col-md-10 col-sm-12">
-                    @Html.TextBoxFor(a => a.Title, null, new { @class = "form-control form-control-sm", placeholder = "必填", required = "required" })
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-sm-12 col-md-2 col-form-label text-sm-left text-md-right col-form-label-sm" for="fee">活动费用</label>
-                <div class="col-md-10 col-sm-12">
-                    <label class="radio-block mr-3">
-                        @Html.RadioButtonFor(a => a.IsFree, true)
-                        <i class="r-b-check"></i>
-                        <span class="m-border"></span>
-                        免费
-                    </label>
-                    <label class="radio-block radio-inline">
-                        @Html.RadioButtonFor(a => a.IsFree, false)
-                        <i class="r-b-check"></i>
-                        <span class="m-border"></span>
-                        收费
-                    </label>
-                </div>
-            </div>
 
-            <div class="row form-group" id="fee-container" style="display:@(Model!=null && Model.IsFree ? " none":"flex")">
-                <label class="col-sm-12 col-md-2 col-form-label text-sm-left text-md-right col-form-label-sm" for="title">费用</label>
-                <div class="col-md-4 col-sm-12">
-                    @Html.TextBoxFor(a => a.Fee, null, new { type = "number", @class = "form-control form-control-sm", placeholder = "必填", required = "required" })
-                </div>
+    <div class="row">
+        <div class="col-md-4 order-md-3 mb-4">
+            <div class="p-3 mb-3 words">
+                <p class="m-0 font-min">@Localizer["Warning"]</p>
             </div>
-
-            <div class="form-group row">
-                <label class="col-md-2 col-sm-12 col-form-label text-sm-left text-md-right col-form-label-sm">活动地点</label>
-                <div class="col-md-10 col-sm-12">
-                    <div class="row m-0">
-                        <div class="col-md-4 col-sm-12 p-0 pr-md-2">
-                            <select class="custom-select form-control-sm"></select>
-                        </div>
-                        <div class="col-md-4 col-sm-12 p-0 pr-md-1 pl-md-1 pt-md-0 pt-2">
-                            <select class="custom-select form-control-sm"></select>
-                        </div>
-                        <div class="col-md-4 col-sm-12 p-0 pl-md-2 pt-md-0 pt-2">
-                            <select class="custom-select form-control-sm"></select>
-                        </div>
-                    </div>
-                    <div class="row m-0 mt-3">
-                        @Html.TextBoxFor(a => a.Address_Details, null, new { id = "placeSearch", @class="col-sm-12 form-control form-control-sm", placeholder="详细地址（必填）", required= "required"})
-                        <div class="mt-3 col-sm-12 p-1 border border-1 rounded">
-                            ss
-                        </div>
-                    </div>
-                </div>
+            <div>
+                <p class="font-sm">@Localizer["Tip"]</p>
+                <ol class="pl-3 font-min">
+                    <li>@Localizer["Tip Option 1"]</li>
+                    <li>@Localizer["Tip Option 2"]</li>
+                    <li>@Localizer["Tip Option 3"]</li>
+                </ol>
             </div>
-
-            @*<div class="form-group row">
-                    <label class="col-form-label text-sm-left text-md-right col-md-2 col-sm-12 col-form-label-sm">活动须知</label>
+        </div>
+        <div class="order-md-2 col-md-1"></div>
+        <div class="col-md-7 order-md-1">
+            <form class="needs-validation" novalidate asp-controller="activity" asp-action="create" method="post">
+                <div class="form-group row">
+                    <label class="col-sm-12 col-md-2 col-form-label text-sm-left text-md-right col-form-label-sm" for="category_parent">@Localizer["Category"]</label>
                     <div class="col-sm-12 col-md-10">
-                        <textarea rows="4" style="min-height:100px" class="form-control"></textarea>
+                        <div class="row">
+                            <div class="col-md-4 pr-md-0 col-sm-12 mr-md-2">
+                                @await Component.InvokeAsync("Categories", new CategorySelect { Name = "ParentCategory", Id = "parentCategories", ClassName = "custom-select form-control-sm", SelectedCategory = Model?.ParentCategory })
+                            </div>
+                            <div class="col-md-4 pl-md-0 col-sm-12 pt-md-0 pt-2" id="childCategoryContainer">
+                            </div>
+                        </div>
                     </div>
-                </div>*@
-
-            <div class="form-group row">
-                <label class="col-form-label text-sm-left text-md-right col-md-2 col-sm-12 col-form-label-sm">活动详情</label>
-                <div class="col-sm-12 col-md-10">
-                    @Html.TextAreaFor(a => a.Details, 6, 0, new { style = "min-height:120px", @class = "form-control-sm form-control", required = "required" })
                 </div>
-            </div>
-
-            <div class="form-group row">
-                <div class="col-md-2"></div>
-                <div class="col-md-10 text-left">
-                    <button type="submit" class="btn btn-info btn-sm">创建活动</button>
+                <div class="form-group row">
+                    <label class="col-sm-12 col-md-2 col-form-label text-sm-left text-md-right col-form-label-sm" for="title">@Localizer["Title"]</label>
+                    <div class="col-md-10 col-sm-12">
+                        <input type="text" asp-for="Title" class="form-control form-control-sm" placeholder="必填" required />
+                    </div>
                 </div>
-            </div>
-        </form>
+
+
+                <div class="form-group row">
+                    <label class="col-md-2 col-sm-12 col-form-label text-sm-left text-md-right col-form-label-sm">@Localizer["Activity Time"]</label>
+                    <div class="col-md-10 col-sm-12">
+                        <div class="row m-0">
+                            <div class="col-md-6 col-sm-12 p-0 pr-md-1">
+                                <input type="text" asp-for="ActivityStartTime" class="form_datetime form-control form-control-sm" readonly />
+
+                            </div>
+                            <div class="col-md-6 col-sm-12 p-0 pl-md-1 pt-md-0 pt-2">
+                                <input type="text" asp-for="ActivityEndTime" class="form_datetime form-control-sm form-control" readonly />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-2 col-sm-12 col-form-label text-sm-left text-md-right col-form-label-sm">@Localizer["Deadline Of Joining"]</label>
+                    <div class="col-md-10 col-sm-12">
+                        <div class="row m-0">
+                            <div class="col-md-6 col-sm-12 p-0 pr-md-1">
+                                <input type="text" asp-for="RegisterEndTime" class="form_datetime form-control-sm form-control" readonly="readonly" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-2 col-sm-12 col-form-label text-sm-left text-md-right col-form-label-sm">@Localizer["Event Location"]</label>
+                    <div class="col-md-10 col-sm-12">
+                        <div class="row m-0">
+                            <div class="col-md-4 col-sm-12 p-0 pr-md-2">
+                                <input type="hidden" asp-for="Address.Province" />
+                                <input type="hidden" asp-for="Address.Longitude" />
+                                <input type="hidden" asp-for="Address.Latitude" />
+                                <select asp-for="Address.City" class="custom-select form-control-sm">
+                                    <option value="杭州">杭州</option>
+                                </select>
+                            </div>
+                            <div class="col-md-8 col-sm-12 p-0 pl-md-1 pt-md-0 pt-2">
+                                <input type="text" asp-for="Address.Detail" placeholder="详细地址（必填）" id="placeSearch" class="col-sm-12 form-control form-control-sm" required="required" />
+                            </div>
+                        </div>
+                        <div class="row m-0 mt-3">
+                            <div class=" col-sm-12 p-1 border border-1 rounded">
+                                ss
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-12 col-md-2 col-form-label text-sm-left text-md-right col-form-label-sm" for="fee">@Localizer["Address Visible Rule"]</label>
+                    <div class="col-md-10 col-sm-12">
+                        <label class="radio-block mr-3">
+                            <input asp-for="AddressVisibleRuleId" type="radio" value="1" />
+                            <i class="r-b-check"></i>
+                            <span class="m-border"></span>
+                            公开
+                        </label>
+                        <label class="radio-block radio-inline">
+                            <input asp-for="AddressVisibleRuleId" type="radio" value="0" />
+                            <i class="r-b-check"></i>
+                            <span class="m-border"></span>
+                            参与者可见
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-form-label text-sm-left text-md-right col-md-2 col-sm-12 col-form-label-sm">@Localizer["Details"]</label>
+                    <div class="col-sm-12 col-md-10">
+                        <textarea asp-for="Details" cols="0" rows="6" style="min-height:120px" class="form-control-sm form-control" required></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-10 text-left">
+                        <button type="submit" class="btn btn-info btn-sm">@Localizer["Create An Activity"]</button>
+                        @*<button type="submit" class="btn btn-secondary btn-sm">保存草稿</button>*@
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
-
+@section FooterStripes{
+    <partial name="_FooterMainStripe" />
+}
 @section Scripts{
+    <script src="~/lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
+    <script src="~/lib/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
     <script src="~/lib/typeahead/bootstrap3-typeahead.js"></script>
     <script>
         $(function () {
             'use strict';
+
+            $(".form_datetime").datetimepicker({ format: 'yyyy-mm-dd hh:ii', language:'zh-CN' });
+
             // Fetch all the forms we want to apply custom Bootstrap validation styles to
             var forms = document.getElementsByClassName('needs-validation');
             // Loop over them and prevent submission
@@ -231,25 +174,17 @@
                 loadChildCategories(id);
             });
 
-            $('input[name="IsFree"]').change(function () {
-                var isFree = $('input[name="IsFree"]:checked').val();
-                console.log(isFree);
-                if (isFree === 'True') {
-                    $('#fee-container').hide()
-                } else {
-                    $('#fee-container').show()
-                }
-            })
+
             var $input = $("#placeSearch");
 
-            var dropdown = $('<ul class="selects dropdown-menu"></ul>')
+            var dropdown = $('<ul class="selects dropdown-menu"></ul>');
             var newTop = $input.position().top + $input.innerHeight();
             console.log(newTop);
-            dropdown.css({ left: "15px", right: "15px", top: newTop + "px" })
+            dropdown.css({ left: "15px", right: "15px", top: newTop + "px" });
             $input.after(dropdown);
 
 
-            $input.on('input',function () {
+            $input.on('input', function () {
                 var $this = $(this);
                 var text = $this.val().trim();
                 $.ajax({
@@ -263,16 +198,15 @@
                         for (var i = 0; i < results.length; i++) {
                             var result = results[i];
                             var item = $('<li onclick="selectAddress(\'' + result.name + '\')"></li>').html($('<a class="dropdown-item"></a>').text(result.name));
-                            dropdown.append(item)
+                            dropdown.append(item);
                         }
                     }
-                })
+                });
             });
             $input.blur(function () {
                 //dropdown.hide();
-            })
-
-        })
+            });
+        });
 
         function selectAddress(name) {
             $("#placeSearch").val(name);
@@ -283,7 +217,7 @@
         function loadChildCategories(parentId) {
             $.ajax({
                 method: 'GET',
-                url: '/Components/Categories?SelectedCategory=@Model?.ChildCategory&name=ChildCategory&id=childCategories&className=custom-select form-control-sm&ParentId=' + parentId,
+                url: '/Components/Categories?SelectedCategory=@Model?.ChildCategory&name=ChildCategory&id=childCategories&className=custom-select form-control-sm&ParentId=' + parentId
             }).done(function (data, statusText, xhdr) {
                 $("#childCategoryContainer").html(data);
             }).fail(function (xhdr, statusText, errorText) {

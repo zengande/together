@@ -1,9 +1,61 @@
 ﻿{
   "ReRoutes": [
+    //{
+    //  "DownstreamPathTemplate": "/api/v1/activities/{activityId}",
+    //  "DownstreamScheme": "http",
+    //  "UpstreamPathTemplate": "/api/activities/{activityId}",
+    //  "UpstreamHttpMethod": [ "GET" ],
+    //  "ServiceName": "activity_api",
+    //  "LoadBalancerOptions": {
+    //    "Type": "LeastConnection"
+    //  },
+    //  "UseServiceDiscovery": true
+    //},
+    //{
+    //  "DownstreamPathTemplate": "/api/v1/activities",
+    //  "DownstreamScheme": "http",
+    //  "UpstreamPathTemplate": "/api/activities",
+    //  "UpstreamHttpMethod": [ "GET" ],
+    //  "ServiceName": "activity_api",
+    //  "LoadBalancerOptions": {
+    //    "Type": "LeastConnection"
+    //  },
+    //  "UseServiceDiscovery": true
+    //},
     {
-      "DownstreamPathTemplate": "/api/v1/activities/{url}",
+      "DownstreamPathTemplate": "/api/v1/activities/create",
       "DownstreamScheme": "http",
-      "UpstreamPathTemplate": "/api/activities/{url}",
+      "UpstreamPathTemplate": "/api/activities/create",
+      "UpstreamHttpMethod": [ "POST" ],
+      "ServiceName": "activity_api",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      "UseServiceDiscovery": true,
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "IdentityApiKey",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/activities/join/{activityId}",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/api/activities/join/{activityId}",
+      "UpstreamHttpMethod": [ "PUT" ],
+      "ServiceName": "activity_api",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      "UseServiceDiscovery": true,
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "IdentityApiKey",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/activities/{everything}",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/api/activities/{everything}",
       "UpstreamHttpMethod": [ "GET" ],
       "ServiceName": "activity_api",
       "LoadBalancerOptions": {

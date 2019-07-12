@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Together.Activity.Domain.SeedWork;
 
@@ -14,5 +15,8 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         Task UpdateAsync(Activity activity);
 
         Task<Activity> GetAsync(int activityId);
+
+        Task<Activity> FindOneAsync(Expression<Func<Activity, bool>> where);
+        Task<IQueryable<Activity>> FindListAsync(List<int> activityIds);
     }
 }

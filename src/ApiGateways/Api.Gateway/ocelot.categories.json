@@ -1,0 +1,15 @@
+﻿{
+  "ReRoutes": [
+    {
+      "DownstreamPathTemplate": "/api/v1/categories",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/api/categories",
+      "UpstreamHttpMethod": [ "GET" ],
+      "ServiceName": "activity_api",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      "UseServiceDiscovery": true
+    }
+  ]
+}

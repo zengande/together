@@ -1,86 +1,61 @@
-﻿using Together.Activity.BackgroundTasks.Tasks.Base;
+﻿using Dapper;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
-using Dapper;
-using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.DependencyInjection;
-using Together.Activity.BackgroundTasks.IntegrationEvents.Events;
-using DotNetCore.CAP;
+using Together.Activity.BackgroundTasks.Tasks.Base;
 
 namespace Together.Activity.BackgroundTasks.Tasks
 {
+    /// <summary>
+    /// 将完结活动置为完结状态
+    /// </summary>
     public class ExpiredActivitiesManagerTask
         : BackgroundTask
     {
-        private readonly IServiceProvider _provider;
         private readonly BackgroundTaskSettings _settings;
+        private readonly ILogger<ExpiredActivitiesManagerTask> _logger;
         public ExpiredActivitiesManagerTask(IOptions<BackgroundTaskSettings> options,
-            IServiceProvider provider)
+            ILogger<ExpiredActivitiesManagerTask> logger)
         {
-            _provider = provider;
+            _logger = logger;
             _settings = options.Value;
         }
 
-
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-
+            _logger.LogInformation("开始更新完结活动的任务...");
             stoppingToken.Register(() => { });
-
             while (stoppingToken.IsCancellationRequested == false)
             {
-                await CheckExpiredActivities();
-
+                var count = await ChangeExpiredActivitiesToFinished();
+                if (count > 0)
+                {
+                    _logger.LogInformation($"已将{count}条置为完成状态");
+                }
                 // delay 10s
-                await Task.Delay(100000, stoppingToken);
-
+                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
             }
             await Task.CompletedTask;
         }
 
-        private async Task CheckExpiredActivities()
+        private async Task<int> ChangeExpiredActivitiesToFinished()
         {
             try
             {
-                using (IServiceScope scope = _provider.CreateScope())
+                using (var connection = new Npgsql.NpgsqlConnection(_settings.ConnectionString))
                 {
-                    var publisher = scope.ServiceProvider.GetRequiredService<ICapPublisher>();
-                    var activities = GetExpiredActivities();
-                    foreach (var activity in activities)
-                    {
-                        await publisher.PublishAsync("Together.Activity.BackgroundTasks.ActivityExpired", new ActivityExpiredIntegrationEvent { ActivityId = activity });
-                    }
+                    connection.Open();
+
+                    return await connection.ExecuteAsync("update \"public\".activities set \"ActivityStatusId\" =3 where (round(date_part('epoch',now() AT TIME ZONE 'Asia/Shanghai' - \"ActivityEndTime\")::NUMERIC / 60)) > 0 and \"ActivityStatusId\" in  (1,2)");
                 }
             }
             catch (Exception e)
             {
-
-                throw;
+                _logger.LogError($"执行完结活动时发生异常：[{e.Message}]");
             }
-        }
-
-        private IEnumerable<int> GetExpiredActivities()
-        {
-            IEnumerable<int> result = new List<int>();
-            using (var connection = new SqlConnection(_settings.ConnectionString))
-            {
-                try
-                {
-                    connection.Open();
-
-                    result = connection.Query<int>(@"select * from [dbo].[activities] 
-                        where ActivityStatusId = 2 and DATEDIFF(minute, [EndTime], GETDATE()) > 1");
-                }
-                catch
-                {
-
-                }
-            }
-            return result;
+            return 0;
         }
     }
 }

@@ -1,10 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Together.Identity.API.Models;
 
 namespace Together.Identity.API.Data
@@ -16,6 +10,20 @@ namespace Together.Identity.API.Data
             : base(options)
         {
 
+        }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            var entry = builder.Entity<ApplicationUser>();
+            entry.Property(a => a.Avatar)
+                .HasMaxLength(512);
+            entry.Property(a => a.Nickname)
+                .IsUnicode()
+                .HasMaxLength(100);
+            entry.Property(a => a.Gender)
+                .HasDefaultValue(Gender.Unknown);
+
+            base.OnModelCreating(builder);
         }
     }
 

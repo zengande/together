@@ -1,21 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using AspectCore.Configuration;
+using AspectCore.Extensions.DependencyInjection;
+using AutoMapper;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Nutshell.Common.Cache;
-using Nutshell.Resilience.HttpRequest;
-using Nutshell.Resilience.HttpRequest.abstracts;
+using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Extensions.Http;
+using Refit;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http;
+using WebMVC.Infrastructure.API;
+using WebMVC.Infrastructure.Attributes;
+using WebMVC.Infrastructure.HttpClientHandlers;
 using WebMVC.Services;
 
 namespace WebMVC
@@ -30,14 +38,20 @@ namespace WebMVC
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
 
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"))
-                .AddCustomMvc(Configuration)
-                .AddHttpClientServices(Configuration)
                 .AddCustomAuth(Configuration)
+                .AddAddLocalizations()
+                .AddCustomMvc(Configuration)
+                .AddRefitApiServices(Configuration)
+                .AddServices(Configuration)
+                .AddHttpClientLogging(Configuration)
+                .AddAutoMapper()
                 .AddSignalR();
+
+            return services.BuildAspectInjectorProvider();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,20 +64,21 @@ namespace WebMVC
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
+                //app.UseHsts();
             }
+
+            app.UseApiRequestExceptionHandling();
+
             app.UseAuthentication();
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
+            //app.UseCookiePolicy();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            var localizationOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
+            app.UseRequestLocalization(localizationOptions.Value);
+
+            app.UseMvcWithDefaultRoute();
         }
 
 
@@ -71,16 +86,25 @@ namespace WebMVC
 
     public static class ServiceCollectionExtensions
     {
+        public static IServiceCollection AddAddLocalizations(this IServiceCollection services)
+        {
+            services.Configure<RequestLocalizationOptions>(opts => SetLocalizationOptions(opts));
+
+            services.AddLocalization(opts => opts.ResourcesPath = "Resources");
+            return services;
+        }
+
         public static IServiceCollection AddCustomMvc(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
+            //services.Configure<CookiePolicyOptions>(options =>
+            //{
+            //    // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+            //    options.CheckConsentNeeded = context => false;
+            //    options.MinimumSameSitePolicy = SameSiteMode.None;
+            //});
             services.AddMvc()
-                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             return services;
         }
@@ -90,43 +114,120 @@ namespace WebMVC
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services.AddAuthentication(options =>
             {
-                options.DefaultScheme = "Cookies";
-                options.DefaultChallengeScheme = "oidc";
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme; ;
+                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
             })
-                .AddCookie("Cookies")
-                .AddOpenIdConnect("oidc", options =>
+                .AddCookie()
+                .AddOpenIdConnect(options =>
                 {
-                    options.SignInScheme = "Cookies";
+                    options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 
+                    //options.SignedOutRedirectUri = callBackUrl.ToString();
                     options.Authority = configuration.GetValue<string>("IdentityUrl");
                     options.RequireHttpsMetadata = false;
 
                     options.ClientId = "mvc";
+                    options.ClientSecret = "secret";
+                    options.ResponseType = "code id_token";
+
                     options.SaveTokens = true;
+                    options.GetClaimsFromUserInfoEndpoint = true;
+
+                    options.RequireHttpsMetadata = false;
+
+                    options.Scope.Add("profile");
+                    options.Scope.Add("openid");
+                    options.Scope.Add("activities");
+                    options.Scope.Add("user_group_api");
+                    options.Scope.Add("noticeservice");
                 });
 
             return services;
         }
 
-        public static IServiceCollection AddHttpClientServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
         {
-            //services.Configure<BaiDuMapOptions>(configuration.GetSection("BaiduMap"));
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-            services.AddHttpClient<ICategoriesService, CategoriesService>()
-                   .AddPolicyHandler(GetRetryPolicy())
-                   .AddPolicyHandler(GetCircuitBreakerPolicy());
-
-            services.AddHttpClient<IActivityService, ActivityService>()
-                   .AddPolicyHandler(GetRetryPolicy())
-                   .AddPolicyHandler(GetCircuitBreakerPolicy());
-
-            //services.AddHttpClient<IBaiDuMapApiClient, BaiDuMapApiClient>()
-            //        .AddPolicyHandler(GetRetryPolicy())
-            //        .AddPolicyHandler(GetCircuitBreakerPolicy());
+            services.AddTransient<IActivityService, ActivityService>();
 
             return services;
         }
+
+        public static IServiceCollection AddHttpClientLogging(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddLogging(b =>
+            {
+                b.AddFilter((category, level) => true); // Spam the world with logs.
+
+                // Add console logger so we can see all the logging produced by the client by default.
+                b.AddConsole(c => c.IncludeScopes = true);
+
+                // Add console logger
+                b.AddDebug();
+            });
+
+            return services;
+        }
+
+        public static IServiceCollection AddRefitApiServices(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
+            services.AddTransient<HttpClientRequestIdDelegatingHandler>();
+
+            var baseUrl = configuration.GetValue<string>("APIGatewayEndpoint");
+            services.AddRefitClient<IActivityAPI>()
+                .ConfigureHttpClient((options) =>
+                {
+                    options.BaseAddress = new Uri(baseUrl);
+                })
+                .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+                .AddHttpMessageHandler<HttpClientRequestIdDelegatingHandler>()
+                //Steeltoe discovery
+                //.AddHttpMessageHandler<DiscoveryHttpMessageHandler>()
+                ;
+
+            services.AddRefitClient<ICategoryAPI>()
+                .ConfigureHttpClient(options =>
+                {
+                    options.BaseAddress = new Uri(baseUrl);
+                })
+                .AddPolicyHandler(GetRetryPolicy())
+                .AddPolicyHandler(GetCircuitBreakerPolicy());
+
+            return services;
+        }
+
+        public static IServiceCollection AddHttps(this IServiceCollection services)
+        {
+            services.AddHsts(options =>
+            {
+                options.Preload = true;
+                options.IncludeSubDomains = true;
+                options.MaxAge = TimeSpan.FromDays(60);
+            });
+
+            services.AddHttpsRedirection(options =>
+            {
+                options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
+                options.HttpsPort = 5002;
+            });
+
+            return services;
+        }
+
+        private static void SetLocalizationOptions(RequestLocalizationOptions options)
+        {
+            var supportedCultures = new List<CultureInfo>
+            {
+                new CultureInfo("zh-CN"),
+                new CultureInfo("en-US")
+            };
+
+            options.DefaultRequestCulture = new RequestCulture(supportedCultures[0], supportedCultures[0]);
+            options.SupportedCultures = supportedCultures;
+            options.SupportedUICultures = supportedCultures;
+        }
+
 
         private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
         {

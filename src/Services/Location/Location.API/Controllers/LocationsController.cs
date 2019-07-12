@@ -1,11 +1,9 @@
-﻿using System;
+﻿using Location.API.Infrastructure.Services;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using Location.API.Infrastructure.Services;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Location.API.Controllers
 {
@@ -62,6 +60,14 @@ namespace Location.API.Controllers
             {
                 return NotFound(parentCode);
             }
+            return Ok(locations);
+        }
+
+        [HttpGet]
+        [Route("")]
+        public async Task<IActionResult> Get(int level)
+        {
+            var locations = await _locationService.GetLocationsAsync(level);
             return Ok(locations);
         }
     }

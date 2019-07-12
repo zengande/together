@@ -1,9 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Together.Activity.Domain.AggregatesModel.ActivityAggregate;
+using Together.Activity.Domain.AggregatesModel.CategoryAggregate;
 
 namespace Together.Activity.Infrastructure.EntityTypeConfigurations
 {
@@ -32,20 +29,51 @@ namespace Together.Activity.Infrastructure.EntityTypeConfigurations
                 .IsRequired(false);
             builder.Property<int>("ActivityStatusId")
                 .IsRequired();
-            builder.Property(a => a.Description)
+            builder.Property<int>("AddressVisibleRuleId")
+                .IsRequired();
+            builder.Property(a => a.Title)
                 .IsRequired(false);
             builder.Property(a => a.Details)
                 .IsRequired(false);
             builder.Property(a => a.EndRegisterTime)
                 .IsRequired();
             builder.Property(a => a.CategoryId)
-               .IsRequired();
+               .IsRequired(false);
             builder.Property(a => a.LimitsNum);
 
             builder.HasOne(a => a.ActivityStatus)
                 .WithMany()
                 .HasForeignKey("ActivityStatusId");
-            builder.OwnsOne(a => a.Address);
+
+            builder.HasOne(a => a.AddressVisibleRule)
+                .WithMany()
+                .HasForeignKey("AddressVisibleRuleId");
+
+            var addressBuilder = builder.OwnsOne(a => a.Address);
+            addressBuilder.Property(a => a.City)
+                .HasColumnName("City")
+                .IsRequired()
+                .HasMaxLength(200)
+                .IsUnicode();
+            addressBuilder.Property(a => a.Province)
+                .HasColumnName("Province")
+                .HasMaxLength(200)
+                .IsUnicode();
+            addressBuilder.Property(a => a.DetailAddress)
+                .HasColumnName("DetailAddress")
+                .HasMaxLength(512)
+                .IsUnicode();
+            addressBuilder.Property(a => a.Latitude)
+                .HasColumnName("Latitude")
+                .HasDefaultValue(0);
+            addressBuilder.Property(a => a.Longitude)
+                .HasColumnName("Longitude")
+                .HasDefaultValue(0);
+
+            builder.HasOne<Category>()
+                .WithMany()
+                .HasForeignKey(a => a.CategoryId)
+                .IsRequired(false);
 
             var navigation = builder.Metadata
                 .FindNavigation(nameof(Domain.AggregatesModel.ActivityAggregate.Activity.Participants));

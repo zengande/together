@@ -28,7 +28,7 @@ namespace Together.Activity.BackgroundTasks.Tasks.Base
         public virtual Task StartAsync(CancellationToken cancellationToken)
         {
             _executingTask = ExecuteAsync(_tokenSource.Token);
-
+            
             if (_executingTask.IsCanceled)
             {
                 return _executingTask;

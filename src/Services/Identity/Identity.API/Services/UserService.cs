@@ -1,13 +1,6 @@
-﻿using DnsClient;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
-using Nutshell.Resilience.HttpRequest.abstracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Together.Identity.API.Configurations;
 using Together.Identity.API.Models;
 
 namespace Together.Identity.API.Services
@@ -34,9 +27,14 @@ namespace Together.Identity.API.Services
             return await _userManager.CheckPasswordAsync(user, password);
         }
 
-        public async Task SignIn(ApplicationUser user, AuthenticationProperties props)
+        public async Task SignInAsync(ApplicationUser user, AuthenticationProperties props)
         {
             await _signInManager.SignInAsync(user, props);
+        }
+
+        public async Task SignOutAsync()
+        {
+            await _signInManager.SignOutAsync();
         }
     }
 }

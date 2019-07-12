@@ -42,13 +42,13 @@ namespace Together.Activity.BackgroundTasks
 
             services.AddCap(options =>
             {
-
                 options.UseEntityFramework<TasksDbContext>()
                     .UseRabbitMQ("rabbitmq")
                     .UseDashboard();
             });
 
             services.AddHostedService<ExpiredActivitiesManagerTask>();
+            services.AddHostedService<RecruitmentActivitiesToProcessingTask>();
 
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
@@ -65,7 +65,6 @@ namespace Together.Activity.BackgroundTasks
             {
                 app.UseHsts();
             }
-            app.UseCap();
             app.UseMvc();
             //app.Map("/liveness", lapp => lapp.Run(async ctx => ctx.Response.StatusCode = 200));
         }

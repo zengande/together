@@ -7,7 +7,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Nutshell.Extensions.WebHost;
+using Together.Extensions.WebHost;
 using Together.Activity.BackgroundTasks.Data;
 
 namespace Together.Activity.BackgroundTasks

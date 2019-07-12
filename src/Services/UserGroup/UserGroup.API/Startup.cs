@@ -122,14 +122,13 @@ namespace Together.UserGroup.API
             app.UseHsts();
 
             app.UseHttpsRedirection();
-            app.UseCap();
             app.UseMvc();
             app.UseSwagger()
                .UseSwaggerUI(c =>
                {
                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "UserGroup API V1");
                });
-            app.UseTracing("usergroup_api");
+            //app.UseTracing("usergroup_api");
         }
 
         /// <summary>

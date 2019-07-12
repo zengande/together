@@ -1,9 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Together.Activity.Domain.AggregatesModel.ActivityAggregate;
 
 namespace Together.Activity.Infrastructure.EntityTypeConfigurations
@@ -32,6 +28,9 @@ namespace Together.Activity.Infrastructure.EntityTypeConfigurations
                 .IsRequired();
             builder.Property(p => p.Sex)
                 .HasDefaultValue(0);
+            builder.Property(p => p.IsOwner)
+                .HasDefaultValue(false)
+                .IsRequired();
         }
     }
 }

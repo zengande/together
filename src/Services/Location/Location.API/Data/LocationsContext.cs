@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Location.API.Models;
+﻿using Location.API.Models;
 using Microsoft.Extensions.Options;
-using MongoDB;
 using MongoDB.Driver;
+using System;
+using System.Linq;
 
 namespace Location.API.Data
 {
@@ -39,5 +36,19 @@ namespace Location.API.Data
             }
         }
 
+        public IMongoCollection<UserLocation> UserLocation
+        {
+            get
+            {
+                var list = _database.ListCollections()
+                    .ToList().
+                    Select(a => a["name"].AsString);
+                if (!list.Any(a => a.Equals(nameof(UserLocation), StringComparison.CurrentCultureIgnoreCase)))
+                {
+                    _database.CreateCollection(nameof(UserLocation));
+                }
+                return _database.GetCollection<UserLocation>(nameof(UserLocation));
+            }
+        }
     }
 }

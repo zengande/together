@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+             x:Class="Together.UI.Resources.Themes">
+
+    <Style x:Key="NoNavigationBarStyle" TargetType="{x:Type views:MvxContentPage}">
+        <Setter Property="NavigationPage.HasNavigationBar" Value="False"/>
+        <Setter Property="Padding" Value="12"/>
+    </Style>
+
+
+    <Style x:Key="ButtonBaseStyle" TargetType="Button">
+        <Setter Property="HeightRequest" Value="40"/>
+        <Setter Property="FontSize" Value="16"/>
+    </Style>
+    <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource ButtonBaseStyle}">
+        <Setter Property="CornerRadius" Value="20"/>
+        <Setter Property="BackgroundColor" Value="{DynamicResource PrimaryColor}"/>
+        <Setter Property="TextColor" Value="#ffffff"/>
+    </Style>
+
+    <Style x:Key="HeaderLabelStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{DynamicResource PrimaryTextColor}"/>
+        <Setter Property="Margin" Value="0,0,0,8"/>
+    </Style>
+
+</ResourceDictionary>

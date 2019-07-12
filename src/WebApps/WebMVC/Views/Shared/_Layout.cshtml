@@ -1,8 +1,11 @@
 ﻿@using Microsoft.Extensions.Configuration
+@using Together.Extensions.Claims
+
 @inject IConfiguration configuration
+@inject IViewLocalizer Localizer
 
 <!DOCTYPE html>
-<html>
+<html lang="zh-cn">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,10 +13,12 @@
 
     <environment include="Development">
         <link href="~/lib/bootstrap-4.0.0/css/bootstrap.css" rel="stylesheet" />
+        <link href="~/lib/font-awesome-4.7.0/css/font-awesome.css" rel="stylesheet" />
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment exclude="Development">
         <link href="~/lib/bootstrap-4.0.0/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="~/lib/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
     @RenderSection("Styles", required: false)
@@ -21,44 +26,54 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-            <div class="container">
+            <div class="container-fluid">
                 <a class="navbar-brand" href="/">TOGETHER</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarCollapse">
-                    <ul class="navbar-nav mr-auto">
+                    <ul class="navbar-nav ml-auto mr-3">
                         <li class="nav-item">
-                            <a class="nav-link" href="/activity/create">Create</a>
+                            <a class="nav-link text-info" href="/activity/create">@Localizer["Create a activity"]</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link disabled" href="#">Disabled</a>
-                        </li>
+
                     </ul>
-                    @*<form class="form-inline mt-2 mt-md-0">
-                        <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                    </form>*@
-                    <a href="/account/signin" class="btn btn-link">登录</a>
+                    @{
+                        var user = User.GetCurrentUserInfo();
+                        if (user != null)
+                        {
+                            <div class="btn-group">
+                                <a href="/member/me" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img class="avatar-30" src="@user.Avatar" /></a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a asp-controller="member" asp-action="me" class="dropdown-item">@Localizer["Profile"]</a>
+                                    <a asp-controller="account" asp-action="settings" class="dropdown-item">@Localizer["Settings"]</a>
+                                    <a asp-controller="account" asp-action="signout" class="dropdown-item">@Localizer["Log out"]</a>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <a href="/account/signin">@Localizer["Log in"]</a>
+                        }
+                    }
                 </div>
             </div>
         </nav>
     </header>
 
-    <main role="main" class="container">
+    <main role="main" class="main position-relative">
         @RenderBody()
     </main>
 
-    <footer class="text-muted">
-        <div class="container border-top mt-4 pt-3">
-            <p class="float-right">
-                <a href="#">Back to top</a>
-            </p>
-            <p>&copy;2018 together.cn by TOGETHER</p>
+    <footer class="text-muted footer mt-4">
+        @RenderSection("FooterStripes", required: false)
+        <div class="stripe-legal foot-stripe">
+            <div class="container">
+                <a id="backtop" class="float-right" href="javascript:;">@Localizer["Back to top"]</a>
+                <p class="copy"><i class="fa fa-copyright"></i>2018 together.cn by TOGETHER</p>
+            </div>
         </div>
     </footer>
-
-
 
     <environment include="Development">
         <script src="~/lib/jquery/3.3.1/jquery.js"></script>
@@ -73,21 +88,48 @@
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
     <script type="text/javascript">
-        const connection = new signalR.HubConnectionBuilder()
-            .withUrl("@(configuration.GetValue<string>("NoticeHttpEndpoint"))/notificationhub")
-            .build();
+        if ('@User.Identity.IsAuthenticated' === 'True') {
+            var timerId;
 
-        connection.start()
-            .then(() => {
-                console.log("connected to signalr hub");
-            })
-            .catch(error => {
-                console.error(error);
+            stablishConnection((conn) => registerNotificationHandlers(conn));
+        }
+
+        function stablishConnection(cb) {
+            let connection = new signalR.HubConnectionBuilder()
+                .withUrl('@(configuration.GetValue<string>("APIGatewayEndpoint"))/hubs/notificationhub', {
+                    transport: signalR.HttpTransportType.LongPolling,
+                    accessTokenFactory: () => {
+                        return "Authorization", getToken();
+                    }
+                })
+                .build();
+
+            connection.start().then(function () {
+                console.log('User Registered to Signalr Hub');
+                cb(connection);
             });
+        }
 
-        connection.on("NewUserJoined", (title, entrants) => {
-            console.log("your " + title + " has user joined : " + entrants + "");
-        });
+        function registerNotificationHandlers(connection) {
+            connection.on("NewUserJoined", (response) => {
+                console.log(response);
+            });
+        }
+
+        function getToken() {
+            var token = '';
+            $.ajax({
+                url: '/account/gettoken',
+                type: 'get',
+                async: false,
+                success: function (response) {
+                    token = response;
+                },
+                error: function () {
+                }
+            });
+            return token;
+        }
     </script>
     @RenderSection("Scripts", required: false)
 </body>

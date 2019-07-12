@@ -1,10 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver.GeoJsonObjectModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Location.API.Models
 {
@@ -27,6 +23,8 @@ namespace Location.API.Models
         /// </summary>
         public double Latitude { get; set; }
         public GeoJsonPoint<GeoJson2DGeographicCoordinates> Location { get; private set; }
+
+        public int Level { get; set; }
 
         /// <summary>
         /// 设置位置

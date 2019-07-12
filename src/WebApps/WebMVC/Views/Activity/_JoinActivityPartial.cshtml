@@ -1,0 +1,41 @@
+﻿@using WebMVC.Infrastructure.Enums
+@inject IViewLocalizer Localizer
+@if (User.Identity.IsAuthenticated)
+{
+    if (Model.IsJoined)
+    {
+        <p class="p-notice"><b>@Localizer["You have already joined"]</b></p>
+    }
+    else
+    {
+        switch (Model.Status)
+        {
+            case ActivityStatus.Recruitment:
+                {
+                    <p class="question">
+                        <b>@Localizer["activity_header_question"]</b>@string.Format(Localizer["Join before"].Value, Model.EndRegisterTime)
+                        @if (Model.LimitsNum?.Value > 0)
+                        {
+                            @string.Format("剩余{0}个名额", Model.LimitsNum.Value - Model.NumberOfParticipants)
+                        }
+                    </p>
+                    <p class="p-notice"><button onclick="join(@Model.Id)" class="btn btn-info btn-sm w-50"><i class="fa fa-check"></i></button></p>
+                    break;
+                }
+            case ActivityStatus.Finished:
+                {
+                    <p class="p-notice">@Localizer["This activity is past"]</p>
+                    break;
+                }
+            case ActivityStatus.Processing:
+                {
+                    <p class="p-notice">@Localizer["This activity is in progress"]</p>
+                    break;
+                }
+        }
+    }
+}
+else
+{
+    <p class="p-notice">@Localizer["Sign in to join"]</p>
+}
