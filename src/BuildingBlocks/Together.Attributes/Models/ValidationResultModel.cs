@@ -2,18 +2,19 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
+using Together.Mvc.Core.Models;
 
 namespace Together.Attributes.Models
 {
-    public class ValidationResultModel
+    public class ValidationResultModel : JsonResultModel<bool>
     {
-        public string Message { get; }
-
         public List<ValidationError> Errors { get; }
 
         public ValidationResultModel(ModelStateDictionary modelState, string message)
         {
-            Message = message;
+            Success = false;
+            ErrorMessage = message;
+            ErrorCode = ErrorCodes.ModelStateValidationFailed;
             Errors = modelState.Keys
                     .SelectMany(key => modelState[key].Errors.Select(x => new ValidationError(key, x.ErrorMessage)))
                     .ToList();
