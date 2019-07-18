@@ -1,0 +1,47 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/logs/logs",
+    "pages/discovery/discovery",
+    "pages/message/message",
+    "pages/me/me"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "同趣同城",
+    "navigationBarTextStyle": "black"
+  },
+  "sitemapLocation": "sitemap.json",
+  "tabBar": {
+    "color": "#515151",
+    "selectedColor": "#fdc832",
+    "borderStyle": "white",
+    "list": [
+      {
+        "selectedIconPath": "static/images/home-selected.png",
+        "iconPath": "static/images/home-normal.png",
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "selectedIconPath": "static/images/discovery-selected.png",
+        "iconPath": "static/images/discovery-normal.png",
+        "pagePath": "pages/discovery/discovery",
+        "text": "发现"
+      },
+      {
+        "selectedIconPath": "static/images/message-selected.png",
+        "iconPath": "static/images/message-normal.png",
+        "pagePath": "pages/message/message",
+        "text": "消息"
+      },
+      {
+        "selectedIconPath": "static/images/me-selected.png",
+        "iconPath": "static/images/me-normal.png",
+        "pagePath": "pages/me/me",
+        "text": "我"
+      }
+    ]
+  }
+}

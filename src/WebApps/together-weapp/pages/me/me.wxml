@@ -1,0 +1,15 @@
+<!-- pages/me/me.wxml -->
+<view class="content">
+    <view class="me-header">
+        <view class="me-header-left">
+            <text class="title">登录/注册</text>
+            <text class="tip-text">与兴趣相投的人交朋友</text>
+        </view>
+        <view class="me-header-right"></view>
+    </view>
+    <view class="me-menu">
+        <view class="me-menu-item">
+            <text class="me-menu-item-text">设置</text>
+        </view>
+    </view>
+</view>

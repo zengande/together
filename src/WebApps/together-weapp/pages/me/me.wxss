@@ -1,0 +1,23 @@
+/* pages/me/me.wxss */
+
+.me-header {
+    display              : grid;
+    grid-template-columns: auto 60px;
+}
+
+.me-header-right {
+    border-radius: 30px;
+    height       : 60px;
+    width        : 60px;
+    overflow     : hidden;
+    background   : transparent;
+}
+
+.me-menu {
+    padding  : 15rpx 0;
+    font-size: 13pt;
+}
+
+.me-menu-item {
+    margin: 15rpx 0;
+}
