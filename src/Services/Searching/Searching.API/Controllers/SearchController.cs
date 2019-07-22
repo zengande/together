@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nest;
 using Together.Searching.API.Models;
+using Together.Searching.API.ViewModels;
 
 namespace Together.Searching.API.Controllers
 {
@@ -17,20 +18,27 @@ namespace Together.Searching.API.Controllers
 
         [HttpGet]
         [Route("activities")]
-        public IActionResult Activities(string keyword, int offset = 0, int limit = 10)
+        public IActionResult Activities(ActivitySearchViewModel vm)
         {
             var activities = _elasticClient.Search<Activity>(s =>
                 s.Index<Activity>()
-                    .From(offset)
-                    .Size(limit)
-                    .Query(q => q.Match(m => m.Field(f => f.Detail).Query(keyword)) ||
-                        q.Match(m => m.Field(f => f.Title).Query(keyword))
+                    .Query(q => (q.Match(m => m.Field(f => f.Detail).Query(vm.Keyword)) ||
+                        q.Match(m => m.Field(f => f.Title).Query(vm.Keyword))) &&
+                        q.GeoDistance(g => g
+                            .Boost(1.1)
+                            .Field(f => f.LocationPoint)
+                            .Distance(vm.Distance)
+                            .Location(vm.Location)
+                            .ValidationMethod(GeoValidationMethod.IgnoreMalformed)
+                        )
                     )
+                    .From(vm.Offset)
+                    .Size(vm.Limit)
                     .Sort(d => d.Descending(SortSpecialField.Score))
-            //.Sort(d => d.Descending(f => f.CreateTime))
-            //.Highlight(h => h.PreTags("<b style='color:red'>")
-            //    .PostTags("</b>")
-            //    .Fields(f1 => f1.Field(e => e.Title), f2 => f2.Field(e => e.Detail)))
+            .Sort(d => d.Descending(f => f.CreateTime))
+            .Highlight(h => h.PreTags("<b style='color:red'>")
+                .PostTags("</b>")
+                .Fields(f1 => f1.Field(e => e.Title), f2 => f2.Field(e => e.Detail)))
             ).Documents;
             return Ok(activities);
         }
@@ -39,11 +47,6 @@ namespace Together.Searching.API.Controllers
         [Route("activities")]
         public IActionResult Activities([FromBody]Activity activity)
         {
-            //if (_elasticClient.IndexExists(Indices.Index(IndexName.From<Activity>())).Exists == false)
-            //{
-            //    _elasticClient.CreateIndex(IndexName.From<Activity>());
-            //}
-            //var response = _elasticClient.IndexDocument(activity);
             return Ok();
         }
 
