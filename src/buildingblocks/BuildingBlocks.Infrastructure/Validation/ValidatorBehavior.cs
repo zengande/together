@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Together.BuildingBlocks.Domain;
 
-namespace Together.BuildingBlocks.Application.Behaviors
+namespace Together.BuildingBlocks.Infrastructure.Validation
 {
     public class ValidatorBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
