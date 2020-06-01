@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Logging;
 using NSwag.AspNetCore;
 using Together.Activity.API;
 using Together.Activity.Application.Commands;
+using Together.Activity.Application.Queries;
 using Together.Activity.Application.Validations;
 using Together.Activity.Domain.AggregatesModel.ActivityAggregate;
 using Together.Activity.Infrastructure.Data;
@@ -52,6 +53,12 @@ namespace Activity.API
 
             builder.RegisterType<ActivityRepository>()
                 .As<IActivityRepository>()
+                .InstancePerLifetimeScope();
+
+            // ²éÑ¯¿â
+            var connectionString = Configuration.GetConnectionString("Default");
+            builder.Register(c=> new ActivityQueries(connectionString))
+                .As<IActivityQueries>()
                 .InstancePerLifetimeScope();
         }
 

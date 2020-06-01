@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Together.Activity.Application.Commands;
 using Together.Activity.Application.Dtos.Activity;
+using Together.Activity.Application.Queries;
 using Together.Activity.Domain.AggregatesModel.ActivityAggregate;
 using Together.BuildingBlocks.Infrastructure.Identity;
 
@@ -20,17 +21,21 @@ namespace Together.Activity.API.Controllers
     {
         private readonly IIdentityService _identityService;
         private readonly IMediator _mediator;
+        private readonly IActivityQueries _queries;
         public ActivitiesController(IMediator mediator,
-            IIdentityService identityService)
+            IIdentityService identityService,
+            IActivityQueries queries)
         {
+            _queries = queries;
             _mediator = mediator;
             _identityService = identityService;
         }
 
         [HttpGet, Route("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return Ok();
+            var activity = await _queries.GetActivityByIdAsync(id);
+            return activity != null ? Ok(activity) : (IActionResult)NotFound(id);
         }
 
         [Authorize]
