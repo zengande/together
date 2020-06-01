@@ -24,7 +24,7 @@ namespace Together.Activity.Infrastructure.EntityTypeConfigurations
                 .IsRequired();
             builder.Property(a => a.CreateTime)
                 .IsRequired();
-            builder.Property(a => a.OwnerId)
+            builder.Property(a => a.Creator)
                 .HasMaxLength(200)
                 .IsRequired(false);
             builder.Property<int>("ActivityStatusId")
@@ -33,7 +33,7 @@ namespace Together.Activity.Infrastructure.EntityTypeConfigurations
                 .IsRequired();
             builder.Property(a => a.Title)
                 .IsRequired(false);
-            builder.Property(a => a.Details)
+            builder.Property(a => a.Content)
                 .IsRequired(false);
             builder.Property(a => a.EndRegisterTime)
                 .IsRequired();

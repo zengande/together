@@ -25,6 +25,8 @@ namespace Together.Activity.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfiguration(new ClientRequestEntityTypeConfiguration());
+
             modelBuilder.ApplyConfiguration(new ActivityStatusEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ActivityEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ParticipantEntityTypeConfiguration());

@@ -7,5 +7,7 @@ namespace Together.BuildingBlocks.Domain
     public interface IRepository<T> where T : IAggregateRoot
     {
         IUnitOfWork UnitOfWork { get; }
+
+        T Add(T entity);
     }
 }

@@ -1,21 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
+using Autofac;
+using FluentValidation.AspNetCore;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Logging;
-using NSwag;
 using NSwag.AspNetCore;
-using NSwag.Generation.Processors.Security;
 using Together.Activity.API;
+using Together.Activity.Application.Commands;
+using Together.Activity.Application.Validations;
+using Together.Activity.Domain.AggregatesModel.ActivityAggregate;
 using Together.Activity.Infrastructure.Data;
+using Together.Activity.Infrastructure.Repositories;
 using Together.BuildingBlocks.Infrastructure;
 
 namespace Activity.API
@@ -34,18 +34,25 @@ namespace Activity.API
         {
             IdentityModelEventSource.ShowPII = true;
 
-            services.AddCustomAuth(Configuration);
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
+                .AddCustomAuth(Configuration)
+                .AddIdentityServices()
+                .AddOpenApiDocument(document => document.AddCustomSecurity(Configuration))
+                .AddDbContext<ActivityDbContext>(options =>
+                {
+                    options.UseMySql(Configuration.GetConnectionString("Default"));
+                })
+                .AddControllers();
+        }
 
-            services.AddOpenApiDocument(document => document.AddCustomSecurity(Configuration));
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterMediatorModule(typeof(CreateActivityCommandHandler), typeof(CreateActivityCommandValidator));
+            builder.RegisterGeneric(typeof(IdentifiedCommandHandler<,>)).As(typeof(IRequestHandler<,>));
 
-            services.AddCustomMediatR(typeof(Startup));
-
-            services.AddDbContext<ActivityDbContext>(options =>
-            {
-                options.UseMySql(Configuration.GetConnectionString("Default"));
-            });
-
-            services.AddControllers();
+            builder.RegisterType<ActivityRepository>()
+                .As<IActivityRepository>()
+                .InstancePerLifetimeScope();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

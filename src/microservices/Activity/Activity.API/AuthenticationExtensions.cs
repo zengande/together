@@ -44,7 +44,6 @@ namespace Together.Activity.API
                         AuthorizationUrl = $"https://together2.b2clogin.com/{configuration["AzureAdB2C:Tenant"]}/{configuration["AzureAdB2C:Policy"]}/oauth2/v2.0/authorize",
                         Scopes = new Dictionary<string, string>
                             {
-                                { "https://together2.onmicrosoft.com/activityapi/request","activity api" },
                                 { "https://together2.onmicrosoft.com/activityapi/user_impersonation", "Access the api as the signed-in user"}
                             }
                     }
