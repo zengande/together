@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Together.Activity.Application.Dtos.Activity
+namespace Together.Activity.Application.Dtos
 {
     public class CreateActivityDto
     {

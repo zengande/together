@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Together.Activity.Application.Commands;
-using Together.Activity.Application.Dtos.Activity;
+using Together.Activity.Application.Dtos;
 using Together.Activity.Application.Queries;
 using Together.Activity.Domain.AggregatesModel.ActivityAggregate;
 using Together.BuildingBlocks.Infrastructure.Identity;
@@ -40,7 +40,7 @@ namespace Together.Activity.API.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody]CreateActivityDto dto, [FromHeader(Name = "x-requestid")] string requestId)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateActivityDto dto, [FromHeader(Name = "x-requestid")] string requestId)
         {
             if (Guid.TryParse(requestId, out Guid guid) && guid != Guid.Empty)
             {
@@ -60,6 +60,13 @@ namespace Together.Activity.API.Controllers
             return BadRequest();
         }
 
+        [HttpGet, Route("{activityId}/participants")]
+        public async Task<IActionResult> GetActivityParticipantsAsync(int activityId)
+        {
+            var participants = await _queries.GetActivityParticipantsAsync(activityId);
+            return Ok(participants);
+        }
+
         [Authorize]
         [HttpPost, Route("{activityId}/join")]
         public async Task<IActionResult> JoinAsync(int activityId, [FromHeader(Name = "x-requestid")] string requestId)
@@ -67,8 +74,8 @@ namespace Together.Activity.API.Controllers
             bool commandResult = false;
             if (Guid.TryParse(requestId, out Guid guid) && guid != Guid.Empty)
             {
-                var userId = _identityService.GetUserIdentity();
-                var command = new JoinActivityCommand(activityId, userId);
+                var userInfo = _identityService.GetUserInfo();
+                var command = new JoinActivityCommand(activityId, userInfo);
                 var requestJoinActivity = new IdentifiedCommand<JoinActivityCommand, bool>(command, guid);
                 commandResult = await _mediator.Send(requestJoinActivity);
                 //commandResult = await _mediator.Send(command);

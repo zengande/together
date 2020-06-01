@@ -8,5 +8,6 @@ namespace Together.BuildingBlocks.Infrastructure.Identity
     {
         string GetUserIdentity();
         string GetUserName();
+        UserInfo GetUserInfo();
     }
 }

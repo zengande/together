@@ -142,36 +142,31 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         /// </summary>
         public void JoinActivity(string userId, string nickname, string avatar, int sex)
         {
-            // 非活动所有者
-            if (Creator != userId)
+            // 招募状态才能加入
+            if (ActivityStatusId != ActivityStatus.Recruitment.Id)
             {
-                // 招募状态才能加入
-                if (ActivityStatusId != ActivityAggregate.ActivityStatus.Recruitment.Id)
-                {
-                    throw new DomainException($"该活动当前状态不允许加入");
-                }
+                throw new DomainException($"该活动当前状态不允许加入");
+            }
 
-                // 已参加了此活动
-                if (_participants.Any(u => u.UserId == userId))
-                {
-                    return;
-                }
+            // 判断是否已经截止了报名
+            if (DateTimeOffset.Now > EndRegisterTime)
+            {
+                throw new DomainException("已经截止了报名");
+            }
 
-                // 判断是否已经截止了报名
-                if (DateTimeOffset.Now > EndRegisterTime)
-                {
-                    throw new DomainException("已经截止了报名");
-                }
+            // 已参加了此活动
+            if (_participants.Any(u => u.UserId == userId))
+            {
+                return;
+            }
 
-
-                // 人数已满
-                if (LimitsNum.HasValue)
+            // 人数已满
+            if (LimitsNum.HasValue && LimitsNum > 0)
+            {
+                // 除本人外人数限制
+                if (_participants.Count > LimitsNum.Value)
                 {
-                    // 除本人外人数限制
-                    if (_participants.Count > LimitsNum.Value)
-                    {
-                        throw new DomainException("本次活动人数已满");
-                    }
+                    throw new DomainException("本次活动人数已满");
                 }
             }
 

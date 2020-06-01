@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
+using Together.BuildingBlocks.Infrastructure.Identity;
 
 namespace Together.Activity.Application.Commands
 {
@@ -10,14 +11,14 @@ namespace Together.Activity.Application.Commands
     public class JoinActivityCommand : IRequest<bool>
     {
         [DataMember]
-        public string UserId { get; private set; }
+        public UserInfo UserInfo { get; private set; }
         [DataMember]
         public int ActivityId { get; private set; }
 
-        public JoinActivityCommand(int activityId, string userId)
+        public JoinActivityCommand(int activityId, UserInfo userInfo)
         {
             ActivityId = activityId;
-            UserId = userId;
+            UserInfo = userInfo;
         }
     }
 }

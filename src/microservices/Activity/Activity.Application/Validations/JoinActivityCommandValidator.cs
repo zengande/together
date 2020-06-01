@@ -10,8 +10,8 @@ namespace Together.Activity.Application.Validations
     {
         public JoinActivityCommandValidator()
         {
-            RuleFor(r => r.UserId)
-                .NotEmpty();
+            RuleFor(r => r.UserInfo)
+                .NotNull();
             RuleFor(r => r.ActivityId)
                 .GreaterThan(0);
         }
