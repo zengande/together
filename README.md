@@ -1,1 +1,2 @@
-# TOGETHER - a microservice application on docker container
+# together
+🚢 Containers based microservices application
