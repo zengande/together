@@ -31,11 +31,11 @@ namespace Together.Activity.API.Controllers
             _identityService = identityService;
         }
 
-        [HttpGet, Route("{id}")]
-        public async Task<IActionResult> Get(int id)
+        [HttpGet, Route("{activityId}")]
+        public async Task<IActionResult> Get(int activityId)
         {
-            var activity = await _queries.GetActivityByIdAsync(id);
-            return activity != null ? Ok(activity) : (IActionResult)NotFound(id);
+            var activity = await _queries.GetActivityByIdAsync(activityId);
+            return activity != null ? Ok(activity) : (IActionResult)NotFound(activityId);
         }
 
         [Authorize]
@@ -50,10 +50,10 @@ namespace Together.Activity.API.Controllers
                 var address = new Address("浙江省", "西湖区", "西湖风景区", 0, 0);
                 var command = new CreateActivityCommand(creator, dto.Title, dto.Content, dto.EndRegisterTime, dto.ActivityStartTime, dto.ActivityEndTime, address, dto.LimitsNum);
                 var requestCreateActivity = new IdentifiedCommand<CreateActivityCommand, int>(command, guid);
-                var id = await _mediator.Send(requestCreateActivity);
-                if (id > 0)
+                var activityId = await _mediator.Send(requestCreateActivity);
+                if (activityId > 0)
                 {
-                    return Created(Url.Action(nameof(ActivitiesController.Get), new { id }), id);
+                    return Created(Url.Action(nameof(ActivitiesController.Get), new { activityId }), activityId);
                 }
             }
 
