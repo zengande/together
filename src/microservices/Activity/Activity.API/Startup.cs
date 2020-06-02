@@ -39,10 +39,7 @@ namespace Activity.API
                 .AddCustomAuth(Configuration)
                 .AddIdentityServices()
                 .AddOpenApiDocument(document => document.AddCustomSecurity(Configuration))
-                .AddDbContext<ActivityDbContext>(options =>
-                {
-                    options.UseMySql(Configuration.GetConnectionString("Default"));
-                })
+                .AddDbContext<ActivityDbContext>(options => options.UseMySql(Configuration.GetConnectionString("Default")))
                 .AddControllers();
         }
 
@@ -57,7 +54,7 @@ namespace Activity.API
 
             // ²éÑ¯¿â
             var connectionString = Configuration.GetConnectionString("Default");
-            builder.Register(c=> new ActivityQueries(connectionString))
+            builder.Register(c => new ActivityQueries(connectionString))
                 .As<IActivityQueries>()
                 .InstancePerLifetimeScope();
         }
