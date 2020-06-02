@@ -18,6 +18,7 @@ using Together.Activity.Domain.AggregatesModel.ActivityAggregate;
 using Together.Activity.Infrastructure.Data;
 using Together.Activity.Infrastructure.Repositories;
 using Together.BuildingBlocks.Infrastructure;
+using Together.BuildingBlocks.Infrastructure.Filters;
 
 namespace Activity.API
 {
@@ -40,7 +41,7 @@ namespace Activity.API
                 .AddIdentityServices()
                 .AddOpenApiDocument(document => document.AddCustomSecurity(Configuration))
                 .AddDbContext<ActivityDbContext>(options => options.UseMySql(Configuration.GetConnectionString("Default")))
-                .AddControllers();
+                .AddControllers(options=>options.Filters.Add<HttpGlobalExceptionFilter>());
         }
 
         public void ConfigureContainer(ContainerBuilder builder)

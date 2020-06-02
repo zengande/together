@@ -17,4 +17,8 @@
     <Folder Include="Application\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Activity.API\Activity.API.csproj" />
+  </ItemGroup>
+
 </Project>
