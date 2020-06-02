@@ -1,0 +1,78 @@
+import * as msal from 'msal';
+import AuthConfig from '@/services/auth.config'
+console.log(msal)
+const application = new msal.UserAgentApplication(AuthConfig.msalConfig);
+
+class AuthService {
+    public async loginPopup() {
+        try {
+            const response = await application.loginPopup(AuthConfig.loginRequest);
+            console.log("id_token acquired at: " + new Date().toString());
+            console.log(response);
+
+            const account = service.getAccount();
+            console.log(account)
+            if (account) {
+
+            }
+        } catch (error) {
+            console.error(error);
+            // Error handling
+            if (error.errorMessage) {
+                // Check for forgot password error
+                // Learn more about AAD error codes at https://docs.microsoft.com/en-us/azure/active-directory/develop/reference-aadsts-error-codes
+                if (error.errorMessage.indexOf("AADB2C90118") > -1) {
+                    const response = await application.loginPopup(AuthConfig.b2cPolicies.authorities.forgotPassword);
+                    console.log(response);
+                    window.alert("Password has been reset successfully. \nPlease sign-in with your new password.");
+
+                }
+            }
+        }
+    }
+
+    /**Sign-out the user */
+    public logout() {
+        // Removes all sessions, need to call AAD endpoint to do full logout
+        application.logout();
+    }
+
+    public getAccount(): msal.Account {
+        const account = application.getAccount();
+        console.log(account);
+        return account;
+    }
+
+    private getTokenPopup(request: msal.AuthenticationParameters) {
+        return application.acquireTokenSilent(request)
+            .catch(error => {
+                console.log("Silent token acquisition fails. Acquiring token using popup");
+                console.log(error);
+                // fallback to interaction when silent call fails
+                return application.acquireTokenPopup(request)
+                    .then(tokenResponse => {
+                        console.log("access_token acquired at: " + new Date().toString());
+                        return tokenResponse;
+                    }).catch(error => {
+                        console.log(error);
+                        return null;
+                    });
+            });
+    }
+
+    // Acquires and access token and then passes it to the API call
+    public async getAccessToken(): Promise<string> {
+        const tokenResponse = await service.getTokenPopup(AuthConfig.tokenRequest)
+        if (tokenResponse != null) {
+            const { accessToken } = tokenResponse;
+            console.log("access_token acquired at: " + new Date().toString());
+            console.log(accessToken);
+            return accessToken;
+        }
+        return '';
+    }
+}
+
+const service = new AuthService();
+
+export default service;
