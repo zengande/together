@@ -1,14 +1,33 @@
 import React from 'react';
-import { Button } from 'antd';
-import withAuthorized from '@/components/withAuthorized';
+import { Select } from 'antd';
+import { connect, Loading, CreateModelState, ConnectProps } from 'umi';
+import ActivityCatalog from '@/@types/activity/catalog';
 
-@withAuthorized
-class CreatePage extends React.PureComponent {
+interface CreatePageProps extends ConnectProps {
+    catalogs?: ActivityCatalog[]
+}
+
+class CreatePage extends React.PureComponent<CreatePageProps> {
+    componentDidMount() {
+        this.fetCatalogs();
+    }
+
+    private fetCatalogs(parentId?: string | number) {
+        this.props.dispatch!({ type: 'activitycreate/fetchCatalogs', payload: parentId });
+    }
+
     render() {
+        console.log(this.props.catalogs);
         return (
-            <Button>Create</Button>
+            <div>
+                <Select>
+                    {this.props.catalogs && this.props.catalogs.map(c => <Select.Option value={c.id}>{c.name}</Select.Option>)}
+                </Select>
+            </div>
         )
     }
 }
 
-export default CreatePage;
+export default connect(({ loading, activitycreate }: { loading: Loading, activitycreate: CreateModelState }) => ({
+    catalogs: activitycreate.catalogs
+}))(CreatePage);
