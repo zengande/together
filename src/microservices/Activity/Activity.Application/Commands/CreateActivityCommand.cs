@@ -14,7 +14,8 @@ namespace Together.Activity.Application.Commands
         public DateTime ActivityStartTime { get; private set; }
         public DateTime ActivityEndTime { get; private set; }
         public int? LimitsNum { get; private set; }
-        public CreateActivityCommand(Participant creator, string title, string content, DateTime endRegisterTime, DateTime activityStartTime, DateTime activityEndTime, Address address, int? limitsNum)
+        public int AddressVisibleRuleId { get; private set; }
+        public CreateActivityCommand(Participant creator, string title, string content, DateTime endRegisterTime, DateTime activityStartTime, DateTime activityEndTime, Address address, int addressVisibleRuleId, int? limitsNum)
         {
             Creator = creator;
             Title = title;
@@ -23,6 +24,7 @@ namespace Together.Activity.Application.Commands
             ActivityStartTime = activityStartTime;
             ActivityEndTime = activityEndTime;
             Address = address;
+            AddressVisibleRuleId = addressVisibleRuleId;
             LimitsNum = limitsNum;
         }
     }

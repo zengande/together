@@ -48,7 +48,7 @@ namespace Together.Activity.API.Controllers
                 // TODO 获取用户信息
                 var creator = new Participant(userId, "nickname", "", 1, true);
                 var address = new Address("浙江省", "西湖区", "西湖风景区", 0, 0);
-                var command = new CreateActivityCommand(creator, dto.Title, dto.Content, dto.EndRegisterTime, dto.ActivityStartTime, dto.ActivityEndTime, address, dto.LimitsNum);
+                var command = new CreateActivityCommand(creator, dto.Title, dto.Content, dto.EndRegisterTime, dto.ActivityStartTime, dto.ActivityEndTime, address, dto.AddressVisibleRuleId, dto.LimitsNum);
                 var requestCreateActivity = new IdentifiedCommand<CreateActivityCommand, int>(command, guid);
                 var activityId = await _mediator.Send(requestCreateActivity);
                 if (activityId > 0)

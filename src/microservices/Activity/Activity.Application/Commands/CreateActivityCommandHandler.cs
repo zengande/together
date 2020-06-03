@@ -27,7 +27,7 @@ namespace Together.Activity.Application.Commands
                 request.ActivityEndTime,
                 request.Address,
                 0,
-                AddressVisibleRule.PublicVisible,
+                request.AddressVisibleRuleId,
                 request.LimitsNum);
 
             var entity = _repository.Add(activity);

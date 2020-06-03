@@ -9,6 +9,7 @@ export default () => {
       <button onClick={AuthService.loginPopup}>Login Popup</button>
       <button onClick={AuthService.getAccessToken}>Get AccessToken</button>
       <button onClick={AuthService.getAccount}>Get Account</button>
+      <button onClick={AuthService.logout}>Logout</button>
     </div>
   );
 }

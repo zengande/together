@@ -18,9 +18,10 @@ namespace Activity.UnitTests.Domain
             var endRegisterTime = DateTime.Now.AddDays(1);
             var startTime = DateTime.Now.AddDays(2);
             var endTime = DateTime.Now.AddDays(2).AddHours(4);
+            var addressVisibleRuleId = AddressVisibleRule.ParticipantsVisible.Id;
             var expectedResult = 1;
 
-            var activity = new Together.Activity.Domain.AggregatesModel.ActivityAggregate.Activity(creator, title, content, endRegisterTime, startTime, endTime, address, 0, AddressVisibleRule.PublicVisible);
+            var activity = new Together.Activity.Domain.AggregatesModel.ActivityAggregate.Activity(creator, title, content, endRegisterTime, startTime, endTime, address, 0, addressVisibleRuleId);
 
             Assert.Equal(expectedResult, activity.DomainEvents.Count);
         }

@@ -58,6 +58,9 @@ namespace Activity.API
             builder.Register(c => new ActivityQueries(connectionString))
                 .As<IActivityQueries>()
                 .InstancePerLifetimeScope();
+            builder.Register(c => new CatalogQueries(connectionString))
+                .As<ICatalogQueries>()
+                .InstancePerLifetimeScope();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

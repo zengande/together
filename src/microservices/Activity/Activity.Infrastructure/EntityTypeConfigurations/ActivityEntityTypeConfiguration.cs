@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Together.Activity.Domain.AggregatesModel.CatalogAggregate;
 using Together.Activity.Infrastructure.Data;
 
 namespace Together.Activity.Infrastructure.EntityTypeConfigurations
@@ -20,34 +21,42 @@ namespace Together.Activity.Infrastructure.EntityTypeConfigurations
 
             builder.Property(a => a.ActivityStartTime)
                 .IsRequired();
+
             builder.Property(a => a.ActivityEndTime)
                 .IsRequired();
+
             builder.Property(a => a.CreateTime)
                 .IsRequired();
-            builder.Property(a => a.Creator)
+
+            builder.Property(a => a.CreatorId)
                 .HasMaxLength(200)
                 .IsRequired(false);
-            builder.Property<int>("ActivityStatusId")
+            
+            builder.Property<int>("_activityStatusId")
+                .UsePropertyAccessMode(PropertyAccessMode.Field)
+                .HasColumnName("ActivityStatusId")
                 .IsRequired();
-            builder.Property<int>("AddressVisibleRuleId")
+
+            builder.Property<int>("_addressVisibleRuleId")
+                .UsePropertyAccessMode(PropertyAccessMode.Field)
+                .HasColumnName("AddressVisibleRuleId")
                 .IsRequired();
+
+            builder.Property<int>("_catalogId")
+                .UsePropertyAccessMode(PropertyAccessMode.Field)
+                .HasColumnName("CategoryId")
+                .IsRequired();
+
             builder.Property(a => a.Title)
                 .IsRequired(false);
+
             builder.Property(a => a.Content)
                 .IsRequired(false);
+
             builder.Property(a => a.EndRegisterTime)
                 .IsRequired();
-            builder.Property(a => a.CategoryId)
-               .IsRequired(false);
+
             builder.Property(a => a.LimitsNum);
-
-            builder.HasOne(a => a.ActivityStatus)
-                .WithMany()
-                .HasForeignKey("ActivityStatusId");
-
-            builder.HasOne(a => a.AddressVisibleRule)
-                .WithMany()
-                .HasForeignKey("AddressVisibleRuleId");
 
             var addressBuilder = builder.OwnsOne(a => a.Address);
             addressBuilder.Property(a => a.City)
@@ -73,6 +82,18 @@ namespace Together.Activity.Infrastructure.EntityTypeConfigurations
             var navigation = builder.Metadata
                 .FindNavigation(nameof(Domain.AggregatesModel.ActivityAggregate.Activity.Participants));
             navigation.SetPropertyAccessMode(PropertyAccessMode.Field);
+
+            builder.HasOne(a => a.ActivityStatus)
+                .WithMany()
+                .HasForeignKey("ActivityStatusId");
+
+            builder.HasOne(a => a.AddressVisibleRule)
+                .WithMany()
+                .HasForeignKey("AddressVisibleRuleId");
+
+            builder.HasOne<Catalog>()
+                .WithMany()
+                .HasForeignKey("_catalogId");
         }
     }
 }

@@ -35,5 +35,10 @@ namespace Together.Activity.Application.Dtos
         /// 活动结束时间
         /// </summary>
         public DateTime ActivityEndTime { get; set; }
+
+        /// <summary>
+        /// 地址可见规则
+        /// </summary>
+        public int AddressVisibleRuleId { get; set; }
     }
 }

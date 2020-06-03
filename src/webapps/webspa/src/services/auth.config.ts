@@ -2,15 +2,15 @@ import { Configuration } from 'msal';
 
 const b2cPolicies = {
     names: {
-        signUpSignIn: "b2c_1_susi",
-        forgotPassword: "b2c_1_resetpwd"
+        signUpSignIn: "B2C_1_susi",
+        forgotPassword: "B2C_1_resetpwd"
     },
     authorities: {
         signUpSignIn: {
-            authority: "https://together2.b2clogin.com/together2.onmicrosoft.com/b2c_1_susi",
+            authority: "https://together2.b2clogin.com/together2.onmicrosoft.com/B2C_1_resetpwd",
         },
         forgotPassword: {
-            authority: "https://together2.b2clogin.com/together2.onmicrosoft.com/b2c_1_resetpwd",
+            authority: "https://together2.b2clogin.com/together2.onmicrosoft.com/B2C_1_resetpwd",
         },
     }
 }

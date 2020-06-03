@@ -9,8 +9,8 @@ using Together.Activity.Infrastructure.Data;
 namespace Together.Activity.Infrastructure.Migrations
 {
     [DbContext(typeof(ActivityDbContext))]
-    [Migration("20200601071434_AddClientRequests")]
-    partial class AddClientRequests
+    [Migration("20200603023551_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,13 +31,12 @@ namespace Together.Activity.Infrastructure.Migrations
                     b.Property<DateTime>("ActivityStartTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("ActivityStatusId")
+                    b.Property<int?>("ActivityStatusId")
+                        .HasColumnName("ActivityStatusId1")
                         .HasColumnType("int");
 
-                    b.Property<int>("AddressVisibleRuleId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CategoryId")
+                    b.Property<int?>("AddressVisibleRuleId")
+                        .HasColumnName("AddressVisibleRuleId1")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
@@ -46,7 +45,7 @@ namespace Together.Activity.Infrastructure.Migrations
                     b.Property<DateTime>("CreateTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Creator")
+                    b.Property<string>("CreatorId")
                         .HasColumnType("varchar(200) CHARACTER SET utf8mb4")
                         .HasMaxLength(200);
 
@@ -59,11 +58,25 @@ namespace Together.Activity.Infrastructure.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<int>("_activityStatusId")
+                        .HasColumnName("ActivityStatusId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("_addressVisibleRuleId")
+                        .HasColumnName("AddressVisibleRuleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("_catalogId")
+                        .HasColumnName("CategoryId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ActivityStatusId");
 
                     b.HasIndex("AddressVisibleRuleId");
+
+                    b.HasIndex("_catalogId");
 
                     b.ToTable("AppActivities");
                 });
@@ -177,6 +190,36 @@ namespace Together.Activity.Infrastructure.Migrations
                     b.ToTable("AppParticipants");
                 });
 
+            modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.CatalogAggregate.Catalog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("varchar(200) CHARACTER SET utf8mb4")
+                        .HasMaxLength(200)
+                        .IsUnicode(true);
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnName("ParentId1")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Picture")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<int?>("_parentId")
+                        .HasColumnName("ParentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
+
+                    b.ToTable("AppCatalogs");
+                });
+
             modelBuilder.Entity("Together.BuildingBlocks.Infrastructure.Idempotency.ClientRequest", b =>
                 {
                     b.Property<Guid>("Id")
@@ -199,13 +242,15 @@ namespace Together.Activity.Infrastructure.Migrations
                 {
                     b.HasOne("Together.Activity.Domain.AggregatesModel.ActivityAggregate.ActivityStatus", "ActivityStatus")
                         .WithMany()
-                        .HasForeignKey("ActivityStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ActivityStatusId");
 
                     b.HasOne("Together.Activity.Domain.AggregatesModel.ActivityAggregate.AddressVisibleRule", "AddressVisibleRule")
                         .WithMany()
-                        .HasForeignKey("AddressVisibleRuleId")
+                        .HasForeignKey("AddressVisibleRuleId");
+
+                    b.HasOne("Together.Activity.Domain.AggregatesModel.CatalogAggregate.Catalog", null)
+                        .WithMany()
+                        .HasForeignKey("_catalogId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -261,6 +306,13 @@ namespace Together.Activity.Infrastructure.Migrations
                         .HasForeignKey("ActivityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.CatalogAggregate.Catalog", b =>
+                {
+                    b.HasOne("Together.Activity.Domain.AggregatesModel.CatalogAggregate.Catalog", null)
+                        .WithMany("Children")
+                        .HasForeignKey("ParentId");
                 });
 #pragma warning restore 612, 618
         }

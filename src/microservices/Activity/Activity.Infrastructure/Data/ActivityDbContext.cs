@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using Together.Activity.Domain.AggregatesModel.ActivityAggregate;
+using Together.Activity.Domain.AggregatesModel.CatalogAggregate;
 using Together.Activity.Infrastructure.EntityTypeConfigurations;
 using Together.BuildingBlocks.Infrastructure.Data;
 
@@ -17,6 +18,7 @@ namespace Together.Activity.Infrastructure.Data
         public DbSet<ActivityStatus> ActivityStatuses { get; set; }
         public DbSet<AddressVisibleRule> AddressVisibleRules { get; set; }
         public DbSet<Participant> Participants { get; set; }
+        public DbSet<Catalog> Catalogs { get; set; }
 
         public ActivityDbContext(DbContextOptions<ActivityDbContext> options, IMediator mediator)
             : base(options, mediator)
@@ -26,6 +28,8 @@ namespace Together.Activity.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new ClientRequestEntityTypeConfiguration());
+
+            modelBuilder.ApplyConfiguration(new CatalogEntityTypeConfiguration());
 
             modelBuilder.ApplyConfiguration(new ActivityStatusEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ActivityEntityTypeConfiguration());
