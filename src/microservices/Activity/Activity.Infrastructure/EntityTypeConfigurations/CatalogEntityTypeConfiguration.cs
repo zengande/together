@@ -27,17 +27,13 @@ namespace Together.Activity.Infrastructure.EntityTypeConfigurations
                 .HasDefaultValue(0)
                 .IsRequired();
 
-            builder.Property<int?>("_parentId")
-                .UsePropertyAccessMode(PropertyAccessMode.Field)
-                .HasColumnName("ParentId");
-
             var navigation = builder.Metadata
                 .FindNavigation(nameof(Catalog.Children));
             navigation.SetPropertyAccessMode(PropertyAccessMode.Field);
 
             builder.HasOne<Catalog>()
                 .WithMany(c => c.Children)
-                .HasForeignKey("ParentId");
+                .HasForeignKey(c => c.ParentId);
         }
     }
 }

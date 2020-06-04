@@ -2,9 +2,11 @@
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Together.Activity.Application.Dtos;
+using Together.Activity.Domain.AggregatesModel.CatalogAggregate;
 
 namespace Together.Activity.Application.Queries
 {

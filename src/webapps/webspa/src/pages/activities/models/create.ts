@@ -24,10 +24,8 @@ const Model: CreateModelType = {
     },
     effects: {
         *fetchCatalogs({ payload }, { call, put, select }) {
-            const catalogs: ActivityCatalog[] = [{
-                id:1,
-                name:'test1'
-            }];
+            const catalogs = yield call(request, '[ApiBaseAddress]/api/Catalogs')
+            console.log(catalogs);
             yield put({ type: 'save', payload: { catalogs } })
         }
     },

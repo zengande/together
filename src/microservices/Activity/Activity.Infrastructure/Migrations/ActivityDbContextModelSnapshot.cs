@@ -222,7 +222,7 @@ namespace Together.Activity.Infrastructure.Migrations
 
             modelBuilder.Entity("Together.BuildingBlocks.Infrastructure.Idempotency.ClientRequest", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 

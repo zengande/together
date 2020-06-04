@@ -10,7 +10,7 @@ namespace Together.Activity.Domain.AggregatesModel.CatalogAggregate
     {
         public string Name { get; private set; }
         public int Order { get; set; }
-        private int? _parentId;
+        public int? ParentId { get; set; }
         public IReadOnlyCollection<Catalog> Children => _children?.AsReadOnly();
         private List<Catalog> _children;
 
@@ -21,7 +21,8 @@ namespace Together.Activity.Domain.AggregatesModel.CatalogAggregate
         public Catalog(string name, int? order = 0, int? parentId = null)
         {
             Name = name;
-            _parentId = parentId;
+            Order = order ?? 0;
+            ParentId = parentId;
         }
 
         public void AddChild(string name, int? order = null)

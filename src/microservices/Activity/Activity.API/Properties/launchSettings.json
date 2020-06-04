@@ -24,6 +24,18 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "http://localhost:3001"
+    },
+    "Azure Dev Spaces": {
+      "commandName": "AzureDevSpaces",
+      "resourceGroup": "together-group",
+      "aksName": "together-aks",
+      "subscriptionId": "03289134-4bce-463d-82e1-5147f05443b3"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/weatherforecast",
+      "publishAllPorts": true,
+      "useSSL": true
     }
   }
 }

@@ -5,6 +5,8 @@
     <AssemblyName>Together.Activity.API</AssemblyName>
     <RootNamespace>Together.Activity.API</RootNamespace>
     <UserSecretsId>64ad557e-af7d-4174-83d1-01e5477e32aa</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..\..\..</DockerfileContext>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile></DocumentationFile>
@@ -17,6 +19,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Kubernetes.Tools.Targets" Version="1.1.0" />
     <PackageReference Include="NSwag.AspNetCore" Version="13.6.0" />
   </ItemGroup>
   <ItemGroup>
