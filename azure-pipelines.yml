@@ -22,7 +22,7 @@ stages:
     steps:
     - task: DotNetCoreCLI@2
       inputs:
-        command: 'build'
+        command: 'restore'
         projects: 'src/microservices/Activity/Activity.API/Activity.API.csproj'
     - task: Docker@2
       displayName: Build an image
