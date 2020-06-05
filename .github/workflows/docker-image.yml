@@ -15,4 +15,4 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file src/microservices/Activity/ActivityAPI/Dockerfile --tag zengande/activityapi:$(date +%s)
+      run: docker build . --file src/microservices/Activity/Activity.API/Dockerfile --tag zengande/activityapi:$(date +%s)
