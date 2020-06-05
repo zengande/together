@@ -9,7 +9,7 @@ resources:
 - repo: self
 
 variables:
-  tag: '$(Build.BuildId)'
+  tag: 'latest'
 
 stages:
 - stage: Build
@@ -29,4 +29,16 @@ stages:
         buildContext: .
         Dockerfile: 'src/microservices/Activity/Activity.API/Dockerfile'
         tags: 
-          $(Build.BuildId)
+          $(tag)
+    - task: HelmDeploy@0
+      displayName: Deploy activityapi
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscription: 'Azure 订阅 (03289134-4bce-463d-82e1-5147f05443b3)'
+        azureResourceGroup: 'together-group'
+        kubernetesCluster: 'together-aks'
+        namespace: 'together'
+        command: 'upgrade'
+        chartType: 'FilePath'
+        chartPath: 'deploy/k8s/helm/activityapi'
+        releaseName: 'activityapi'
