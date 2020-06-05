@@ -3,7 +3,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
 trigger:
-- master
+- dev
 
 resources:
 - repo: self
@@ -13,22 +13,20 @@ variables:
 
 stages:
 - stage: Build
-  displayName: Build ActivityAPI image
+  displayName: Build image
   jobs:  
   - job: Build
     displayName: Build
     pool:
       vmImage: 'ubuntu-latest'
     steps:
-    - task: NuGetCommand@2
-      inputs:
-        command: 'restore'
-        restoreSolution: '**/*.sln'
-        feedsToUse: 'select'
     - task: Docker@2
-      displayName: Build an image
+      displayName: Build and push activityapi image
       inputs:
-        command: build
-        dockerfile: '$(Build.SourcesDirectory)/src/microservices/Activity/Activity.API/Dockerfile'
-        tags: |
-          $(tag)
+        containerRegistry: 'docker hub'
+        repository: 'zengande/activityapi'
+        command: 'buildAndPush'
+        buildContext: .
+        Dockerfile: 'src/microservices/Activity/Activity.API/Dockerfile'
+        tags: 
+          $(Build.BuildId)
