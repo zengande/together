@@ -42,4 +42,4 @@ stages:
         chartType: 'FilePath'
         chartPath: 'deploy/k8s/helm/activityapi'
         releaseName: 'activityapi'
-        arguments: '-f deploy/k8s/helm/inf.yaml'
+        arguments: '-f ./deploy/k8s/helm/inf.yaml'
