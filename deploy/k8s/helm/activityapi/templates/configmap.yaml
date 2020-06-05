@@ -1,0 +1,13 @@
+{{- $fullName := include "activityapi.fullname" . -}}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cfg-{{ $fullName }}
+  labels:
+    app: {{ template "activityapi.name" . }}
+    chart: {{ template "activityapi.chart" .}}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  ActivityDefaultConnection: server=mysql;user id=root;password={{ .Values.inf.mysql.password }};database={{ .Values.inf.activity.db }};charset=utf8;sslMode=None

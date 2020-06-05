@@ -1,0 +1,5 @@
+inf:
+  mysql:
+    password: aw1qDfF9lF
+  activity:
+    db: TogetherActivityDb      
