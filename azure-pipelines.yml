@@ -29,4 +29,4 @@ stages:
         buildContext: .
         Dockerfile: 'src/microservices/Activity/Activity.API/Dockerfile'
         tags: 
-          $(Build.BuildId)
+          $(tag)

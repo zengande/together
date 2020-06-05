@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
 using NSwag.AspNetCore;
 using Together.Activity.API;
@@ -39,7 +40,7 @@ namespace Activity.API
                 .AddIdentityServices()
                 .AddOpenApiDocument(document => document.AddCustomSecurity(Configuration))
                 .AddDbContext<ActivityDbContext>(options => options.UseMySql(Configuration.GetConnectionString("Default")))
-                .AddControllers(options=>options.Filters.Add<HttpGlobalExceptionFilter>());
+                .AddControllers(options => options.Filters.Add<HttpGlobalExceptionFilter>());
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
@@ -53,6 +54,7 @@ namespace Activity.API
 
             // ²éÑ¯¿â
             var connectionString = Configuration.GetConnectionString("Default");
+            System.Console.WriteLine(connectionString);
             builder.Register(c => new ActivityQueries(connectionString))
                 .As<IActivityQueries>()
                 .InstancePerLifetimeScope();

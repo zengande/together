@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -6,6 +7,7 @@ using Polly;
 using Polly.Retry;
 using System;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace Together.BuildingBlocks.Infrastructure.Data
 {
@@ -39,7 +41,10 @@ namespace Together.BuildingBlocks.Infrastructure.Data
                         //migration can't fail for network related exception. The retry options for DbContext only 
                         //apply to transient exceptions.
 
-                        context.Database.Migrate();
+                        if (context.Database.GetPendingMigrations().Count() > 0)
+                        {
+                            context.Database.Migrate();
+                        }
 
                         seeder?.Invoke(context, services);
                     });
