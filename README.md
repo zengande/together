@@ -1,16 +1,6 @@
-# TOGETHER - a microservice application on docker container
+# TOGETHER
 
-none
-
-
-## Urls
-
-[MVC](http://localhost:5001)
-
-[IdentityServer](http://localhost:5000)
-
-[api gateway](http://localhost:8000)
-
-[consul](http://localhost:8500)
-
-[rabbitmq](http://localhost:15672)
+## Microservice application based on Azure cloud
+1. 使用 Azure AD B2C 进行认证授权
+2. 将服务部署到 Azure Kubernetes Service
+3. 通过 Azure API Management 发布 API
