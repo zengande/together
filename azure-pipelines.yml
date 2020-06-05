@@ -10,7 +10,7 @@ resources:
 
 variables:
   tag: 'latest'
-  rootpath: '$(Agent.BuildDirectory)'
+  rootpath: '$(Pipeline.Workspace)'
 
 stages:
 - stage: Build
@@ -31,6 +31,14 @@ stages:
         Dockerfile: 'src/microservices/Activity/Activity.API/Dockerfile'
         tags: 
           $(tag)
+- stage: Deploy
+  displayName: Deploy services
+  jobs:
+  - job: Deploy
+    displayName: Deploy
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:  
     - task: HelmDeploy@0
       displayName: Deploy activityapi
       inputs:
@@ -43,4 +51,4 @@ stages:
         chartType: 'FilePath'
         chartPath: 'deploy/k8s/helm/activityapi'
         releaseName: 'activityapi'
-        arguments: '-f $(rootpath)/deploy/k8s/helm/inf.yaml'
+        arguments: '-f $(rootpath)/s/deploy/k8s/helm/inf.yaml'
