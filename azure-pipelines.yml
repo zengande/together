@@ -18,8 +18,12 @@ stages:
   - job: Build
     displayName: Build
     pool:
-      vmImage: 'centos-latest'
+      vmImage: 'ubuntu-latest'
     steps:
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'build'
+        projects: 'src/microservices/Activity/Activity.API/Activity.API.csproj'
     - task: Docker@2
       displayName: Build an image
       inputs:
