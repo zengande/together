@@ -5,7 +5,7 @@ fullnameOverride: activityapi
 replicaCount: 1
 image:
   repository: zengande/activityapi
-  tag: stable
+  tag: latest
   pullPolicy: IfNotPresent
 imagePullSecrets: []
   # Optionally specify an array of imagePullSecrets.
@@ -15,9 +15,10 @@ imagePullSecrets: []
   # This uses credentials from secret "myRegistryKeySecretName".
   # - name: myRegistryKeySecretName
 service:
-  type: ClusterIP
+  type: LoadBalancer
   port: 80
-
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
 probes:
   enabled: false
 
