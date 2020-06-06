@@ -13,7 +13,7 @@ variables:
   rootpath: '$(Pipeline.Workspace)'
 
 stages:
-- stage: Build activityapi
+- stage: Build_activityapi
   displayName: Build activityapi
   jobs:  
   - job: Build
@@ -32,7 +32,7 @@ stages:
         tags: 
           $(tag)
 
-- stage: Deploy activityapi
+- stage: Deploy_activityapi
   displayName: Deploy activityapi
   jobs:  
   - job: Deploy
@@ -55,7 +55,7 @@ stages:
         arguments: '-f $(rootpath)/s/deploy/k8s/helm/inf.yaml'
         overrideValues: 'image.tag=$(tag)'
 
-- stage: Build messaginghost
+- stage: Build_messaginghost
   displayName: Build messaginghost
   jobs:
   - job: Build
@@ -74,7 +74,7 @@ stages:
         tags: 
           $(tag)
 
-- stage: Deploy messaginghost
+- stage: Deploy_messaginghost
   displayName: Deploy messaginghost
   jobs:
   - job: Deploy
