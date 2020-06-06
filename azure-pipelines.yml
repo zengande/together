@@ -13,8 +13,8 @@ variables:
   rootpath: '$(Pipeline.Workspace)'
 
 stages:
-- stage: Build_and_Deploy_activityapi
-  displayName: Build and deploy activityapi
+- stage: Build activityapi
+  displayName: Build activityapi
   jobs:  
   - job: Build
     displayName: Build
@@ -31,6 +31,10 @@ stages:
         Dockerfile: 'src/microservices/Activity/Activity.API/Dockerfile'
         tags: 
           $(tag)
+
+- stage: Deploy activityapi
+  displayName: Deploy activityapi
+  jobs:  
   - job: Deploy
     displayName: Deploy
     pool:
@@ -50,8 +54,9 @@ stages:
         releaseName: 'activityapi'
         arguments: '-f $(rootpath)/s/deploy/k8s/helm/inf.yaml'
         overrideValues: 'image.tag=$(tag)'
-- stage: Build_and_Deploy_messaginghost
-  displayName: Build and deploy messaginghost
+
+- stage: Build messaginghost
+  displayName: Build messaginghost
   jobs:
   - job: Build
     displayName: Build
@@ -68,6 +73,9 @@ stages:
         Dockerfile: 'src/microservices/Messaging/Messaging.Host/Dockerfile'
         tags: 
           $(tag)
+
+- stage: Deploy messaginghost
+  displayName: Deploy messaginghost
   - job: Deploy
     displayName: Deploy
     pool:
