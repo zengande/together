@@ -39,8 +39,6 @@ namespace Together.Messaging.Host
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
 
             app.UseAuthorization();
