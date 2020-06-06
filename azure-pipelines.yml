@@ -13,8 +13,8 @@ variables:
   rootpath: '$(Pipeline.Workspace)'
 
 stages:
-- stage: Build
-  displayName: Build image
+- stage: Build_and_Deploy_activityapi
+  displayName: Build and deploy activityapi
   jobs:  
   - job: Build
     displayName: Build
@@ -31,9 +31,6 @@ stages:
         Dockerfile: 'src/microservices/Activity/Activity.API/Dockerfile'
         tags: 
           $(tag)
-- stage: Deploy
-  displayName: Deploy services
-  jobs:
   - job: Deploy
     displayName: Deploy
     pool:
@@ -53,4 +50,39 @@ stages:
         releaseName: 'activityapi'
         arguments: '-f $(rootpath)/s/deploy/k8s/helm/inf.yaml'
         overrideValues: 'image.tag=$(tag)'
-        
+- stage: Build_and_Deploy_messaginghost
+  displayName: Build and deploy messaginghost
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: Docker@2
+      displayName: Build and push messaginghost image
+      inputs:
+        containerRegistry: 'docker hub'
+        repository: 'zengande/messaginghost'
+        command: 'buildAndPush'
+        buildContext: .
+        Dockerfile: 'src/microservices/Messaging/Messaging.Host/Dockerfile'
+        tags: 
+          $(tag)
+  - job: Deploy
+    displayName: Deploy
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:  
+    - task: HelmDeploy@0
+      displayName: Deploy messaginghost
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscription: 'Azure 订阅 (03289134-4bce-463d-82e1-5147f05443b3)'
+        azureResourceGroup: 'together-group'
+        kubernetesCluster: 'together-aks'
+        namespace: 'together'
+        command: 'upgrade'
+        chartType: 'FilePath'
+        chartPath: 'deploy/k8s/helm/messaginghost'
+        releaseName: 'messaginghost'
+        overrideValues: 'image.tag=$(tag)'

@@ -40,23 +40,22 @@ namespace Together.Activity.Application.Queries
             using var connection = new MySqlConnection(_connectionString);
             connection.Open();
 
-            var result = await connection.QueryFirstOrDefaultAsync<ActivityDto>(sql, new { id });
-            return result;
+            return await connection.QueryFirstOrDefaultAsync<ActivityDto>(sql, new { id });
         }
 
         public async Task<IEnumerable<ParticipantDto>> GetActivityParticipantsAsync(int id)
         {
             var sql = @"SELECT
-							AppActivities.UserId,
-							AppActivities.Nickname,
-							AppActivities.Avatar,
-							AppActivities.Sex,
-							AppActivities.JoinTime,
-							AppActivities.IsOwner 
+							AppParticipants.UserId,
+							AppParticipants.Nickname,
+							AppParticipants.Avatar,
+							AppParticipants.Sex,
+							AppParticipants.JoinTime,
+							AppParticipants.IsOwner 
 						FROM
-							AppActivities
-						WHERE AppActivities.ActivityId=@id
-                        ORDER BY AppActivities.JoinTime";
+							AppParticipants
+						WHERE AppParticipants.ActivityId=@id
+                        ORDER BY AppParticipants.JoinTime";
 
             using var connection = new MySqlConnection(_connectionString);
             connection.Open();
