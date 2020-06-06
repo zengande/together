@@ -44,7 +44,7 @@ namespace Together.Activity.Application.Queries
             return result;
         }
 
-        public Task<IEnumerable<ParticipantDto>> GetActivityParticipantsAsync(int id)
+        public async Task<IEnumerable<ParticipantDto>> GetActivityParticipantsAsync(int id)
         {
             var sql = @"SELECT
 							AppActivities.UserId,
@@ -61,7 +61,7 @@ namespace Together.Activity.Application.Queries
             using var connection = new MySqlConnection(_connectionString);
             connection.Open();
 
-            return connection.QueryAsync<ParticipantDto>(sql, new { id });
+            return await connection.QueryAsync<ParticipantDto>(sql, new { id });
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Together.Activity.Application.Queries
             _connectionString = !string.IsNullOrWhiteSpace(connectionString) ? connectionString : throw new ArgumentNullException(nameof(connectionString));
         }
 
-        public Task<IEnumerable<CatalogDto>> GetCatalogsAsync(int? parentId)
+        public async Task<IEnumerable<CatalogDto>> GetCatalogsAsync(int? parentId)
         {
             // TODO cache
             var sql = new StringBuilder(@"SELECT
@@ -39,7 +39,7 @@ namespace Together.Activity.Application.Queries
             using var connection = new MySqlConnection(_connectionString);
             connection.Open();
 
-            return connection.QueryAsync<CatalogDto>(sql.ToString(), new { parentId });
+            return await connection.QueryAsync<CatalogDto>(sql.ToString(), new { parentId });
         }
     }
 }
