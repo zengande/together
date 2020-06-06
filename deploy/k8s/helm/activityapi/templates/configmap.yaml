@@ -10,4 +10,4 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  ActivityDefaultConnection: server=mysql.together;user id=root;password={{ .Values.inf.mysql.password }};database={{ .Values.inf.activity.db }};charset=utf8;sslMode=None
+  activity__DefaultConnection: server=mysql.together;user id=root;password={{ .Values.inf.mysql.password }};database={{ .Values.inf.activity.db }};charset=utf8;sslMode=None;

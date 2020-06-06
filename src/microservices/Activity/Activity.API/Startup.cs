@@ -40,7 +40,8 @@ namespace Activity.API
                 .AddIdentityServices()
                 .AddOpenApiDocument(document => document.AddCustomSecurity(Configuration))
                 .AddDbContext<ActivityDbContext>(options => options.UseMySql(Configuration.GetConnectionString("Default")))
-                .AddControllers(options => options.Filters.Add<HttpGlobalExceptionFilter>());
+                .AddControllers(options => options.Filters.Add<HttpGlobalExceptionFilter>())
+                .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
         }
 
         public void ConfigureContainer(ContainerBuilder builder)

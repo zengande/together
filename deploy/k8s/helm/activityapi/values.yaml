@@ -6,7 +6,7 @@ replicaCount: 1
 image:
   repository: zengande/activityapi
   tag: latest
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
 imagePullSecrets: []
   # Optionally specify an array of imagePullSecrets.
   # Secrets must be manually created in the namespace.
@@ -63,10 +63,9 @@ tolerations: []
 affinity: {}
 
 env:
-  urls:
   configmap:
-    - name: ConnectionStrings:Default
-      key: ActivityDefaultConnection
+    - name: ConnectionStrings__Default
+      key: activity__DefaultConnection
   values:
     - name: ASPNETCORE_ENVIRONMENT
       value: Development
