@@ -9,7 +9,7 @@ resources:
 - repo: self
 
 variables:
-  tag: 'latest'
+  tag: '$(Build.BuildId)'
   rootpath: '$(Pipeline.Workspace)'
 
 stages:
@@ -52,3 +52,5 @@ stages:
         chartPath: 'deploy/k8s/helm/activityapi'
         releaseName: 'activityapi'
         arguments: '-f $(rootpath)/s/deploy/k8s/helm/inf.yaml'
+        overrideValues: 'image.tag=$(tag)'
+        
