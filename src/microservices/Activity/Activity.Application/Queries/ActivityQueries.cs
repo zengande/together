@@ -19,23 +19,23 @@ namespace Together.Activity.Application.Queries
         public async Task<ActivityDto> GetActivityByIdAsync(int id)
         {
             var sql = @"SELECT
-	                        appactivities.Title,
-	                        appactivities.EndRegisterTime,
-	                        appactivities.ActivityStartTime,
-	                        appactivities.DetailAddress,
-	                        appactivities.City,
-	                        appactivities.Province,
-	                        appactivities.Longitude,
-	                        appactivities.Latitude,
-	                        appactivities.LimitsNum,
-	                        appactivities.ActivityEndTime,
-	                        appactivities.Content,
-	                        appactivities.AddressVisibleRuleId,
-	                        appactivities.Id,
-	                        appactivities.ActivityStatusId 
+	                        AppActivities.Title,
+	                        AppActivities.EndRegisterTime,
+	                        AppActivities.ActivityStartTime,
+	                        AppActivities.DetailAddress,
+	                        AppActivities.City,
+	                        AppActivities.Province,
+	                        AppActivities.Longitude,
+	                        AppActivities.Latitude,
+	                        AppActivities.LimitsNum,
+	                        AppActivities.ActivityEndTime,
+	                        AppActivities.Content,
+	                        AppActivities.AddressVisibleRuleId,
+	                        AppActivities.Id,
+	                        AppActivities.ActivityStatusId 
                         FROM
-	                        appactivities
-                        WHERE appactivities.Id=@id";
+	                        AppActivities
+                        WHERE AppActivities.Id=@id";
 
             using var connection = new MySqlConnection(_connectionString);
             connection.Open();
@@ -47,16 +47,16 @@ namespace Together.Activity.Application.Queries
         public Task<IEnumerable<ParticipantDto>> GetActivityParticipantsAsync(int id)
         {
             var sql = @"SELECT
-							appparticipants.UserId,
-							appparticipants.Nickname,
-							appparticipants.Avatar,
-							appparticipants.Sex,
-							appparticipants.JoinTime,
-							appparticipants.IsOwner 
+							AppActivities.UserId,
+							AppActivities.Nickname,
+							AppActivities.Avatar,
+							AppActivities.Sex,
+							AppActivities.JoinTime,
+							AppActivities.IsOwner 
 						FROM
-							appparticipants
-						WHERE appparticipants.ActivityId=@id
-                        ORDER BY appparticipants.JoinTime";
+							AppActivities
+						WHERE AppActivities.ActivityId=@id
+                        ORDER BY AppActivities.JoinTime";
 
             using var connection = new MySqlConnection(_connectionString);
             connection.Open();

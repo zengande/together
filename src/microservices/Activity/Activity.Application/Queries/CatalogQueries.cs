@@ -22,19 +22,19 @@ namespace Together.Activity.Application.Queries
         {
             // TODO cache
             var sql = new StringBuilder(@"SELECT
-	                        appcatalogs.Id,
-	                        appcatalogs.NAME
+	                        AppCatalogs.Id,
+	                        AppCatalogs.NAME
                         FROM
-	                        appcatalogs ");
+	                        AppCatalogs ");
             if (parentId.HasValue)
             {
-                sql.Append("WHERE appcatalogs.ParentId=@parentId");
+                sql.Append("WHERE AppCatalogs.ParentId=@parentId");
             }
             else
             {
-                sql.Append("WHERE ISNULL(appcatalogs.ParentId)");
+                sql.Append("WHERE ISNULL(AppCatalogs.ParentId)");
             }
-            sql.Append(" ORDER BY appcatalogs.Order");
+            sql.Append(" ORDER BY AppCatalogs.Order");
 
             using var connection = new MySqlConnection(_connectionString);
             connection.Open();
