@@ -76,6 +76,7 @@ stages:
 
 - stage: Deploy messaginghost
   displayName: Deploy messaginghost
+  jobs:
   - job: Deploy
     displayName: Deploy
     pool:
