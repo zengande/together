@@ -4,7 +4,7 @@
 fullnameOverride: activityapi
 replicaCount: 1
 image:
-  repository: zengande/activityapi
+  repository: togetherhub/activityapi
   tag: latest
   pullPolicy: IfNotPresent
 imagePullSecrets: []

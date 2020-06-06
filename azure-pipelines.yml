@@ -25,7 +25,7 @@ stages:
       displayName: Build and push activityapi image
       inputs:
         containerRegistry: 'docker hub'
-        repository: 'zengande/activityapi'
+        repository: 'togetherhub/activityapi'
         command: 'buildAndPush'
         buildContext: .
         Dockerfile: 'src/microservices/Activity/Activity.API/Dockerfile'
@@ -62,7 +62,7 @@ stages:
       displayName: Build and push messaginghost image
       inputs:
         containerRegistry: 'docker hub'
-        repository: 'zengande/messaginghost'
+        repository: 'togetherhub/messaginghost'
         command: 'buildAndPush'
         buildContext: .
         Dockerfile: 'src/microservices/Messaging/Messaging.Host/Dockerfile'
