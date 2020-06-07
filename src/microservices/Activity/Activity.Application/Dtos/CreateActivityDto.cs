@@ -40,5 +40,9 @@ namespace Together.Activity.Application.Dtos
         /// 地址可见规则
         /// </summary>
         public int AddressVisibleRuleId { get; set; }
+        /// <summary>
+        /// 活动类型
+        /// </summary>
+        public int CatalogId { get; set; }
     }
 }

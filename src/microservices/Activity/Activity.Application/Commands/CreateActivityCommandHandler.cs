@@ -26,7 +26,7 @@ namespace Together.Activity.Application.Commands
                 request.ActivityStartTime,
                 request.ActivityEndTime,
                 request.Address,
-                0,
+                request.CatalogId,
                 request.AddressVisibleRuleId,
                 request.LimitsNum);
 

@@ -65,9 +65,9 @@ stages:
         namespace: 'together'
         command: 'upgrade'
         chartType: 'FilePath'
-        chartPath: 'deploy/k8s/helm/activityapi'
+        chartPath: 'k8s/helm/activityapi'
         releaseName: 'activityapi'
-        arguments: '-f $(rootpath)/s/deploy/k8s/helm/inf.yaml'
+        arguments: '-f $(rootpath)/s/k8s/helm/inf.yaml'
         overrideValues: 'image.tag=$(tag)'
   # - job: Deploy_messaginghost
   #   displayName: Deploy messaginghost
@@ -84,6 +84,6 @@ stages:
   #       namespace: 'together'
   #       command: 'upgrade'
   #       chartType: 'FilePath'
-  #       chartPath: 'deploy/k8s/helm/messaginghost'
+  #       chartPath: 'k8s/helm/messaginghost'
   #       releaseName: 'messaginghost'
   #       overrideValues: 'image.tag=$(tag)'

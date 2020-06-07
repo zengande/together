@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Together.Messaging.Host
+namespace Together.Messaging.API
 {
     public class Startup
     {
@@ -26,7 +26,8 @@ namespace Together.Messaging.Host
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSignalR();
+            services.AddSignalR()
+                .AddAzureSignalR();
 
             ConfigureAuthService(services);
         }
@@ -45,7 +46,7 @@ namespace Together.Messaging.Host
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHub<NotificationsHub>("notificationhub", options =>
+                endpoints.MapHub<NotificationsHub>("/notificationhub", options =>
                 {
                     options.Transports = Microsoft.AspNetCore.Http.Connections.HttpTransports.All;
                 });

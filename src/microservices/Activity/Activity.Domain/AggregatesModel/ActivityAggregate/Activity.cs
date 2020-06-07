@@ -91,10 +91,10 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         /// <param name="startTime"></param>
         /// <param name="endTime"></param>
         /// <param name="address"></param>
-        /// <param name="categoryId"></param>
+        /// <param name="catalogId"></param>
         /// <param name="addressVisibleRuleId"></param>
         /// <param name="limitsNum"></param>
-        public Activity(Participant creator, string title, string content, DateTime endRegisterTime, DateTime startTime, DateTime endTime, Address address, int categoryId, int? addressVisibleRuleId, int? limitsNum = null)
+        public Activity(Participant creator, string title, string content, DateTime endRegisterTime, DateTime startTime, DateTime endTime, Address address, int catalogId, int? addressVisibleRuleId, int? limitsNum = null)
             : this()
         {
             ValidateAllTime(endRegisterTime, startTime, endTime);
@@ -107,7 +107,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
             ActivityEndTime = endTime;
             Address = address;
             LimitsNum = limitsNum;
-            _catalogId = categoryId;
+            _catalogId = catalogId;
             _activityStatusId = ActivityStatus.Recruitment.Id;
             if (addressVisibleRuleId == null)
             {
@@ -160,7 +160,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
             // 已参加了此活动
             if (_participants.Any(u => u.UserId == userId))
             {
-                return;
+                throw new DomainException("已经参加，请不要重复提交");
             }
 
             // 人数已满

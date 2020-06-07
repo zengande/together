@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Together.Messaging.Host
+namespace Together.Messaging.API
 {
     public class Program
     {

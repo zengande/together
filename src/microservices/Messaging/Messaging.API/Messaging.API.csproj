@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>Together.Messaging.Host</AssemblyName>
-    <RootNamespace>Together.Messaging.Host</RootNamespace>
+    <AssemblyName>Together.Messaging.API</AssemblyName>
+    <RootNamespace>Together.Messaging.API</RootNamespace>
     <UserSecretsId>f6178091-8b5f-4083-aa64-4bbcc0828da1</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..\..\..</DockerfileContext>
@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.4" />
+    <PackageReference Include="Microsoft.Azure.SignalR" Version="1.4.3" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
   </ItemGroup>
 

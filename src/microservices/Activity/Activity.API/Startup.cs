@@ -42,6 +42,8 @@ namespace Activity.API
                 .AddDbContext<ActivityDbContext>(options => options.UseMySql(Configuration.GetConnectionString("Default")))
                 .AddControllers(options => options.Filters.Add<HttpGlobalExceptionFilter>())
                 .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            ConfigureCapServices(services);
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
@@ -92,6 +94,15 @@ namespace Activity.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+        }
+    
+        private void ConfigureCapServices(IServiceCollection services)
+        {
+            services.AddCap(options =>
+            {
+                options.UseEntityFramework<ActivityDbContext>();
+                options.UseAzureServiceBus(Configuration["Azure:ServiceBus:ConnectionString"]);
             });
         }
     }
