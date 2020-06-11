@@ -11,3 +11,6 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   activity__DefaultConnection: server=mysql.together;user id=root;password={{ .Values.inf.mysql.password }};database={{ .Values.inf.activity.db }};charset=utf8;sslMode=None;
+  rabbitmq__HostName: rabbitmq-rabbitmq-ha-discovery.together.svc.cluster.local
+  rabbitmq__UserName: {{ .Values.inf.rabbitmq.username }}
+  rabbitmq__Password: {{ .Values.inf.rabbitmq.password }}

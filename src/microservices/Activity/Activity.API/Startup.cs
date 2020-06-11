@@ -96,13 +96,19 @@ namespace Activity.API
                 endpoints.MapControllers();
             });
         }
-    
+
         private void ConfigureCapServices(IServiceCollection services)
         {
             services.AddCap(options =>
             {
                 options.UseEntityFramework<ActivityDbContext>();
-                options.UseAzureServiceBus(Configuration["Azure:ServiceBus:ConnectionString"]);
+                options.UseRabbitMQ(options =>
+                {
+                    options.HostName = Configuration["RabbitMQ:HostName"];
+                    options.VirtualHost = "/";
+                    options.UserName = Configuration["RabbitMQ:UserName"];
+                    options.Password = Configuration["RabbitMQ:Password"];
+                });
             });
         }
     }

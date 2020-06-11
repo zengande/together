@@ -1,0 +1,1 @@
+helm install rabbitmq stable/rabbitmq-ha --set rabbitmqUsername=guest,rabbitmqPassword=VRe5o82jGdA6Em4cSo6cBzaZ,service.type=LoadBalancer,prometheus.operator.enabled=false --namespace together

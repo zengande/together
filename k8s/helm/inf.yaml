@@ -1,4 +1,7 @@
 inf:
+  rabbitmq:
+    username: guest
+    password: VRe5o82jGdA6Em4cSo6cBzaZ
   mysql:
     password: aw1qDfF9lF
   activity:
