@@ -33,9 +33,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Messaging", "Messaging", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.API", "src\microservices\Messaging\Messaging.API\Messaging.API.csproj", "{3BADB1C4-1CB3-4840-8D1A-89CF51F6E1AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messaging.Application", "src\microservices\Messaging\Messaging.Application\Messaging.Application.csproj", "{AEADE8A3-B042-4D64-AE78-414BB0EF87DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.Application", "src\microservices\Messaging\Messaging.Application\Messaging.Application.csproj", "{AEADE8A3-B042-4D64-AE78-414BB0EF87DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messaging.Domain", "src\microservices\Messaging\Messaging.Domain\Messaging.Domain.csproj", "{0B7D6126-985E-4DAA-B7E3-CB66B7E76F99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.Domain", "src\microservices\Messaging\Messaging.Domain\Messaging.Domain.csproj", "{0B7D6126-985E-4DAA-B7E3-CB66B7E76F99}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messaging.Infrastructure", "src\microservices\Messaging\Messaging.Infrastructure\Messaging.Infrastructure.csproj", "{00DDC4D0-6EA8-4606-A2CB-6F2C3EE6E102}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -179,6 +181,18 @@ Global
 		{0B7D6126-985E-4DAA-B7E3-CB66B7E76F99}.Release|x64.Build.0 = Release|Any CPU
 		{0B7D6126-985E-4DAA-B7E3-CB66B7E76F99}.Release|x86.ActiveCfg = Release|Any CPU
 		{0B7D6126-985E-4DAA-B7E3-CB66B7E76F99}.Release|x86.Build.0 = Release|Any CPU
+		{00DDC4D0-6EA8-4606-A2CB-6F2C3EE6E102}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00DDC4D0-6EA8-4606-A2CB-6F2C3EE6E102}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00DDC4D0-6EA8-4606-A2CB-6F2C3EE6E102}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{00DDC4D0-6EA8-4606-A2CB-6F2C3EE6E102}.Debug|x64.Build.0 = Debug|Any CPU
+		{00DDC4D0-6EA8-4606-A2CB-6F2C3EE6E102}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{00DDC4D0-6EA8-4606-A2CB-6F2C3EE6E102}.Debug|x86.Build.0 = Debug|Any CPU
+		{00DDC4D0-6EA8-4606-A2CB-6F2C3EE6E102}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00DDC4D0-6EA8-4606-A2CB-6F2C3EE6E102}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00DDC4D0-6EA8-4606-A2CB-6F2C3EE6E102}.Release|x64.ActiveCfg = Release|Any CPU
+		{00DDC4D0-6EA8-4606-A2CB-6F2C3EE6E102}.Release|x64.Build.0 = Release|Any CPU
+		{00DDC4D0-6EA8-4606-A2CB-6F2C3EE6E102}.Release|x86.ActiveCfg = Release|Any CPU
+		{00DDC4D0-6EA8-4606-A2CB-6F2C3EE6E102}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -200,6 +214,7 @@ Global
 		{3BADB1C4-1CB3-4840-8D1A-89CF51F6E1AE} = {245F861E-AD65-4614-BBA3-592E138AE13A}
 		{AEADE8A3-B042-4D64-AE78-414BB0EF87DC} = {245F861E-AD65-4614-BBA3-592E138AE13A}
 		{0B7D6126-985E-4DAA-B7E3-CB66B7E76F99} = {245F861E-AD65-4614-BBA3-592E138AE13A}
+		{00DDC4D0-6EA8-4606-A2CB-6F2C3EE6E102} = {245F861E-AD65-4614-BBA3-592E138AE13A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C4725BAD-EDBA-46C8-A785-E920B64EF305}

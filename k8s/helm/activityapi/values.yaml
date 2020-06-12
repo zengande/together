@@ -66,11 +66,11 @@ env:
   configmap:
     - name: ConnectionStrings__Default
       key: activity__DefaultConnection
-    - name: RabbitMQ__HostName
+    - name: CAP__RabbitMQ__HostName
       key: rabbitmq__HostName
-    - name: RabbitMQ__UserName
+    - name: CAP__RabbitMQ__UserName
       key: rabbitmq__UserName
-    - name: RabbitMQ__Password
+    - name: CAP__RabbitMQ__Password
       key: rabbitmq_Password
   values:
     - name: ASPNETCORE_ENVIRONMENT

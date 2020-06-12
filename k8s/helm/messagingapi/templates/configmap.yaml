@@ -1,0 +1,16 @@
+{{- $fullName := include "messagingapi.fullname" . -}}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cfg-{{ $fullName }}
+  labels:
+    app: {{ template "activityapi.name" . }}
+    chart: {{ template "activityapi.chart" .}}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  messaging__DefaultConnection: server=mysql.together;user id=root;password={{ .Values.inf.mysql.password }};database={{ .Values.inf.messaging.db }};charset=utf8;sslMode=None;
+  rabbitmq__HostName: rabbitmq-rabbitmq-ha-discovery.together.svc.cluster.local
+  rabbitmq__UserName: {{ .Values.inf.rabbitmq.username }}
+  rabbitmq__Password: {{ .Values.inf.rabbitmq.password }}

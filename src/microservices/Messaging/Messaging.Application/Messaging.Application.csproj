@@ -6,4 +6,8 @@
     <RootNamespace>Together.Messaging.Application</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Messaging.Infrastructure\Messaging.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

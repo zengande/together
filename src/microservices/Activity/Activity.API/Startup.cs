@@ -35,6 +35,8 @@ namespace Activity.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            IdentityModelEventSource.ShowPII = true;
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
                 .AddCustomAuth(Configuration)
                 .AddIdentityServices()
@@ -104,10 +106,9 @@ namespace Activity.API
                 options.UseEntityFramework<ActivityDbContext>();
                 options.UseRabbitMQ(options =>
                 {
-                    options.HostName = Configuration["RabbitMQ:HostName"];
-                    options.VirtualHost = "/";
-                    options.UserName = Configuration["RabbitMQ:UserName"];
-                    options.Password = Configuration["RabbitMQ:Password"];
+                    options.HostName = Configuration["CAP:RabbitMQ:HostName"];
+                    options.UserName = Configuration["CAP:RabbitMQ:UserName"];
+                    options.Password = Configuration["CAP:RabbitMQ:Password"];
                 });
             });
         }
