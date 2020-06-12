@@ -1,4 +1,4 @@
-helm upgrade --install kong kong/kong -f .\k8s\helm\kong\values.yaml --namespace kong
+helm upgrade --install kong kong/kong -f ./k8s/helm/kong/values.yaml --namespace kong
 
 helm upgrade --install konga .\k8s\helm\konga\ --namespace kong
 
