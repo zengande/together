@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 fullnameOverride: activityapi
-replicaCount: 3
+replicaCount: 2
 image:
   repository: togetherhub/activityapi
   tag: latest
@@ -71,7 +71,7 @@ env:
     - name: CAP__RabbitMQ__UserName
       key: rabbitmq__UserName
     - name: CAP__RabbitMQ__Password
-      key: rabbitmq_Password
+      key: rabbitmq__Password
   values:
     - name: ASPNETCORE_ENVIRONMENT
       value: Development

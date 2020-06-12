@@ -5,8 +5,8 @@ kind: ConfigMap
 metadata:
   name: cfg-{{ $fullName }}
   labels:
-    app: {{ template "activityapi.name" . }}
-    chart: {{ template "activityapi.chart" .}}
+    app: {{ template "messagingapi.name" . }}
+    chart: {{ template "messagingapi.chart" .}}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:

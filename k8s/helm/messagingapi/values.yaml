@@ -70,4 +70,4 @@ env:
     - name: CAP__RabbitMQ__UserName
       key: rabbitmq__UserName
     - name: CAP__RabbitMQ__Password
-      key: rabbitmq_Password
+      key: rabbitmq__Password
