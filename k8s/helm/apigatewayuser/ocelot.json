@@ -1,4 +1,5 @@
 {
+  
   "ReRoutes": [
     {
       "DownstreamPathTemplate": "/api/activities/{everything}",
