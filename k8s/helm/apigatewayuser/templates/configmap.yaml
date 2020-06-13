@@ -9,8 +9,7 @@ metadata:
     chart: {{ template "apigatewayuser.chart" .}}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-data:
-  internalurls__identity: http://{{ .Values.app.svc.identity }}
+data: {}
 ---
 apiVersion: v1
 kind: ConfigMap
