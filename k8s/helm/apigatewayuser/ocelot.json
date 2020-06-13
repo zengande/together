@@ -1,0 +1,21 @@
+{
+    "ReRoutes": [{
+        "DownstreamPathTemplate": "/api/activities/{everything}",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [{
+            "Host": "activityapi",
+            "Port": 80
+        }],
+        "UpstreamPathTemplate": "/api/activities/{everything}",
+        "UpstreamHttpMethod": []
+    }, {
+        "DownstreamPathTemplate": "/api/catalogs/{everything}",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [{
+            "Host": "activityapi",
+            "Port": 80
+        }],
+        "UpstreamPathTemplate": "/api/catalogs/{everything}",
+        "UpstreamHttpMethod": []
+    }]
+}

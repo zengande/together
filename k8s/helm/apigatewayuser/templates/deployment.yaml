@@ -1,3 +1,6 @@
+{{- $name := include "apigatewayuser.fullname" . -}}
+{{- $ocelotcfgname := printf "%s-%s" "ocelot" $name -}}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -24,10 +27,20 @@ spec:
       annotations:
         buildID: {{ .Values.buildID | default "" | quote }}
     spec:
+      volumes:
+        - name: ocelot
+          configMap: 
+            name: {{ $ocelotcfgname }}
+            items:
+            - key: ocelot.json
+              path: ocelot.json
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          volumeMounts:
+          - name: ocelot
+            mountPath: /app/configuration
           ports:
             - name: http
               containerPort: {{ .Values.deployment.containerPort }}

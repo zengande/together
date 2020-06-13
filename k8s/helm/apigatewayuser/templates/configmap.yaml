@@ -1,0 +1,25 @@
+{{- $name := include "apigatewayuser.fullname" . -}}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "cfg-{{ $name }}"
+  labels:
+    app: {{ template "apigatewayuser.name" . }}
+    chart: {{ template "apigatewayuser.chart" .}}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  internalurls__identity: http://{{ .Values.app.svc.identity }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "ocelot-{{ $name }}"
+  labels:
+    app: {{ template "apigatewayuser.name" . }}
+    chart: {{ template "apigatewayuser.chart" .}}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  {{ (.Files.Glob "ocelot.json").AsConfig  | indent 2 }}
