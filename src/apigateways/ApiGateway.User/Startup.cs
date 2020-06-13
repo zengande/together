@@ -8,8 +8,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Logging;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Serilog;
 
 namespace ApiGateway.User
 {
@@ -26,6 +28,40 @@ namespace ApiGateway.User
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            IdentityModelEventSource.ShowPII = true;
+
+            var identityUrl = Configuration.GetValue<string>("IdentityUrl");
+            var authenticationProviderKey = "IdentityApiKey";
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
+            });
+
+            services.AddAuthentication()
+                .AddJwtBearer(authenticationProviderKey, x =>
+                {
+                    x.Authority = identityUrl;
+                    x.RequireHttpsMetadata = false;
+                    x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                    {
+                        ValidAudiences = new[] {
+                            "bfab1d84-7124-4a27-9adc-e5da960ceab3", // activity api
+                        }
+                    };
+                    x.Events = new Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerEvents()
+                    {
+                        OnAuthenticationFailed = ctx =>
+                        {
+                            Log.Error(ctx.Exception.Message);
+                            return Task.CompletedTask;
+                        }
+                    };
+                });
+
             services.AddOcelot(Configuration);
         }
 
@@ -37,15 +73,7 @@ namespace ApiGateway.User
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseRouting();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
-            });
+            app.UseCors("CorsPolicy");
 
             app.UseOcelot().Wait();
         }

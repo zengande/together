@@ -1,29 +1,24 @@
 {
-  
-  "ReRoutes": [
-    {
-      "DownstreamPathTemplate": "/api/activities/{everything}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+
+    "Routes": [{
+            "DownstreamPathTemplate": "/api/activities/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [{
+                "Host": "activityapi",
+                "Port": 80
+            }],
+            "UpstreamPathTemplate": "/api/activities/{everything}",
+            "UpstreamHttpMethod": []
+        },
         {
-          "Host": "activityapi",
-          "Port": 80
+            "DownstreamPathTemplate": "/api/catalogs",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [{
+                "Host": "activityapi",
+                "Port": 80
+            }],
+            "UpstreamPathTemplate": "/api/catalogs",
+            "UpstreamHttpMethod": ["GET"]
         }
-      ],
-      "UpstreamPathTemplate": "/api/activities/{everything}",
-      "UpstreamHttpMethod": []
-    },
-    {
-      "DownstreamPathTemplate": "/api/catalogs",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "activityapi",
-          "Port": 80
-        }
-      ],
-      "UpstreamPathTemplate": "/api/catalogs",
-      "UpstreamHttpMethod": ["GET"]
-    }
-  ]
+    ]
 }

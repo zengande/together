@@ -72,6 +72,14 @@ env:
       key: rabbitmq__UserName
     - name: CAP__RabbitMQ__Password
       key: rabbitmq__Password
+    - name: AzureAdB2C__SwaggerUIClientId
+      key: activity__SwaggerUIClientId
+    - name: AzureAdB2C__ClientId
+      key: activity__clientId
+    - name: AzureAdB2C__Tenant
+      key: aad__Tenant
+    - name: AzureAdB2C__Policy
+      key: aad__Policy
   values:
     - name: ASPNETCORE_ENVIRONMENT
       value: Development

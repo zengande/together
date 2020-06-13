@@ -1,4 +1,7 @@
 inf:
+  aad:
+    tenant: together2.onmicrosoft.com
+    siginSignupPolicy: B2C_1_susi
   rabbitmq:
     username: guest
     password: VRe5o82jGdA6Em4cSo6cBzaZ
@@ -6,5 +9,7 @@ inf:
     password: aw1qDfF9lF
   activity:
     db: TogetherActivityDb
+    clientId: bfab1d84-7124-4a27-9adc-e5da960ceab3
+    swaggerUIClientId: 8ae5c150-e5f3-4fef-b7e6-cafbed047e2e
   messaging:
     db: TogetherMessagingDb  
