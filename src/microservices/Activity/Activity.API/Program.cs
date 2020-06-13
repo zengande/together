@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using Together.Activity.Infrastructure.Data;
 using Together.BuildingBlocks.Infrastructure.Data;
 
@@ -27,6 +28,9 @@ namespace Activity.API
                     config.AddEnvironmentVariables();
                 })
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .UseSerilog((context, config) => {
+                    config.WriteTo.Console();
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

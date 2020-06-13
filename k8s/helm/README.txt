@@ -1,3 +1,6 @@
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm install ingress-nginx ingress-nginx/ingress-nginx --namespace ingress-nginx
+
 helm repo add kong https://charts.konghq.com
 
 helm upgrade --install kong kong/kong -f ./k8s/helm/kong/values.yaml --namespace kong
