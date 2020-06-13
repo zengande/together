@@ -14,7 +14,7 @@
       "UpstreamHttpMethod": []
     },
     {
-      "DownstreamPathTemplate": "/api/catalogs/{everything}",
+      "DownstreamPathTemplate": "/api/catalogs",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -22,8 +22,8 @@
           "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/api/catalogs/{everything}",
-      "UpstreamHttpMethod": []
+      "UpstreamPathTemplate": "/api/catalogs",
+      "UpstreamHttpMethod": ["GET"]
     }
   ]
 }
