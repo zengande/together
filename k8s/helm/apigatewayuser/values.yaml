@@ -31,7 +31,7 @@ ingress:
   path: /
   hosts:
     - api.together2.fun
-  tls: []
+  tls: 
     - secretName: api-together2-fun
       hosts:
         - api.together2.fun
