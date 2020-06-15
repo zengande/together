@@ -1,5 +1,5 @@
 import { Configuration } from 'msal';
-import config from 'config';
+import config from '../../config';
 
 const b2cPolicies = {
     names: {

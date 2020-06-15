@@ -1,6 +1,7 @@
 import { Effect, Reducer, request } from 'umi';
 import { CascaderOptionType } from 'antd/lib/cascader';
 import ActivityCatalog from '@/@types/activity/catalog';
+import ActivityService from "@/services/activity.service";
 
 export interface CreateModelState {
     catalogs?: ActivityCatalog[]
@@ -24,8 +25,7 @@ const Model: CreateModelType = {
     },
     effects: {
         *fetchCatalogs({ payload }, { call, put, select }) {
-            const catalogs = yield call(request, '[ApiBaseAddress]/api/Catalogs')
-            console.log(catalogs);
+            const catalogs = yield call(ActivityService.fetchCatalogs)
             yield put({ type: 'save', payload: { catalogs } })
         }
     },

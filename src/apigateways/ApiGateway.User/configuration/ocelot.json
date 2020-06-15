@@ -1,19 +1,46 @@
 {
 
-  "Routes": [
-    {
-      "DownstreamPathTemplate": "/api/catalogs",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+    "Routes": [
         {
-          "Host": "localhost",
-          "Port": 3001
+            "DownstreamPathTemplate": "/api/activities/{activityId:int}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 3001
+                }
+            ],
+            "UpstreamPathTemplate": "/activities/{activityId:int}",
+            "UpstreamHttpMethod": [ "GET" ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/activities",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 3001
+                }
+            ],
+            "UpstreamPathTemplate": "/activities",
+            "UpstreamHttpMethod": [ "POST" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "IdentityApiKey"
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/catalogs",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 3001
+                }
+            ],
+            "UpstreamPathTemplate": "/catalogs",
+            "UpstreamHttpMethod": [ "GET" ]
         }
-      ],
-      "UpstreamPathTemplate": "/catalogs",
-      "UpstreamHttpMethod": [ "GET" ]
-    }
-  ],
+    ],
   "GlobalConfiguration": {
     "RequestIdKey": "OcRequestId"
   }
