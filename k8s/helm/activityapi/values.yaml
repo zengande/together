@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 fullnameOverride: activityapi
-replicaCount: 2
+replicaCount: 1
 image:
   repository: togetherhub/activityapi
   tag: latest
@@ -15,10 +15,9 @@ imagePullSecrets: []
   # This uses credentials from secret "myRegistryKeySecretName".
   # - name: myRegistryKeySecretName
 service:
-  type: LoadBalancer
+  type: ClusterIP
   port: 80
-  annotations:
-    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+
 probes:
   enabled: false
 
@@ -86,7 +85,7 @@ env:
     - name: AzureAdB2C__Tenant
       key: aad__Tenant
     - name: AzureAdB2C__Policy
-      key: aad__Policy
+      key: aad__SiginSignupPolicy
   values:
     - name: ASPNETCORE_ENVIRONMENT
       value: Development

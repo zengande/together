@@ -14,7 +14,7 @@ data:
   rabbitmq__HostName: rabbitmq-rabbitmq-ha-discovery.together.svc.cluster.local
   rabbitmq__UserName: {{ .Values.inf.rabbitmq.username }}
   rabbitmq__Password: {{ .Values.inf.rabbitmq.password }}
-  activity__waggerUIClientId: {{ .Values.inf.activity.swaggerUIClientId }}
+  activity__SwaggerUIClientId: {{ .Values.inf.activity.swaggerUIClientId }}
   activity__clientId: {{ .Values.inf.activity.clientId }}
   aad__Tenant: {{ .Values.inf.aad.tenant }}
   aad__SiginSignupPolicy: {{ .Values.inf.aad.siginSignupPolicy }}

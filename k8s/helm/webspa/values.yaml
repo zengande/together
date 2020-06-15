@@ -69,3 +69,10 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+env:
+  values:
+    - name: APP_BASEADDRESS
+      value: https://together2.fun/
+    - name: API_BASEADDRESS
+      value: https://api.together2.fun

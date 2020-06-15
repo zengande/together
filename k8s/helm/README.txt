@@ -6,7 +6,10 @@ helm install ingress-nginx ingress-nginx/ingress-nginx --namespace ingress-nginx
 kubectl create secret tls www.together2.fun --cert .\1_www.together2.fun_bundle.crt --key .\2_www.together2.fun.key --namespace together
 
 ## RabbitMQ
-helm install rabbitmq stable/rabbitmq-ha --set rabbitmqUsername=guest,rabbitmqPassword=VRe5o82jGdA6Em4cSo6cBzaZ,service.type=LoadBalancer,prometheus.operator.enabled=false --namespace together
+helm upgrade --install rabbitmq stable/rabbitmq-ha --set rabbitmqUsername=guest,rabbitmqPassword=VRe5o82jGdA6Em4cSo6cBzaZ,prometheus.operator.enabled=false --namespace together
+
+## User ApiGateway
+helm upgrade --install apigatewayuser .\k8s\helm\apigatewayuser\ -f .\k8s\helm\inf.yaml .\k8s\helm\ingress-values.yaml --set image.tag=3 --namespace together
 
 ## Activity API
 helm upgrade --install activityapi .\k8s\helm\activityapi\ -f .\k8s\helm\inf.yaml --set image.tag=39 --namespace together

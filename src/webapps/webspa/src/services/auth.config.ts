@@ -1,4 +1,5 @@
 import { Configuration } from 'msal';
+import config from 'config';
 
 const b2cPolicies = {
     names: {
@@ -7,7 +8,7 @@ const b2cPolicies = {
     },
     authorities: {
         signUpSignIn: {
-            authority: "https://together2.b2clogin.com/together2.onmicrosoft.com/B2C_1_resetpwd",
+            authority: "https://together2.b2clogin.com/together2.onmicrosoft.com/B2C_1_susi",
         },
         forgotPassword: {
             authority: "https://together2.b2clogin.com/together2.onmicrosoft.com/B2C_1_resetpwd",
@@ -19,7 +20,8 @@ const msalConfig: Configuration = {
     auth: {
         clientId: "5f572c0d-7839-418f-a01b-71b07debf436",
         authority: b2cPolicies.authorities.signUpSignIn.authority,
-        validateAuthority: false
+        validateAuthority: false,
+        redirectUri: config.AppBaseAddress
     },
     cache: {
         cacheLocation: "localStorage", // This configures where your cache will be stored

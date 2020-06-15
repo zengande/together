@@ -1,4 +1,5 @@
 # TOGETHER
+![big picture](./pictures/big-pic.jpg)
 [![Build Status](https://dev.azure.com/zengande0926/together/_apis/build/status/together?branchName=master)](https://dev.azure.com/zengande0926/together/_build/latest?definitionId=4&branchName=master)
 ## Microservice application based on Azure cloud
 1. [使用 Azure AD B2C 进行认证授权](https://zengande.github.io/)

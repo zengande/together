@@ -6,7 +6,7 @@ application.handleRedirectCallback((error, response) => {
     console.log(JSON.stringify(response));
     // Error handling
     if (error) {
-        console.log(error);
+        console.error(error);
 
         // Check for forgot password error
         // Learn more about AAD error codes at https://docs.microsoft.com/en-us/azure/active-directory/develop/reference-aadsts-error-codes

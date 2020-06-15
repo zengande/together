@@ -7,7 +7,7 @@
                 "Host": "activityapi",
                 "Port": 80
             }],
-            "UpstreamPathTemplate": "/api/activities/{everything}",
+            "UpstreamPathTemplate": "/activities/{everything}",
             "UpstreamHttpMethod": []
         },
         {
@@ -17,7 +17,7 @@
                 "Host": "activityapi",
                 "Port": 80
             }],
-            "UpstreamPathTemplate": "/api/catalogs",
+            "UpstreamPathTemplate": "/catalogs",
             "UpstreamHttpMethod": ["GET"]
         }
     ]

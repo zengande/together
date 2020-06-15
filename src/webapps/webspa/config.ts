@@ -1,3 +1,6 @@
 export default {
-    ApiBaseAddress: "https://together-apim.azure-api.net"
+    // 当前应用地址
+    AppBaseAddress: process.env.APP_BASEADDRESS || "http://localhost:3000",
+    // API 地址
+    ApiBaseAddress: process.env.API_BASEADDRESS || "http://localhost:4000"
 }

@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Serilog;
+using Serilog.Events;
 using Together.Activity.Infrastructure.Data;
 using Together.BuildingBlocks.Infrastructure.Data;
 
@@ -24,12 +20,15 @@ namespace Activity.API
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration(config => {
+                .ConfigureAppConfiguration(config =>
+                {
                     config.AddEnvironmentVariables();
                 })
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                .UseSerilog((context, config) => {
-                    config.WriteTo.Console();
+                .UseSerilog((context, logger) =>
+                {
+                    var miniLevel = context.HostingEnvironment.IsDevelopment() ? LogEventLevel.Verbose : LogEventLevel.Warning;
+                    logger.WriteTo.Console(miniLevel);
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
