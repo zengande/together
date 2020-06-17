@@ -1,24 +1,46 @@
 {
-
-    "Routes": [{
-            "DownstreamPathTemplate": "/api/activities/{everything}",
+    "GlobalConfiguration": {
+        "RequestIdKey": "OcRequestId"
+    },
+    "Routes": [
+        {
+            "DownstreamPathTemplate": "/api/activities/{activityId:int}",
             "DownstreamScheme": "http",
-            "DownstreamHostAndPorts": [{
-                "Host": "activityapi",
-                "Port": 80
-            }],
-            "UpstreamPathTemplate": "/activities/{everything}",
-            "UpstreamHttpMethod": []
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 3001
+                }
+            ],
+            "UpstreamPathTemplate": "/activities/{activityId:int}",
+            "UpstreamHttpMethod": [ "GET" ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/activities",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 3001
+                }
+            ],
+            "UpstreamPathTemplate": "/activities",
+            "UpstreamHttpMethod": [ "POST" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "IdentityApiKey"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/catalogs",
             "DownstreamScheme": "http",
-            "DownstreamHostAndPorts": [{
-                "Host": "activityapi",
-                "Port": 80
-            }],
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 3001
+                }
+            ],
             "UpstreamPathTemplate": "/catalogs",
-            "UpstreamHttpMethod": ["GET"]
+            "UpstreamHttpMethod": [ "GET" ]
         }
     ]
 }

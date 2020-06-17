@@ -1,0 +1,6 @@
+rabbitmqUsername: guest
+rabbitmqPassword: VRe5o82jGdA6Em4cSo6cBzaZ
+
+prometheus:
+  operator:
+    enabled: false
