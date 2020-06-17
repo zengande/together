@@ -8,8 +8,8 @@
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
-                    "Host": "localhost",
-                    "Port": 3001
+                    "Host": "activityapi",
+                    "Port": 80
                 }
             ],
             "UpstreamPathTemplate": "/activities/{activityId:int}",
@@ -20,8 +20,8 @@
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
-                    "Host": "localhost",
-                    "Port": 3001
+                    "Host": "activityapi",
+                    "Port": 80
                 }
             ],
             "UpstreamPathTemplate": "/activities",
@@ -35,8 +35,8 @@
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
-                    "Host": "localhost",
-                    "Port": 3001
+                    "Host": "activityapi",
+                    "Port": 80
                 }
             ],
             "UpstreamPathTemplate": "/catalogs",

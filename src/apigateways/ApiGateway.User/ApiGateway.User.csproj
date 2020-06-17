@@ -18,10 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\buildingblocks\BuildingBlocks.Infrastructure\BuildingBlocks.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Update="configuration\ocelot.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
