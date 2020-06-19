@@ -80,7 +80,6 @@ class AuthService {
 
     public getAccount(): msal.Account {
         const account = application.getAccount();
-        console.log(account);
         return account;
     }
 
@@ -111,6 +110,15 @@ class AuthService {
             return accessToken;
         }
         return '';
+    }
+
+    public async isAuthenticated(): Promise<boolean> {
+        try{
+            await application.acquireTokenSilent(AuthConfig.tokenRequest);
+        }catch{
+            return false;
+        }
+        return true;
     }
 }
 

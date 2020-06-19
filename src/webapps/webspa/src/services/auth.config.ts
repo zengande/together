@@ -1,6 +1,8 @@
 import { Configuration } from 'msal';
 import config from '../../config';
 
+const baseAddress = "https://together2.b2clogin.com/together2.onmicrosoft.com";
+
 const b2cPolicies = {
     names: {
         signUpSignIn: "B2C_1_susi",
@@ -8,10 +10,10 @@ const b2cPolicies = {
     },
     authorities: {
         signUpSignIn: {
-            authority: "https://together2.b2clogin.com/together2.onmicrosoft.com/B2C_1_susi",
+            authority: `${baseAddress}/B2C_1_susi`,
         },
         forgotPassword: {
-            authority: "https://together2.b2clogin.com/together2.onmicrosoft.com/B2C_1_resetpwd",
+            authority: `${baseAddress}/B2C_1_resetpwd`,
         },
     }
 }
@@ -38,6 +40,7 @@ const tokenRequest = {
 };
 
 const AuthConfig = {
+    baseAddress,
     b2cPolicies,
     msalConfig,
     loginRequest,

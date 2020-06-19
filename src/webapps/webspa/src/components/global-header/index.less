@@ -1,0 +1,52 @@
+.header {
+    height          : 48px;
+    line-height     : 48px;
+    padding         : 0px 20px;
+    overflow        : hidden;
+    border-bottom   : 1px solid #f0f2f5;
+    background-color: #ffffff;
+
+    .logo {
+        font-size     : 18px;
+        font-weight   : bold;
+        text-transform: uppercase;
+        display       : inline-block;
+    }
+
+    .right {
+        float : right;
+        height: 48px;
+
+        .divider {
+            position: relative;
+            margin  : 0px 10px;
+            height  : 100%;
+
+            &:after {
+                content         : '';
+                position        : absolute;
+                display         : inline-block;
+                height          : 16px;
+                width           : 1px;
+                background-color: #ccc;
+                top             : 0px;
+            }
+        }
+
+        .account {
+            display: inline-block;
+
+            .item {
+                &:first-child {
+                    margin-right: 5px;
+                }
+            }
+        }
+    }
+}
+
+// @media screen and (max-width: 1920px) {
+//     .header{
+
+//     }
+// }
