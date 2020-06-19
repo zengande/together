@@ -22,7 +22,7 @@ export default defineConfig({
       },
       {
         path: "/activities/:activityId",
-
+        title: "活动详情",
         component: 'activities/[activityId]/index'
       },
       {
