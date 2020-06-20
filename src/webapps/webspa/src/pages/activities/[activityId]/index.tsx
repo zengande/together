@@ -149,6 +149,7 @@ class ActivityPage extends React.PureComponent<ActivityPageProps> {
                                             }
                                             <Avatar size={64} className={styles.avatar} />
                                             <p className={styles.name}>参与者{v}</p>
+                                            <p className={styles.role}>角色</p>
                                         </div>
                                     </a>
                                 ))}
