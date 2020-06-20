@@ -24,7 +24,7 @@ class BasicLayout extends React.PureComponent<BasicLayoutProps> {
                 <Content className={styles.content}>
                     {children}
                 </Content>
-                <Footer style={{ textAlign: "center" }}>TOGETHER 2020</Footer>
+                <Footer className={styles.footer}>TOGETHER 2020</Footer>
             </Layout>
         )
     }
