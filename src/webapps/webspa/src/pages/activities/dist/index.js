@@ -35,11 +35,13 @@ var ActivitiesPage = /** @class */ (function (_super) {
         var query = this.state.query;
         return (react_1["default"].createElement("div", { className: index_less_1["default"].container },
             react_1["default"].createElement("div", { className: index_less_1["default"].header },
-                react_1["default"].createElement("div", { className: index_less_1["default"].searchBox },
-                    react_1["default"].createElement("input", { className: index_less_1["default"].input, type: "text", maxLength: 200, value: query, autoFocus: true, onChange: this.change.bind(this), onKeyDown: this.keyDown.bind(this) }),
-                    react_1["default"].createElement(antd_1.Button, { className: index_less_1["default"].btn, icon: react_1["default"].createElement(icons_1.SearchOutlined, null), type: "text", onClick: this.search.bind(this) }))),
+                react_1["default"].createElement("div", { className: index_less_1["default"].searchContainer },
+                    react_1["default"].createElement("div", { className: index_less_1["default"].searchBox },
+                        react_1["default"].createElement("input", { className: index_less_1["default"].input, type: "text", maxLength: 200, value: query, autoFocus: true, onChange: this.change.bind(this), onKeyDown: this.keyDown.bind(this) }),
+                        react_1["default"].createElement(antd_1.Button, { className: index_less_1["default"].btn, icon: react_1["default"].createElement(icons_1.SearchOutlined, null), type: "text", onClick: this.search.bind(this) })),
+                    react_1["default"].createElement("div", { className: index_less_1["default"].searchFields }))),
             react_1["default"].createElement("div", { className: index_less_1["default"].body },
-                react_1["default"].createElement(umi_1.Link, { to: "/activities/1" }, "\u6D3B\u52A81"))));
+                react_1["default"].createElement(umi_1.Link, { to: "/activities/2" }, "\u6D3B\u52A82"))));
     };
     ActivitiesPage.prototype.change = function (e) {
         var query = e.target.value;

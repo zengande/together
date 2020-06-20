@@ -24,24 +24,28 @@ class ActivitiesPage extends React.PureComponent<ActivitiesPageProps> {
         return (
             <div className={styles.container}>
                 <div className={styles.header}>
-                    <div className={styles.searchBox}>
-                        <input
-                            className={styles.input}
-                            type="text"
-                            maxLength={200}
-                            value={query}
-                            autoFocus={true}
-                            onChange={this.change.bind(this)}
-                            onKeyDown={this.keyDown.bind(this)} />
-                        <Button
-                            className={styles.btn}
-                            icon={<SearchOutlined />}
-                            type="text"
-                            onClick={this.search.bind(this)} />
+                    <div className={styles.searchContainer}>
+                        <div className={styles.searchBox}>
+                            <input
+                                className={styles.input}
+                                type="text"
+                                maxLength={200}
+                                value={query}
+                                autoFocus={true}
+                                onChange={this.change.bind(this)}
+                                onKeyDown={this.keyDown.bind(this)} />
+                            <Button
+                                className={styles.btn}
+                                icon={<SearchOutlined />}
+                                type="text"
+                                onClick={this.search.bind(this)} />
+                        </div>
+                        <div className={styles.searchFields}>
+                        </div>
                     </div>
                 </div>
                 <div className={styles.body}>
-                    <Link to="/activities/1">活动1</Link>
+                    <Link to="/activities/2">活动2</Link>
                 </div>
             </div>
         )
