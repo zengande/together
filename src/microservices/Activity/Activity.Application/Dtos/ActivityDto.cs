@@ -9,7 +9,7 @@ namespace Together.Activity.Application.Dtos
         public int Id { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
-        public string Province { get; set; }
+        public string County { get; set; }
         public string City { get; set; }
         public string DetailAddress { get; set; }
         public double Longitude { get; set; }

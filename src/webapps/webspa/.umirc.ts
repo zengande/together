@@ -13,6 +13,7 @@ export default defineConfig({
                 component: '@/layouts/AuthorizeLayout',
                 routes: [{
                     path: '/activities/create',
+                    title: "创建活动 - TOGETHER",
                     component: 'activities/create'
                 }]
             },

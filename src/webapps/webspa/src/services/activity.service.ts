@@ -1,6 +1,6 @@
 import config from '../../config';
 import { request } from 'umi';
-import Activity from '@/@types/activity/activity';
+import Activity, { ActivityInputModel } from '@/@types/activity/activity';
 
 class ActivityService {
     public fetchCatalogs(): Promise<any> {
@@ -13,8 +13,12 @@ class ActivityService {
 
     }
 
-    public getParticipants(activityId: number) { 
+    public getParticipants(activityId: number) {
         return request(`${config.ApiBaseAddress}/activities/${activityId}/participants`)
+    }
+
+    public create(activity: ActivityInputModel) {
+        return request(`${config.ApiBaseAddress}/activities`, { method: "POST", data: activity })
     }
 }
 

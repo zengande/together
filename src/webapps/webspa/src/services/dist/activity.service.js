@@ -14,6 +14,9 @@ var ActivityService = /** @class */ (function () {
     ActivityService.prototype.getParticipants = function (activityId) {
         return umi_1.request(config_1["default"].ApiBaseAddress + "/activities/" + activityId + "/participants");
     };
+    ActivityService.prototype.create = function (activity) {
+        return umi_1.request(config_1["default"].ApiBaseAddress + "/activities", { method: "POST", data: activity });
+    };
     return ActivityService;
 }());
 exports["default"] = new ActivityService();

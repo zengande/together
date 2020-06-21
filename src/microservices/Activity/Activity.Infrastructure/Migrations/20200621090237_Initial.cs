@@ -39,7 +39,7 @@ namespace Together.Activity.Infrastructure.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(maxLength: 200, nullable: false),
-                    Picture = table.Column<string>(nullable: true),
+                    Order = table.Column<int>(nullable: false, defaultValue: 0),
                     ParentId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -80,13 +80,11 @@ namespace Together.Activity.Infrastructure.Migrations
                     ActivityStartTime = table.Column<DateTime>(nullable: false),
                     DetailAddress = table.Column<string>(maxLength: 512, nullable: true),
                     City = table.Column<string>(maxLength: 200, nullable: true),
-                    Province = table.Column<string>(maxLength: 200, nullable: true),
+                    County = table.Column<string>(maxLength: 200, nullable: true),
                     Longitude = table.Column<double>(nullable: true, defaultValue: 0.0),
                     Latitude = table.Column<double>(nullable: true, defaultValue: 0.0),
                     LimitsNum = table.Column<int>(nullable: true),
                     ActivityEndTime = table.Column<DateTime>(nullable: false),
-                    ActivityStatusId1 = table.Column<int>(nullable: true),
-                    AddressVisibleRuleId1 = table.Column<int>(nullable: true),
                     ActivityStatusId = table.Column<int>(nullable: false),
                     AddressVisibleRuleId = table.Column<int>(nullable: false),
                     CategoryId = table.Column<int>(nullable: false)
@@ -95,14 +93,14 @@ namespace Together.Activity.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_AppActivities", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AppActivities_AppActivityStatus_ActivityStatusId1",
-                        column: x => x.ActivityStatusId1,
+                        name: "FK_AppActivities_AppActivityStatus_ActivityStatusId",
+                        column: x => x.ActivityStatusId,
                         principalTable: "AppActivityStatus",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_AppActivities_AppAddressVisibleRules_AddressVisibleRuleId1",
-                        column: x => x.AddressVisibleRuleId1,
+                        name: "FK_AppActivities_AppAddressVisibleRules_AddressVisibleRuleId",
+                        column: x => x.AddressVisibleRuleId,
                         principalTable: "AppAddressVisibleRules",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -159,14 +157,14 @@ namespace Together.Activity.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AppActivities_ActivityStatusId1",
+                name: "IX_AppActivities_ActivityStatusId",
                 table: "AppActivities",
-                column: "ActivityStatusId1");
+                column: "ActivityStatusId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AppActivities_AddressVisibleRuleId1",
+                name: "IX_AppActivities_AddressVisibleRuleId",
                 table: "AppActivities",
-                column: "AddressVisibleRuleId1");
+                column: "AddressVisibleRuleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AppActivities_CategoryId",

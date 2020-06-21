@@ -1,0 +1,35 @@
+.container .header {
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--global-border-color);
+  padding: 30px 0px;
+}
+.container .header .title {
+  margin: 0px;
+  font-size: var(--title-font-size);
+  color: var(--title-color);
+}
+.container .body .tips .rules {
+  padding: 10px;
+  background-color: #fff4ca;
+  border: 1px solid #fff4ca;
+  line-height: 25px;
+  font-size: 0.8rem;
+  border-radius: 5px;
+}
+.container .body .info {
+  margin-top: 20px;
+  margin-bottom: 30px;
+  padding-left: 3px;
+}
+.container .body .info .title {
+  font-size: 0.95rem;
+}
+.container .body .info .text {
+  margin-left: -24px;
+  color: #666;
+  font-size: 0.8rem;
+}
+.container .body .info .text li {
+  list-style: decimal;
+  padding: 0px 0px 5px 0px;
+}

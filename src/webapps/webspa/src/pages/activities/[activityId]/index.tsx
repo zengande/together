@@ -8,6 +8,7 @@ import ReactMarkdown from 'react-markdown'
 import { ActivityModelState } from '../models/activity';
 import Activity from '@/@types/activity/activity';
 import { Participant } from '../../../@types/activity/activity';
+import CodeBlock from '@/components/markdown/codeblock';
 
 const TriggerHight = 180;
 
@@ -83,7 +84,10 @@ class ActivityPage extends React.PureComponent<ActivityPageProps> {
                         <Row className={styles.content}>
                             <Col span={16} className={styles.body}>
                                 <h3 className={styles.sec_title}>活动详情</h3>
-                                <ReactMarkdown source={content} />
+                                <ReactMarkdown source={content}
+                                    renderers={{
+                                        code: CodeBlock
+                                    }}/>
                             </Col>
                             <Col span={8} className={styles.float}>
                                 <div className={styles.time}>

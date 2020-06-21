@@ -24,7 +24,7 @@ namespace Together.Activity.Application.Queries
 	                        AppActivities.ActivityStartTime,
 	                        AppActivities.DetailAddress,
 	                        AppActivities.City,
-	                        AppActivities.Province,
+	                        AppActivities.County,
 	                        AppActivities.Longitude,
 	                        AppActivities.Latitude,
 	                        AppActivities.LimitsNum,

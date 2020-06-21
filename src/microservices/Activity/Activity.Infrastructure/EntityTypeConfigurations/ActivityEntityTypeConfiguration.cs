@@ -64,8 +64,8 @@ namespace Together.Activity.Infrastructure.EntityTypeConfigurations
                 .IsRequired()
                 .HasMaxLength(200)
                 .IsUnicode();
-            addressBuilder.Property(a => a.Province)
-                .HasColumnName("Province")
+            addressBuilder.Property(a => a.County)
+                .HasColumnName("County")
                 .HasMaxLength(200)
                 .IsUnicode();
             addressBuilder.Property(a => a.DetailAddress)

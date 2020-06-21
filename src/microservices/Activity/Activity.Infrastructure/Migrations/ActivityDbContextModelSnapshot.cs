@@ -206,11 +206,6 @@ namespace Together.Activity.Infrastructure.Migrations
                         .HasDefaultValue(0);
 
                     b.Property<int?>("ParentId")
-                        .HasColumnName("ParentId1")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("_parentId")
-                        .HasColumnName("ParentId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -222,7 +217,7 @@ namespace Together.Activity.Infrastructure.Migrations
 
             modelBuilder.Entity("Together.BuildingBlocks.Infrastructure.Idempotency.ClientRequest", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
@@ -266,6 +261,12 @@ namespace Together.Activity.Infrastructure.Migrations
                                 .HasMaxLength(200)
                                 .IsUnicode(true);
 
+                            b1.Property<string>("County")
+                                .HasColumnName("County")
+                                .HasColumnType("varchar(200) CHARACTER SET utf8mb4")
+                                .HasMaxLength(200)
+                                .IsUnicode(true);
+
                             b1.Property<string>("DetailAddress")
                                 .HasColumnName("DetailAddress")
                                 .HasColumnType("varchar(512) CHARACTER SET utf8mb4")
@@ -283,12 +284,6 @@ namespace Together.Activity.Infrastructure.Migrations
                                 .HasColumnName("Longitude")
                                 .HasColumnType("double")
                                 .HasDefaultValue(0.0);
-
-                            b1.Property<string>("Province")
-                                .HasColumnName("Province")
-                                .HasColumnType("varchar(200) CHARACTER SET utf8mb4")
-                                .HasMaxLength(200)
-                                .IsUnicode(true);
 
                             b1.HasKey("ActivityId");
 
