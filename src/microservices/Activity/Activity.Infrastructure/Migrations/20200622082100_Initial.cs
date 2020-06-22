@@ -97,17 +97,36 @@ namespace Together.Activity.Infrastructure.Migrations
                         column: x => x.ActivityStatusId,
                         principalTable: "AppActivityStatus",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AppActivities_AppAddressVisibleRules_AddressVisibleRuleId",
                         column: x => x.AddressVisibleRuleId,
                         principalTable: "AppAddressVisibleRules",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AppActivities_AppCatalogs_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "AppCatalogs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppCollections",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(maxLength: 100, nullable: false),
+                    ActivityId = table.Column<int>(nullable: false),
+                    CollectionTimeUtc = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppCollections", x => new { x.UserId, x.ActivityId });
+                    table.ForeignKey(
+                        name: "FK_AppCollections_AppActivities_ActivityId",
+                        column: x => x.ActivityId,
+                        principalTable: "AppActivities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -177,6 +196,11 @@ namespace Together.Activity.Infrastructure.Migrations
                 column: "ParentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AppCollections_ActivityId",
+                table: "AppCollections",
+                column: "ActivityId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AppParticipants_ActivityId",
                 table: "AppParticipants",
                 column: "ActivityId");
@@ -184,6 +208,9 @@ namespace Together.Activity.Infrastructure.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AppCollections");
+
             migrationBuilder.DropTable(
                 name: "AppParticipants");
 

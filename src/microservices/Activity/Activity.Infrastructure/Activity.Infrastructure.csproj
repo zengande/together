@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200622082013_Initial.cs" />
+    <Compile Remove="Migrations\20200622082013_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200622082648_Initial2.cs" />
+    <Compile Remove="Migrations\20200622082648_Initial2.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.4" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.1.1" />
   </ItemGroup>

@@ -9,7 +9,7 @@ using Together.Activity.Infrastructure.Data;
 namespace Together.Activity.Infrastructure.Migrations
 {
     [DbContext(typeof(ActivityDbContext))]
-    [Migration("20200621090237_Initial")]
+    [Migration("20200622082100_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,11 +32,15 @@ namespace Together.Activity.Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<int?>("ActivityStatusId")
-                        .HasColumnName("ActivityStatusId1")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int?>("AddressVisibleRuleId")
-                        .HasColumnName("AddressVisibleRuleId1")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CategoryId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
@@ -58,25 +62,13 @@ namespace Together.Activity.Infrastructure.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<int>("_activityStatusId")
-                        .HasColumnName("ActivityStatusId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("_addressVisibleRuleId")
-                        .HasColumnName("AddressVisibleRuleId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("_catalogId")
-                        .HasColumnName("CategoryId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ActivityStatusId");
 
                     b.HasIndex("AddressVisibleRuleId");
 
-                    b.HasIndex("_catalogId");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("AppActivities");
                 });
@@ -217,6 +209,25 @@ namespace Together.Activity.Infrastructure.Migrations
                     b.ToTable("AppCatalogs");
                 });
 
+            modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.CollectionAggregate.Collection", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100);
+
+                    b.Property<int>("ActivityId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CollectionTimeUtc")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("UserId", "ActivityId");
+
+                    b.HasIndex("ActivityId");
+
+                    b.ToTable("AppCollections");
+                });
+
             modelBuilder.Entity("Together.BuildingBlocks.Infrastructure.Idempotency.ClientRequest", b =>
                 {
                     b.Property<Guid>("Id")
@@ -239,15 +250,19 @@ namespace Together.Activity.Infrastructure.Migrations
                 {
                     b.HasOne("Together.Activity.Domain.AggregatesModel.ActivityAggregate.ActivityStatus", "ActivityStatus")
                         .WithMany()
-                        .HasForeignKey("ActivityStatusId");
+                        .HasForeignKey("ActivityStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Together.Activity.Domain.AggregatesModel.ActivityAggregate.AddressVisibleRule", "AddressVisibleRule")
                         .WithMany()
-                        .HasForeignKey("AddressVisibleRuleId");
+                        .HasForeignKey("AddressVisibleRuleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Together.Activity.Domain.AggregatesModel.CatalogAggregate.Catalog", null)
                         .WithMany()
-                        .HasForeignKey("_catalogId")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -310,6 +325,15 @@ namespace Together.Activity.Infrastructure.Migrations
                     b.HasOne("Together.Activity.Domain.AggregatesModel.CatalogAggregate.Catalog", null)
                         .WithMany("Children")
                         .HasForeignKey("ParentId");
+                });
+
+            modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.CollectionAggregate.Collection", b =>
+                {
+                    b.HasOne("Together.Activity.Domain.AggregatesModel.ActivityAggregate.Activity", null)
+                        .WithMany()
+                        .HasForeignKey("ActivityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

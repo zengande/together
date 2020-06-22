@@ -64,13 +64,13 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         /// <summary>
         /// 活动状态
         /// </summary>
-        private int _activityStatusId;
+        public int ActivityStatusId { get; private set; }
         public ActivityStatus ActivityStatus { get; private set; }
 
         /// <summary>
         /// 地址可见规则
         /// </summary>
-        private int _addressVisibleRuleId;
+        public int AddressVisibleRuleId { get; private set; }
         public AddressVisibleRule AddressVisibleRule { get; private set; }
 
         private int _catalogId;
@@ -108,12 +108,12 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
             Address = address;
             LimitsNum = limitsNum;
             _catalogId = catalogId;
-            _activityStatusId = ActivityStatus.Recruitment.Id;
+            ActivityStatusId = ActivityStatus.Recruitment.Id;
             if (addressVisibleRuleId == null)
             {
                 addressVisibleRuleId = AddressVisibleRule.PublicVisible.Id;
             }
-            _addressVisibleRuleId = addressVisibleRuleId.Value;
+            AddressVisibleRuleId = addressVisibleRuleId.Value;
 
             _participants.Add(creator);
 
@@ -146,7 +146,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         public void JoinActivity(string userId, string nickname, string avatar, int sex)
         {
             // 招募状态才能加入
-            if (_activityStatusId != ActivityStatus.Recruitment.Id)
+            if (ActivityStatusId != ActivityStatus.Recruitment.Id)
             {
                 throw new DomainException($"该活动当前状态不允许加入");
             }
@@ -182,17 +182,17 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
 
         public void SetFinishedStatus()
         {
-            if (_activityStatusId == ActivityStatus.Processing.Id)
+            if (ActivityStatusId == ActivityStatus.Processing.Id)
             {
-                _activityStatusId = ActivityStatus.Finished.Id;
+                ActivityStatusId = ActivityStatus.Finished.Id;
             }
         }
 
         public void SetProcessingStatus()
         {
-            if (_activityStatusId == ActivityStatus.Recruitment.Id)
+            if (ActivityStatusId == ActivityStatus.Recruitment.Id)
             {
-                _activityStatusId = ActivityStatus.Processing.Id;
+                ActivityStatusId = ActivityStatus.Processing.Id;
             }
         }
 
@@ -201,9 +201,9 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         /// </summary>
         public void Obsolete()
         {
-            if (_activityStatusId == ActivityStatus.Recruitment.Id)
+            if (ActivityStatusId == ActivityStatus.Recruitment.Id)
             {
-                _activityStatusId = ActivityStatus.Obsoleted.Id;
+                ActivityStatusId = ActivityStatus.Obsoleted.Id;
             }
         }
 

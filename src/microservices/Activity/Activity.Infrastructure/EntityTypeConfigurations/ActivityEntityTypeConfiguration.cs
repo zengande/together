@@ -31,21 +31,6 @@ namespace Together.Activity.Infrastructure.EntityTypeConfigurations
             builder.Property(a => a.CreatorId)
                 .HasMaxLength(200)
                 .IsRequired(false);
-            
-            builder.Property<int>("_activityStatusId")
-                .UsePropertyAccessMode(PropertyAccessMode.Field)
-                .HasColumnName("ActivityStatusId")
-                .IsRequired();
-
-            builder.Property<int>("_addressVisibleRuleId")
-                .UsePropertyAccessMode(PropertyAccessMode.Field)
-                .HasColumnName("AddressVisibleRuleId")
-                .IsRequired();
-
-            builder.Property<int>("_catalogId")
-                .UsePropertyAccessMode(PropertyAccessMode.Field)
-                .HasColumnName("CategoryId")
-                .IsRequired();
 
             builder.Property(a => a.Title)
                 .IsRequired(false);
@@ -85,15 +70,18 @@ namespace Together.Activity.Infrastructure.EntityTypeConfigurations
 
             builder.HasOne(a => a.ActivityStatus)
                 .WithMany()
-                .HasForeignKey("ActivityStatusId");
+                .HasForeignKey("ActivityStatusId")
+                .IsRequired();
 
             builder.HasOne(a => a.AddressVisibleRule)
                 .WithMany()
-                .HasForeignKey("AddressVisibleRuleId");
+                .HasForeignKey("AddressVisibleRuleId")
+                .IsRequired();
 
             builder.HasOne<Catalog>()
                 .WithMany()
-                .HasForeignKey("_catalogId");
+                .HasForeignKey("CategoryId")
+                .IsRequired();
         }
     }
 }

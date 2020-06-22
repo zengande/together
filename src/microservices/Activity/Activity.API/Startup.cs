@@ -16,6 +16,8 @@ using Together.Activity.Application.Commands;
 using Together.Activity.Application.Queries;
 using Together.Activity.Application.Validations;
 using Together.Activity.Domain.AggregatesModel.ActivityAggregate;
+using Together.Activity.Domain.AggregatesModel.CatalogAggregate;
+using Together.Activity.Domain.AggregatesModel.CollectionAggregate;
 using Together.Activity.Infrastructure.Data;
 using Together.Activity.Infrastructure.Repositories;
 using Together.BuildingBlocks.Infrastructure;
@@ -55,6 +57,12 @@ namespace Activity.API
 
             builder.RegisterType<ActivityRepository>()
                 .As<IActivityRepository>()
+                .InstancePerLifetimeScope();
+            builder.RegisterType<CatalogRepository>()
+                .As<ICatalogRepository>()
+                .InstancePerLifetimeScope();
+            builder.RegisterType<CollectionRepository>()
+                .As<ICollectionRepository>()
                 .InstancePerLifetimeScope();
 
             // ²éÑ¯¿â

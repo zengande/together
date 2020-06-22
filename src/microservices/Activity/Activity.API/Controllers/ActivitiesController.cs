@@ -86,5 +86,21 @@ namespace Together.Activity.API.Controllers
 
             return commandResult ? Ok() : (IActionResult)BadRequest();
         }
+
+        [Authorize]
+        [HttpPost, Route("{activityId}/collect")]
+        public async Task<IActionResult> CollectAsync(int activityId, [FromHeader(Name = "x-requestid")] string requestId)
+        {
+            bool commandResult = false;
+            if (Guid.TryParse(requestId, out Guid guid) && guid != Guid.Empty)
+            {
+                var userId = _identityService.GetUserIdentity();
+                var command = new CollectActivityCommand(activityId, userId);
+                var requestJoinActivity = new IdentifiedCommand<CollectActivityCommand, bool>(command, guid);
+                commandResult = await _mediator.Send(requestJoinActivity);
+            }
+
+            return commandResult ? Ok() : (IActionResult)BadRequest();
+        }
     }
 }
