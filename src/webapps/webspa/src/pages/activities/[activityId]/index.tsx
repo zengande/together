@@ -53,7 +53,11 @@ class ActivityPage extends React.PureComponent<ActivityPageProps> {
 
         const {
             title,
-            content
+            content,
+            showAddress,
+            detailAddress,
+            city,
+            county
         } = activity || {}
 
         return loading ? <div>加载中...</div> :
@@ -87,7 +91,7 @@ class ActivityPage extends React.PureComponent<ActivityPageProps> {
                                 <ReactMarkdown source={content}
                                     renderers={{
                                         code: CodeBlock
-                                    }}/>
+                                    }} />
                             </Col>
                             <Col span={8} className={styles.float}>
                                 <div className={styles.time}>
@@ -98,8 +102,16 @@ class ActivityPage extends React.PureComponent<ActivityPageProps> {
                                 </div>
                                 <div className={styles.address}>
                                     <EnvironmentOutlined className={styles.icon} />
-                                    <p>人民大会堂</p>
-                                    <p>中国，北京，北京 左转第一个红绿灯的天桥下 o(*￣▽￣*)o</p>
+                                    {!showAddress ?
+                                        <>
+                                            <p className="t-mosaic">地址请登录后查看</p>
+                                            <p className="t-mosaic">详细地址请登录后查看</p>
+                                        </> :
+                                        <>
+                                            <p>{city}，{county}</p>
+                                            <p>{detailAddress}</p>
+                                        </>
+                                    }
                                 </div>
                                 <div className={styles.map}>
                                     <a>

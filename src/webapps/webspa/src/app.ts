@@ -1,9 +1,27 @@
 import { RequestConfig } from 'umi';
+import AuthService from '@/services/auth.service'
+
 export const request: RequestConfig = {
     timeout: 3000,
     errorConfig: {},
     middlewares: [],
-    requestInterceptors: [],
+    requestInterceptors: [
+        async (url, options) => {
+            const accessToken = await AuthService.getAccessToken();
+            const headers = {
+                ...options.headers,
+                "Authorization": `Bearer ${accessToken}`
+            };
+            console.log(headers);
+            return {
+                url,
+                options: {
+                    ...options,
+                    headers
+                }
+            };
+        }
+    ],
     responseInterceptors: [
         (response, options) => {
             const codeMaps = {

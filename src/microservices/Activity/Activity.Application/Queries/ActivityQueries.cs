@@ -16,31 +16,19 @@ namespace Together.Activity.Application.Queries
             _connectionString = !string.IsNullOrWhiteSpace(connectionString) ? connectionString : throw new ArgumentNullException(nameof(connectionString));
         }
 
-        public async Task<ActivityDto> GetActivityByIdAsync(int id)
+        public async Task<ActivityDto> GetActivityByIdAsync(int id, bool showAddress = false)
         {
-            var sql = @"SELECT
-	                        AppActivities.Title,
-	                        AppActivities.EndRegisterTime,
-	                        AppActivities.ActivityStartTime,
-	                        AppActivities.DetailAddress,
-	                        AppActivities.City,
-	                        AppActivities.County,
-	                        AppActivities.Longitude,
-	                        AppActivities.Latitude,
-	                        AppActivities.LimitsNum,
-	                        AppActivities.ActivityEndTime,
-	                        AppActivities.Content,
-	                        AppActivities.AddressVisibleRuleId,
-	                        AppActivities.Id,
-	                        AppActivities.ActivityStatusId 
-                        FROM
-	                        AppActivities
-                        WHERE AppActivities.Id=@id";
+            var sql = new StringBuilder(@"SELECT AppActivities.Title, AppActivities.EndRegisterTime, AppActivities.ActivityStartTime, ");
+            if (showAddress)
+            {
+                sql.Append("AppActivities.DetailAddress, AppActivities.City, AppActivities.County, AppActivities.Longitude, AppActivities.Latitude, ");
+            }
+            sql.Append(@"AppActivities.LimitsNum, AppActivities.ActivityEndTime, AppActivities.Content, AppActivities.Id, AppActivities.ActivityStatusId FROM AppActivities WHERE AppActivities.Id = @id");
 
             using var connection = new MySqlConnection(_connectionString);
             connection.Open();
 
-            return await connection.QueryFirstOrDefaultAsync<ActivityDto>(sql, new { id });
+            return await connection.QueryFirstOrDefaultAsync<ActivityDto>(sql.ToString(), new { id });
         }
 
         public async Task<IEnumerable<ParticipantDto>> GetActivityParticipantsAsync(int id)
@@ -61,6 +49,25 @@ namespace Together.Activity.Application.Queries
             connection.Open();
 
             return await connection.QueryAsync<ParticipantDto>(sql, new { id });
+        }
+
+        public async Task<bool> IsJoinedAsync(int activityId, string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                return false;
+            }
+
+            var sql = @"SELECT
+	                        COUNT(*)
+                        FROM
+                            appparticipants
+                        WHERE ActivityId=@activityId AND UserId=@userId
+                        ";
+            using var connection = new MySqlConnection(_connectionString);
+            connection.Open();
+
+            return await connection.QueryFirstOrDefaultAsync<int>(sql, new { activityId, userId }) > 0;
         }
     }
 }

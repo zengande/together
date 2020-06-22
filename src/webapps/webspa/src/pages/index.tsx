@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './index.less';
+import { Button } from 'antd';
 import AuthService from '@/services/auth.service'
 import { Link } from 'umi';
 
@@ -12,6 +13,7 @@ export default () => {
             <div className={styles.body}>
                 <div className="t-content">
                     <Link to="/activities">活动列表</Link>
+                    <Button onClick={() => AuthService.logout()}>注销</Button>
                 </div>
             </div>
         </div>

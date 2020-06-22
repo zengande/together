@@ -34,7 +34,10 @@ namespace Together.Activity.API.Controllers
         [HttpGet, Route("{activityId}")]
         public async Task<IActionResult> Get(int activityId)
         {
-            var activity = await _queries.GetActivityByIdAsync(activityId);
+            var userId = _identityService.GetUserIdentity();
+            var isJoined = await _queries.IsJoinedAsync(activityId, userId);
+            var activity = await _queries.GetActivityByIdAsync(activityId, isJoined);
+            activity.ShowAddress = isJoined;
             return activity != null ? Ok(activity) : (IActionResult)NotFound(activityId);
         }
 

@@ -2,7 +2,7 @@ import React from 'react'
 import { Link, IRouteComponentProps } from 'umi';
 import styles from './index.less'
 import { Button } from 'antd';
-import { SearchOutlined } from '@ant-design/icons'
+import { SearchOutlined } from '@ant-design/icons';
 
 interface ActivitiesPageProps extends IRouteComponentProps<any, { q?: string }> {
 

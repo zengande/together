@@ -10,7 +10,7 @@ interface Activity {
     activityStartTime: Date;
     activityEndTime: Date;
     activityStatusId: ActivityStatus;
-    addressVisibleRuleId: number;
+    showAddress: boolean;
 }
 
 export enum ActivityStatus {

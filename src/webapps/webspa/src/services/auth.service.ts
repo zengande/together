@@ -86,22 +86,14 @@ class AuthService {
     private getTokenPopup(request: msal.AuthenticationParameters) {
         return application.acquireTokenSilent(request)
             .catch(error => {
-                console.log("Silent token acquisition fails. Acquiring token using popup");
-                console.log(error);
-                // fallback to interaction when silent call fails
-                return application.acquireTokenPopup(request)
-                    .then(tokenResponse => {
-                        console.log("access_token acquired at: " + new Date().toString());
-                        return tokenResponse;
-                    }).catch(error => {
-                        console.log(error);
-                        return null;
-                    });
+                console.error(error)
+                return null;
             });
     }
 
     // Acquires and access token and then passes it to the API call
     public async getAccessToken(): Promise<string> {
+
         const tokenResponse = await service.getTokenPopup(AuthConfig.tokenRequest)
         if (tokenResponse != null) {
             const { accessToken } = tokenResponse;
@@ -113,9 +105,9 @@ class AuthService {
     }
 
     public async isAuthenticated(): Promise<boolean> {
-        try{
+        try {
             await application.acquireTokenSilent(AuthConfig.tokenRequest);
-        }catch{
+        } catch{
             return false;
         }
         return true;

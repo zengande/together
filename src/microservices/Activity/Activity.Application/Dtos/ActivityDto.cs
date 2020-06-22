@@ -19,6 +19,6 @@ namespace Together.Activity.Application.Dtos
         public DateTime ActivityStartTime { get; set; }
         public DateTime ActivityEndTime { get; set; }
         public int ActivityStatusId { get; set; }
-        public int AddressVisibleRuleId { get; set; }
+        public bool ShowAddress { get; set; }
     }
 }
