@@ -16,10 +16,15 @@ interface ActivityPageProps extends ConnectProps {
     activity?: Activity;
     participants?: Participant[];
     loading?: boolean;
+    isJoined?: boolean;
+    joining?: boolean;
+    isCollected?: boolean;
+    collecting?: boolean;
 }
 
 class ActivityPage extends React.PureComponent<ActivityPageProps> {
     state = {
+        activityId: 0,
         visable: false,
         fixedHeaderVisable: false
     }
@@ -32,6 +37,7 @@ class ActivityPage extends React.PureComponent<ActivityPageProps> {
         const { match: { params }, dispatch } = this.props;
         const activityId = Number.parseInt(params.activityId);
         if (!isNaN(activityId)) {
+            this.setState({ activityId })
             dispatch!({ type: 'activity/fetch', payload: activityId });
             dispatch!({ type: 'activity/fetchParticipants', payload: activityId });
         } else {
@@ -47,9 +53,29 @@ class ActivityPage extends React.PureComponent<ActivityPageProps> {
         })
     }
 
+    private collect() {
+        const { dispatch } = this.props;
+        const { activityId } = this.state;
+        dispatch && dispatch({ type: 'activity/collect', payload: activityId })
+    }
+
+    private join() {
+        const { dispatch } = this.props;
+        const { activityId } = this.state;
+        dispatch && dispatch({ type: 'activity/join', payload: activityId })
+    }
+
     render() {
         const { visable, fixedHeaderVisable } = this.state;
-        const { activity, loading = true, participants } = this.props;
+        const {
+            activity,
+            loading = true,
+            participants,
+            isJoined,
+            joining,
+            isCollected,
+            collecting
+        } = this.props;
 
         const {
             title,
@@ -154,8 +180,8 @@ class ActivityPage extends React.PureComponent<ActivityPageProps> {
                                     <b style={{ lineHeight: '50px' }}>免费</b>
                                     {/* <span>剩余 2 个席位</span> */}
                                 </div>
-                                <Button className={styles.starBtn} icon={<StarOutlined />} type="ghost" />
-                                <Button className={styles.joinBtn} type="primary">加入活动</Button>
+                                <Button className={styles.starBtn} icon={<StarOutlined />} type="ghost" loading={collecting} onClick={this.collect.bind(this)}/>
+                                <Button className={styles.joinBtn} type="primary" loading={joining} onClick={this.join.bind(this)}>加入活动</Button>
                                 {/* <Button className={styles.cancelBtn} type="danger">退出活动</Button> */}
                             </Col>
                         </Row>
@@ -178,5 +204,7 @@ class ActivityPage extends React.PureComponent<ActivityPageProps> {
 
 export default connect(({ loading, activity }: { loading: Loading, activity: ActivityModelState }) => ({
     ...activity,
-    loading: loading.effects['activity/fetch']
+    loading: loading.effects['activity/fetch'],
+    joining: loading.effects['activity/join'],
+    collecting: loading.effects['activity/collect'],
 }))(ActivityPage);

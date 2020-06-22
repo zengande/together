@@ -4,7 +4,9 @@ import Activity, { Participant } from '@/@types/activity/activity';
 
 export interface ActivityModelState {
     activity?: Activity;
-    participants?: Participant[]
+    participants?: Participant[];
+    isJoined: boolean;
+    isCollected: boolean;
 }
 
 export interface ActivityModelType {
@@ -13,6 +15,8 @@ export interface ActivityModelType {
     effects: {
         fetch: Effect;
         fetchParticipants: Effect;
+        join: Effect;
+        collect: Effect;
     }
     reducers: {
         save: Reducer<ActivityModelType>;
@@ -21,7 +25,10 @@ export interface ActivityModelType {
 
 const Model: ActivityModelType = {
     namespace: 'activity',
-    state: {},
+    state: {
+        isJoined: false,
+        isCollected: false
+    },
     effects: {
         *fetch({ payload }, { call, put }) {
             try {
@@ -48,6 +55,24 @@ const Model: ActivityModelType = {
             } catch{
                 console.log('error');
             }
+        },
+        *join({ payload }, { call, put }) {
+            yield call(ActivityService.join, payload);
+            yield put({
+                type: 'save',
+                payload: {
+                    isJoined: true
+                }
+            })
+        },
+        *collect({ payload }, { call, put }) {
+            yield call(ActivityService.collect, payload);
+            yield put({
+                type: 'save',
+                payload: {
+                    isJoined: true
+                }
+            })
         }
     },
     reducers: {

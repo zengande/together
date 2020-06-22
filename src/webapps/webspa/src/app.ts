@@ -1,5 +1,6 @@
 import { RequestConfig } from 'umi';
-import AuthService from '@/services/auth.service'
+import AuthService from '@/services/auth.service';
+import { Guid } from '@/utils/guid'
 
 export const request: RequestConfig = {
     timeout: 3000,
@@ -10,7 +11,8 @@ export const request: RequestConfig = {
             const accessToken = await AuthService.getAccessToken();
             const headers = {
                 ...options.headers,
-                "Authorization": `Bearer ${accessToken}`
+                "x-requestid": Guid.newGuid(),
+                "Authorization": `Bearer ${accessToken}`,
             };
             console.log(headers);
             return {

@@ -20,6 +20,14 @@ class ActivityService {
     public create(activity: ActivityInputModel) {
         return request(`${config.ApiBaseAddress}/activities`, { method: "POST", data: activity })
     }
+
+    public join(activityId: number) {
+        return request(`${config.ApiBaseAddress}/activities/${activityId}/join`, { method: "POST" })
+    }
+
+    public collect(activityId: number) {
+        return request(`${config.ApiBaseAddress}/activities/${activityId}/collect`, { method: "POST" })
+    }
 }
 
 export default new ActivityService();

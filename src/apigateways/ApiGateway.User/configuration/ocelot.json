@@ -41,6 +41,36 @@
       }
     },
     {
+      "DownstreamPathTemplate": "/api/activities/{activityId:int}/collect",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 3001
+        }
+      ],
+      "UpstreamPathTemplate": "/activities/{activityId:int}/collect",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "IdentityApiKey"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/activities/{activityId:int}/join",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 3001
+        }
+      ],
+      "UpstreamPathTemplate": "/activities/{activityId:int}/join",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "IdentityApiKey"
+      }
+    },
+    {
       "DownstreamPathTemplate": "/api/catalogs",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
