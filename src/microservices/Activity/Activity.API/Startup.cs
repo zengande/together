@@ -59,7 +59,6 @@ namespace Activity.API
 
             // ²éÑ¯¿â
             var connectionString = Configuration.GetConnectionString("Default");
-            System.Console.WriteLine(connectionString);
             builder.Register(c => new ActivityQueries(connectionString))
                 .As<IActivityQueries>()
                 .InstancePerLifetimeScope();
