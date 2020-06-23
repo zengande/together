@@ -11,6 +11,11 @@ interface Activity {
     activityEndTime: Date;
     activityStatusId: ActivityStatus;
     showAddress: boolean;
+    isCollected: boolean;
+    isJoined: boolean;
+    numOfP?: number;
+    limitsNum?: number;
+    isCreator: boolean;
 }
 
 export enum ActivityStatus {

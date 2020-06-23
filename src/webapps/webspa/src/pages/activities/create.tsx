@@ -155,7 +155,15 @@ class CreatePage extends React.PureComponent<CreatePageProps> {
     }
 
     private submit(values: any) {
-        console.log(values);
+        const { dispatch } = this.props;
+        const { activityTime } = values;
+        const activity = {
+            ...values,
+            activityStartTime: activityTime[0],
+            activityEndTime: activityTime[1]
+        }
+
+        dispatch && dispatch({ type: 'activitycreate/post', payload: activity });
     }
 }
 

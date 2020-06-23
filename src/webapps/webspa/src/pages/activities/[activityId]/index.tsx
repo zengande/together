@@ -2,23 +2,34 @@ import React from 'react'
 import { IRouteComponentProps, history, Redirect, Link, connect, Loading, ConnectProps } from 'umi';
 import styles from './index.less'
 import { Row, Col, Avatar, Button, Modal, List } from 'antd';
-import { ClockCircleOutlined, EnvironmentOutlined, ManOutlined, WomanOutlined, LinkOutlined, WechatOutlined, WeiboOutlined, StarOutlined, ShareAltOutlined } from '@ant-design/icons';
 import classNames from 'classnames';
 import ReactMarkdown from 'react-markdown'
 import { ActivityModelState } from '../models/activity';
 import Activity from '@/@types/activity/activity';
 import { Participant } from '../../../@types/activity/activity';
 import CodeBlock from '@/components/markdown/codeblock';
+import moment from 'moment';
+import {
+    ClockCircleOutlined,
+    EnvironmentOutlined,
+    ManOutlined,
+    WomanOutlined,
+    LinkOutlined,
+    WechatOutlined,
+    WeiboOutlined,
+    StarOutlined,
+    StarFilled,
+    ShareAltOutlined
+} from '@ant-design/icons';
 
 const TriggerHight = 180;
+moment.locale('zh-cn');
 
 interface ActivityPageProps extends ConnectProps {
     activity?: Activity;
     participants?: Participant[];
     loading?: boolean;
-    isJoined?: boolean;
     joining?: boolean;
-    isCollected?: boolean;
     collecting?: boolean;
 }
 
@@ -71,9 +82,7 @@ class ActivityPage extends React.PureComponent<ActivityPageProps> {
             activity,
             loading = true,
             participants,
-            isJoined,
             joining,
-            isCollected,
             collecting
         } = this.props;
 
@@ -83,7 +92,14 @@ class ActivityPage extends React.PureComponent<ActivityPageProps> {
             showAddress,
             detailAddress,
             city,
-            county
+            county,
+            isCollected,
+            isJoined,
+            numOfP = 0,
+            limitsNum = 0,
+            activityStartTime,
+            activityEndTime,
+            isCreator
         } = activity || {}
 
         return loading ? <div>加载中...</div> :
@@ -91,7 +107,7 @@ class ActivityPage extends React.PureComponent<ActivityPageProps> {
                 <div className={styles.container}>
                     <div className={styles.header}>
                         <div className={styles.content}>
-                            <p className={styles.date}>2020年6月25日，星期四</p>
+                            <p className={styles.date}>{moment(activityStartTime).zone("-08:00").format("YYYY年MM月DD日, ddd, hh:mm a")}</p>
                             <h1 className={styles.title}>{title}</h1>
                             <Row>
                                 <Col flex="auto" className={styles.creator}>
@@ -122,8 +138,8 @@ class ActivityPage extends React.PureComponent<ActivityPageProps> {
                             <Col span={8} className={styles.float}>
                                 <div className={styles.time}>
                                     <ClockCircleOutlined className={styles.icon} />
-                                    <p>2020年06月22日，星期一</p>
-                                    <p>08:00 · 12:00</p>
+                                    <p>{moment(activityStartTime).zone("-08:00").format("YYYY年MM月DD日, ddd")}</p>
+                                    <p>{moment(activityStartTime).zone("-08:00").format("HH:mm")} · {moment(activityEndTime).zone("-08:00").format("HH:mm")}</p>
                                     <a>添加到我的日历</a>
                                 </div>
                                 <div className={styles.address}>
@@ -150,7 +166,7 @@ class ActivityPage extends React.PureComponent<ActivityPageProps> {
                     <div className={styles.footer}>
                         <Row className={styles.content}>
                             <Col span={16}>
-                                <h3 className={styles.sec_title}>参与者({participants?.length})</h3>
+                                <h3 className={styles.sec_title}>参与者({numOfP})</h3>
                                 <div className={styles.participants}>
                                     {participants ? participants.map(participant => (
                                         <Link to={`/users/${participant.userId}`} key={participant.userId}>
@@ -172,17 +188,25 @@ class ActivityPage extends React.PureComponent<ActivityPageProps> {
                     <div className={styles.stickyFooter}>
                         <Row className={styles.content}>
                             <Col span={16}>
-                                <p className={styles.date}>2020年6月25日，星期四，16:00</p>
+                                <p className={styles.date}>{moment(activityStartTime).zone("-08:00").format("YYYY年MM月DD日, ddd, hh:mm a")}</p>
                                 <p className={styles.title}>{title}</p>
                             </Col>
                             <Col span={8} className={styles.right}>
                                 <div className={styles.info}>
-                                    <b style={{ lineHeight: '50px' }}>免费</b>
-                                    {/* <span>剩余 2 个席位</span> */}
+                                    <b style={{ lineHeight: limitsNum > 0 ? 'unset' : '50px' }}>免费</b>
+                                    {limitsNum > 0 && <span>剩余 {limitsNum - numOfP} 个席位</span>}
                                 </div>
-                                <Button className={styles.starBtn} icon={<StarOutlined />} type="ghost" loading={collecting} onClick={this.collect.bind(this)}/>
-                                <Button className={styles.joinBtn} type="primary" loading={joining} onClick={this.join.bind(this)}>加入活动</Button>
-                                {/* <Button className={styles.cancelBtn} type="danger">退出活动</Button> */}
+                                {isCreator ?
+                                    <Button className={styles.cancelBtn} danger type="primary">取消活动</Button> :
+                                    <>
+                                        <Button className={styles.starBtn}
+                                            icon={isCollected ? <StarFilled style={{ color: '#1890ff' }} /> : <StarOutlined />}
+                                            type="ghost"
+                                            loading={collecting}
+                                            onClick={this.collect.bind(this)}/>
+                                        <Button className={styles.joinBtn} type="primary" loading={joining} onClick={this.join.bind(this)}>{isJoined ? "已加入" : "加入活动"}</Button>
+                                    </>
+                                }
                             </Col>
                         </Row>
                     </div>
@@ -197,7 +221,7 @@ class ActivityPage extends React.PureComponent<ActivityPageProps> {
                             <List.Item><LinkOutlined /> 复制连接</List.Item>
                         </List>
                     </Modal>
-                </div>
+                </div >
             ) : <Redirect to="/activities" />
     }
 }

@@ -13,7 +13,7 @@ namespace Together.Activity.Application.Queries
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<ActivityDto> GetActivityByIdAsync(int id, bool showAddress = false);
+        Task<ActivityDto> GetActivityByIdAsync(int id, string userId = null);
         /// <summary>
         /// 获取活动参与者
         /// </summary>

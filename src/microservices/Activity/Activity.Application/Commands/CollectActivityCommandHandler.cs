@@ -18,7 +18,11 @@ namespace Together.Activity.Application.Commands
 
         public async Task<bool> Handle(CollectActivityCommand request, CancellationToken cancellationToken)
         {
-            // todo 检查是否已收藏
+            // 已收藏
+            if (await _repository.GetAsync(request.ActivityId, request.UserId) != null)
+            {
+                return true;
+            }
             var collection = new Collection(request.UserId, request.ActivityId);
             _repository.Add(collection);
             var result = await _repository.UnitOfWork.SaveEntitiesAsync(cancellationToken);

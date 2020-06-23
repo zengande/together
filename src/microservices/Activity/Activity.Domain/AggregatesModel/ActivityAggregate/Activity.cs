@@ -73,7 +73,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         public int AddressVisibleRuleId { get; private set; }
         public AddressVisibleRule AddressVisibleRule { get; private set; }
 
-        private int _catalogId;
+        public int CatalogId { get; private set; }
 
         protected Activity()
         {
@@ -107,7 +107,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
             ActivityEndTime = endTime;
             Address = address;
             LimitsNum = limitsNum;
-            _catalogId = catalogId;
+            CatalogId = catalogId;
             ActivityStatusId = ActivityStatus.Recruitment.Id;
             if (addressVisibleRuleId == null)
             {
@@ -129,7 +129,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
                 throw new DomainException("截止报名时间不能早于当前时间");
             }
             // 活动时间早于截止报名时间
-            if (startTime < endRegisterTime)
+            if (startTime <= endRegisterTime)
             {
                 throw new DomainException("截止报名时间不能晚于活动时间");
             }

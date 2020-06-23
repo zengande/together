@@ -80,7 +80,7 @@ namespace Together.Activity.Infrastructure.EntityTypeConfigurations
 
             builder.HasOne<Catalog>()
                 .WithMany()
-                .HasForeignKey("CategoryId")
+                .HasForeignKey("CatalogId")
                 .IsRequired();
         }
     }

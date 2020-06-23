@@ -93,7 +93,6 @@ class AuthService {
 
     // Acquires and access token and then passes it to the API call
     public async getAccessToken(): Promise<string> {
-
         const tokenResponse = await service.getTokenPopup(AuthConfig.tokenRequest)
         if (tokenResponse != null) {
             const { accessToken } = tokenResponse;

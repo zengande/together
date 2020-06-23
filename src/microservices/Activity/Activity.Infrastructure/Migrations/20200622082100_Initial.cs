@@ -87,7 +87,7 @@ namespace Together.Activity.Infrastructure.Migrations
                     ActivityEndTime = table.Column<DateTime>(nullable: false),
                     ActivityStatusId = table.Column<int>(nullable: false),
                     AddressVisibleRuleId = table.Column<int>(nullable: false),
-                    CategoryId = table.Column<int>(nullable: false)
+                    CatalogId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -105,8 +105,8 @@ namespace Together.Activity.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AppActivities_AppCatalogs_CategoryId",
-                        column: x => x.CategoryId,
+                        name: "FK_AppActivities_AppCatalogs_CatalogId",
+                        column: x => x.CatalogId,
                         principalTable: "AppCatalogs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -186,9 +186,9 @@ namespace Together.Activity.Infrastructure.Migrations
                 column: "AddressVisibleRuleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AppActivities_CategoryId",
+                name: "IX_AppActivities_CatalogId",
                 table: "AppActivities",
-                column: "CategoryId");
+                column: "CatalogId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AppCatalogs_ParentId",

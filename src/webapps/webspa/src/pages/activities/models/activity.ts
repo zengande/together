@@ -5,8 +5,6 @@ import Activity, { Participant } from '@/@types/activity/activity';
 export interface ActivityModelState {
     activity?: Activity;
     participants?: Participant[];
-    isJoined: boolean;
-    isCollected: boolean;
 }
 
 export interface ActivityModelType {
@@ -26,8 +24,6 @@ export interface ActivityModelType {
 const Model: ActivityModelType = {
     namespace: 'activity',
     state: {
-        isJoined: false,
-        isCollected: false
     },
     effects: {
         *fetch({ payload }, { call, put }) {
@@ -56,21 +52,29 @@ const Model: ActivityModelType = {
                 console.log('error');
             }
         },
-        *join({ payload }, { call, put }) {
+        *join({ payload }, { call, put, select }) {
             yield call(ActivityService.join, payload);
+            const activity = yield select(({ activity }: { activity: ActivityModelState }) => (activity.activity));
             yield put({
                 type: 'save',
                 payload: {
-                    isJoined: true
+                    activity: {
+                        ...activity,
+                        isJoined: true
+                    }
                 }
             })
         },
-        *collect({ payload }, { call, put }) {
+        *collect({ payload }, { call, put, select }) {
             yield call(ActivityService.collect, payload);
+            const activity = yield select(({ activity }: { activity: ActivityModelState }) => (activity.activity));
             yield put({
                 type: 'save',
                 payload: {
-                    isJoined: true
+                    activity: {
+                        ...activity,
+                        isCollected: true
+                    }
                 }
             })
         }

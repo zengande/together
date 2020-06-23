@@ -37,7 +37,7 @@ namespace Together.Activity.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<int?>("CategoryId")
+                    b.Property<int?>("CatalogId")
                         .IsRequired()
                         .HasColumnType("int");
 
@@ -66,7 +66,7 @@ namespace Together.Activity.Infrastructure.Migrations
 
                     b.HasIndex("AddressVisibleRuleId");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("CatalogId");
 
                     b.ToTable("AppActivities");
                 });
@@ -260,7 +260,7 @@ namespace Together.Activity.Infrastructure.Migrations
 
                     b.HasOne("Together.Activity.Domain.AggregatesModel.CatalogAggregate.Catalog", null)
                         .WithMany()
-                        .HasForeignKey("CategoryId")
+                        .HasForeignKey("CatalogId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

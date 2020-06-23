@@ -1,5 +1,5 @@
 import config from '../../config';
-import { request } from 'umi';
+import request from '@/utils/request';
 import Activity, { ActivityInputModel } from '@/@types/activity/activity';
 
 class ActivityService {
@@ -17,7 +17,7 @@ class ActivityService {
         return request(`${config.ApiBaseAddress}/activities/${activityId}/participants`)
     }
 
-    public create(activity: ActivityInputModel) {
+    public create(activity: ActivityInputModel): Promise<number | undefined> {
         return request(`${config.ApiBaseAddress}/activities`, { method: "POST", data: activity })
     }
 

@@ -20,5 +20,9 @@ namespace Together.Activity.Application.Dtos
         public DateTime ActivityEndTime { get; set; }
         public int ActivityStatusId { get; set; }
         public bool ShowAddress { get; set; }
+        public bool IsCreator { get; set; }
+        public bool IsJoined { get; set; }
+        public bool IsCollected { get; set; }
+        public int? NumOfP { get; set; }
     }
 }
