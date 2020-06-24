@@ -17,6 +17,7 @@
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.35" />
     <PackageReference Include="DotNetCore.CAP" Version="3.0.4" />
+    <PackageReference Include="NEST" Version="7.8.0" />
   </ItemGroup>
 
 </Project>

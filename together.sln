@@ -41,11 +41,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.Infrastructure", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "apigateways", "apigateways", "{374BC59C-4115-41B9-A483-5226C5F83CA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateway.User", "src\apigateways\ApiGateway.User\ApiGateway.User.csproj", "{16A0BA40-ABD6-4209-8F76-21D737337F25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway.User", "src\apigateways\ApiGateway.User\ApiGateway.User.csproj", "{16A0BA40-ABD6-4209-8F76-21D737337F25}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "User", "User", "{4E8C8DC3-7553-44C3-96AA-2B4052EE291A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "User.API", "src\microservices\User\User.API\User.API.csproj", "{58D5495E-1957-4A26-BCE0-01BD1EE60505}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "User.API", "src\microservices\User\User.API\User.API.csproj", "{58D5495E-1957-4A26-BCE0-01BD1EE60505}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

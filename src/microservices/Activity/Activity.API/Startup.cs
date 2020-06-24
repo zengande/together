@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Logging;
 using NSwag.AspNetCore;
 using Together.Activity.API;
 using Together.Activity.Application.Commands;
+using Together.Activity.Application.Elasticsearch;
 using Together.Activity.Application.Queries;
 using Together.Activity.Application.Validations;
 using Together.Activity.Domain.AggregatesModel.ActivityAggregate;
@@ -54,6 +55,9 @@ namespace Activity.API
         {
             builder.RegisterMediatorModule(typeof(CreateActivityCommandHandler), typeof(CreateActivityCommandValidator));
             builder.RegisterGeneric(typeof(IdentifiedCommandHandler<,>)).As(typeof(IRequestHandler<,>));
+
+            builder.RegisterType<ActivityIndexService>()
+                .InstancePerLifetimeScope();
 
             builder.RegisterType<ActivityRepository>()
                 .As<IActivityRepository>()
