@@ -1,8 +1,6 @@
 import React from 'react';
 import styles from './index.less';
-import { Button } from 'antd';
-import AuthService from '@/services/auth.service'
-import { Link } from 'umi';
+import ActivitiesCarousel from './components/activities-carousel';
 
 export default () => {
     return (
@@ -12,8 +10,10 @@ export default () => {
             </div>
             <div className={styles.body}>
                 <div className="t-content">
-                    <Link to="/activities">活动列表</Link>
-                    <Button onClick={() => AuthService.logout()}>注销</Button>
+                    <ActivitiesCarousel title="附近活动" loading={true} activities={[]}/>
+                    <ActivitiesCarousel title="户外与冒险" loading={true} activities={[]}/>
+                    <ActivitiesCarousel title="学习" loading={true} activities={[]}/>
+                    <ActivitiesCarousel title="社交" loading={true} activities={[]}/>
                 </div>
             </div>
         </div>

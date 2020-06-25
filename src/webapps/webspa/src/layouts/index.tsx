@@ -19,7 +19,7 @@ class BasicLayout extends React.PureComponent<BasicLayoutProps> {
     render() {
         const { children } = this.props;
         return (
-            <Layout className={styles.laytou}>
+            <Layout className={styles.layout}>
                 <GlobalHeader {...this.props} />
                 <Content className={styles.content}>
                     {children}

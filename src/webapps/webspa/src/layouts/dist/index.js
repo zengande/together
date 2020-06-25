@@ -40,7 +40,7 @@ var BasicLayout = /** @class */ (function (_super) {
     };
     BasicLayout.prototype.render = function () {
         var children = this.props.children;
-        return (react_1["default"].createElement(antd_1.Layout, { className: index_less_1["default"].laytou },
+        return (react_1["default"].createElement(antd_1.Layout, { className: index_less_1["default"].layout },
             react_1["default"].createElement(global_header_1["default"], __assign({}, this.props)),
             react_1["default"].createElement(Content, { className: index_less_1["default"].content }, children),
             react_1["default"].createElement(Footer, { className: index_less_1["default"].footer }, "TOGETHER 2020")));
