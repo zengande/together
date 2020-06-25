@@ -1,10 +1,10 @@
 import { Effect, Reducer, request, history } from 'umi';
 import { CascaderOptionType } from 'antd/lib/cascader';
-import ActivityCatalog from '@/@types/activity/catalog';
+import ActivityCategory from '@/@types/activity/category';
 import ActivityService from "@/services/activity.service";
 
 export interface CreateModelState {
-    catalogs?: ActivityCatalog[]
+    categories?: ActivityCategory[]
 }
 
 export interface CreateModelType {
@@ -12,7 +12,7 @@ export interface CreateModelType {
     state: CreateModelState;
     effects: {
         post: Effect;
-        fetchCatalogs: Effect;
+        fetchCategories: Effect;
     };
     reducers: {
         save: Reducer<CreateModelState>;
@@ -22,7 +22,7 @@ export interface CreateModelType {
 const Model: CreateModelType = {
     namespace: 'activitycreate',
     state: {
-        catalogs: []
+        categories: []
     },
     effects: {
         *post({ payload }, { call, put }) {
@@ -31,9 +31,9 @@ const Model: CreateModelType = {
                 history.push(`/activities/${activityId}`);
             }
         },
-        *fetchCatalogs({ payload }, { call, put, select }) {
-            const catalogs = yield call(ActivityService.fetchCatalogs)
-            yield put({ type: 'save', payload: { catalogs } })
+        *fetchCategories({ payload }, { call, put, select }) {
+            const categories = yield call(ActivityService.getCategories)
+            yield put({ type: 'save', payload: { categories } })
         }
     },
     reducers: {

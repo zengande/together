@@ -14,7 +14,7 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/activities/{activityId:int}/participants",
+      "DownstreamPathTemplate": "/api/activities/{activityId:int}/attendees",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -22,7 +22,7 @@
           "Port": 3001
         }
       ],
-      "UpstreamPathTemplate": "/activities/{activityId:int}/participants",
+      "UpstreamPathTemplate": "/activities/{activityId:int}/attendees",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
@@ -71,7 +71,7 @@
       }
     },
     {
-      "DownstreamPathTemplate": "/api/catalogs",
+      "DownstreamPathTemplate": "/api/categories",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -79,7 +79,7 @@
           "Port": 3001
         }
       ],
-      "UpstreamPathTemplate": "/catalogs",
+      "UpstreamPathTemplate": "/categories",
       "UpstreamHttpMethod": [ "GET" ]
     }
   ],

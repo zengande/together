@@ -47,9 +47,9 @@ namespace Together.Activity.API.Controllers
             {
                 var userId = _identityService.GetUserIdentity();
                 // TODO 获取用户信息
-                var creator = new Participant(userId, "nickname", "", 1, true);
+                var creator = new Attendee(userId, "nickname", "", 1, true);
                 var address = new Address("杭州", "西湖区", "西湖风景区", 0, 0);
-                var command = new CreateActivityCommand(creator, dto.Title, dto.Content, dto.EndRegisterTime, dto.ActivityStartTime, dto.ActivityEndTime, address, dto.CatalogId, dto.AddressVisibleRuleId, dto.LimitsNum);
+                var command = new CreateActivityCommand(creator, dto.Title, dto.Content, dto.EndRegisterTime, dto.ActivityStartTime, dto.ActivityEndTime, address, dto.CategoryId, dto.AddressVisibleRuleId, dto.LimitsNum);
                 var requestCreateActivity = new IdentifiedCommand<CreateActivityCommand, int>(command, guid);
                 var activityId = await _mediator.Send(requestCreateActivity);
                 if (activityId > 0)
@@ -61,11 +61,11 @@ namespace Together.Activity.API.Controllers
             return BadRequest();
         }
 
-        [HttpGet, Route("{activityId}/participants")]
-        public async Task<IActionResult> GetActivityParticipantsAsync(int activityId)
+        [HttpGet, Route("{activityId}/attendees")]
+        public async Task<IActionResult> GetActivityAttendeesAsync(int activityId)
         {
-            var participants = await _queries.GetActivityParticipantsAsync(activityId);
-            return Ok(participants);
+            var attendees = await _queries.GetActivityAttendeesAsync(activityId);
+            return Ok(attendees);
         }
 
         [Authorize]

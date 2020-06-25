@@ -31,7 +31,7 @@ namespace Together.Activity.Infrastructure.Repositories
             
             if (activity != null)
             {
-                await _dbContext.Entry(activity).Collection(a => a.Participants).LoadAsync();
+                await _dbContext.Entry(activity).Collection(a => a.Attendees).LoadAsync();
             }
 
             return activity;

@@ -25,7 +25,7 @@ export default defineConfig({
             {
                 path: "/activities/:activityId",
                 title: "活动详情 - TOGETHER",
-                component: 'activities/[activityId]/index'
+                component: 'activities/activity/index'
             },
             {
                 path: "/",

@@ -58,8 +58,8 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         /// <summary>
         /// 参与者
         /// </summary>
-        private readonly List<Participant> _participants;
-        public IReadOnlyCollection<Participant> Participants => _participants;
+        private readonly List<Attendee> _attendees;
+        public IReadOnlyCollection<Attendee> Attendees => _attendees;
 
         /// <summary>
         /// 活动状态
@@ -73,11 +73,11 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         public int AddressVisibleRuleId { get; private set; }
         public AddressVisibleRule AddressVisibleRule { get; private set; }
 
-        public int CatalogId { get; private set; }
+        public int CategoryId { get; private set; }
 
         protected Activity()
         {
-            _participants = new List<Participant>();
+            _attendees = new List<Attendee>();
             CreateTime = DateTimeOffset.UtcNow.DateTime;
         }
 
@@ -91,10 +91,10 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         /// <param name="startTime"></param>
         /// <param name="endTime"></param>
         /// <param name="address"></param>
-        /// <param name="catalogId"></param>
+        /// <param name="categoryId"></param>
         /// <param name="addressVisibleRuleId"></param>
         /// <param name="limitsNum"></param>
-        public Activity(Participant creator, string title, string content, DateTime endRegisterTime, DateTime startTime, DateTime endTime, Address address, int catalogId, int? addressVisibleRuleId, int? limitsNum = null)
+        public Activity(Attendee creator, string title, string content, DateTime endRegisterTime, DateTime startTime, DateTime endTime, Address address, int categoryId, int? addressVisibleRuleId, int? limitsNum = null)
             : this()
         {
             ValidateAllTime(endRegisterTime, startTime, endTime);
@@ -107,7 +107,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
             ActivityEndTime = endTime;
             Address = address;
             LimitsNum = limitsNum;
-            CatalogId = catalogId;
+            CategoryId = categoryId;
             ActivityStatusId = ActivityStatus.Recruitment.Id;
             if (addressVisibleRuleId == null)
             {
@@ -115,7 +115,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
             }
             AddressVisibleRuleId = addressVisibleRuleId.Value;
 
-            _participants.Add(creator);
+            _attendees.Add(creator);
 
             // 创建活动领域事件
             AddDomainEvent(new ActivityCreatedDomainEvent(this));
@@ -158,7 +158,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
             }
 
             // 已参加了此活动
-            if (_participants.Any(u => u.UserId == userId))
+            if (_attendees.Any(u => u.UserId == userId))
             {
                 throw new DomainException("已经参加，请不要重复提交");
             }
@@ -167,17 +167,17 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
             if (LimitsNum.HasValue && LimitsNum > 0)
             {
                 // 除本人外人数限制
-                if (_participants.Count > LimitsNum.Value)
+                if (_attendees.Count > LimitsNum.Value)
                 {
                     throw new DomainException("本次活动人数已满");
                 }
             }
 
-            var participant = new Participant(userId, nickname, avatar, sex, userId == CreatorId);
-            _participants.Add(participant);
+            var attendee = new Attendee(userId, nickname, avatar, sex, userId == CreatorId);
+            _attendees.Add(attendee);
 
             // 加入活动领域事件
-            AddDomainEvent(new UserJoinedActivityDomainEvent(participant));
+            AddDomainEvent(new UserJoinedActivityDomainEvent(attendee));
         }
 
         public void SetFinishedStatus()

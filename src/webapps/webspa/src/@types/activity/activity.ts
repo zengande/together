@@ -22,7 +22,7 @@ export enum ActivityStatus {
     Recruitment = 1
 }
 
-export interface Participant {
+export interface Atteandee {
     userId: string;
     nickname: string;
     avatar: string;

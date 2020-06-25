@@ -19,7 +19,7 @@ namespace Together.Activity.Application.Queries
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<IEnumerable<ParticipantDto>> GetActivityParticipantsAsync(int id);
+        Task<IEnumerable<AttendeeDto>> GetActivityAttendeesAsync(int id);
         /// <summary>
         /// 是否加入了此活动
         /// </summary>

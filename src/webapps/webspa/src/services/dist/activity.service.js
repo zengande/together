@@ -1,21 +1,27 @@
 "use strict";
 exports.__esModule = true;
 var config_1 = require("../../config");
-var umi_1 = require("umi");
+var request_1 = require("@/utils/request");
 var ActivityService = /** @class */ (function () {
     function ActivityService() {
     }
-    ActivityService.prototype.fetchCatalogs = function () {
-        return umi_1.request(config_1["default"].ApiBaseAddress + "/catalogs");
+    ActivityService.prototype.getCategories = function () {
+        return request_1["default"](config_1["default"].ApiBaseAddress + "/categories");
     };
     ActivityService.prototype.getActivity = function (activityId) {
-        return umi_1.request(config_1["default"].ApiBaseAddress + "/activities/" + activityId);
+        return request_1["default"](config_1["default"].ApiBaseAddress + "/activities/" + activityId);
     };
-    ActivityService.prototype.getParticipants = function (activityId) {
-        return umi_1.request(config_1["default"].ApiBaseAddress + "/activities/" + activityId + "/participants");
+    ActivityService.prototype.getAttendees = function (activityId) {
+        return request_1["default"](config_1["default"].ApiBaseAddress + "/activities/" + activityId + "/attendees");
     };
     ActivityService.prototype.create = function (activity) {
-        return umi_1.request(config_1["default"].ApiBaseAddress + "/activities", { method: "POST", data: activity });
+        return request_1["default"](config_1["default"].ApiBaseAddress + "/activities", { method: "POST", data: activity });
+    };
+    ActivityService.prototype.join = function (activityId) {
+        return request_1["default"](config_1["default"].ApiBaseAddress + "/activities/" + activityId + "/join", { method: "POST" });
+    };
+    ActivityService.prototype.collect = function (activityId) {
+        return request_1["default"](config_1["default"].ApiBaseAddress + "/activities/" + activityId + "/collect", { method: "POST" });
     };
     return ActivityService;
 }());

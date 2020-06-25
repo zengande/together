@@ -9,7 +9,7 @@ using Together.Activity.Infrastructure.Data;
 namespace Together.Activity.Infrastructure.Migrations
 {
     [DbContext(typeof(ActivityDbContext))]
-    [Migration("20200622082100_Initial")]
+    [Migration("20200625134335_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,16 +31,13 @@ namespace Together.Activity.Infrastructure.Migrations
                     b.Property<DateTime>("ActivityStartTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("ActivityStatusId")
-                        .IsRequired()
+                    b.Property<int>("ActivityStatusId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("AddressVisibleRuleId")
-                        .IsRequired()
+                    b.Property<int>("AddressVisibleRuleId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CategoryId")
-                        .IsRequired()
+                    b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
@@ -144,7 +141,7 @@ namespace Together.Activity.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.ActivityAggregate.Participant", b =>
+            modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.ActivityAggregate.Attendee", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("varchar(200) CHARACTER SET utf8mb4")
@@ -179,14 +176,17 @@ namespace Together.Activity.Infrastructure.Migrations
 
                     b.HasIndex("ActivityId");
 
-                    b.ToTable("AppParticipants");
+                    b.ToTable("AppAttendees");
                 });
 
-            modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.CatalogAggregate.Catalog", b =>
+            modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.CatalogAggregate.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -199,14 +199,9 @@ namespace Together.Activity.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
-                    b.Property<int?>("ParentId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("ParentId");
-
-                    b.ToTable("AppCatalogs");
+                    b.ToTable("AppCategories");
                 });
 
             modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.CollectionAggregate.Collection", b =>
@@ -260,7 +255,7 @@ namespace Together.Activity.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Together.Activity.Domain.AggregatesModel.CatalogAggregate.Catalog", null)
+                    b.HasOne("Together.Activity.Domain.AggregatesModel.CatalogAggregate.Category", null)
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -311,20 +306,13 @@ namespace Together.Activity.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.ActivityAggregate.Participant", b =>
+            modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.ActivityAggregate.Attendee", b =>
                 {
                     b.HasOne("Together.Activity.Domain.AggregatesModel.ActivityAggregate.Activity", null)
-                        .WithMany("Participants")
+                        .WithMany("Attendees")
                         .HasForeignKey("ActivityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.CatalogAggregate.Catalog", b =>
-                {
-                    b.HasOne("Together.Activity.Domain.AggregatesModel.CatalogAggregate.Catalog", null)
-                        .WithMany("Children")
-                        .HasForeignKey("ParentId");
                 });
 
             modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.CollectionAggregate.Collection", b =>

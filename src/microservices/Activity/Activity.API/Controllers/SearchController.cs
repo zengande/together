@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NSwag.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,7 @@ using Together.Activity.Application.Elasticsearch;
 
 namespace Together.Activity.API.Controllers
 {
+    [OpenApiTag("搜索")]
     [ApiController]
     [Route("api/[controller]")]
     public class SearchController : ControllerBase

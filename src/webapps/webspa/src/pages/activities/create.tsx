@@ -3,14 +3,14 @@ import Editor from 'for-editor'
 import { Select, Row, Col, Form, Input, Button, DatePicker, InputNumber, Radio } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import { connect, Loading, CreateModelState, ConnectProps } from 'umi';
-import ActivityCatalog from '@/@types/activity/catalog';
+import ActivityCategory from '@/@types/activity/category';
 import styles from './create.less'
 import AddressInput from '@/components/addressinput';
 
 const { RangePicker } = DatePicker;
 
 interface CreatePageProps extends ConnectProps {
-    catalogs?: ActivityCatalog[]
+    categories?: ActivityCategory[]
 }
 
 class CreatePage extends React.PureComponent<CreatePageProps> {
@@ -29,7 +29,7 @@ class CreatePage extends React.PureComponent<CreatePageProps> {
     }
 
     private fetCatalogs(parentId?: string | number) {
-        this.props.dispatch!({ type: 'activitycreate/fetchCatalogs', payload: parentId });
+        this.props.dispatch!({ type: 'activitycreate/fetchCategories', payload: parentId });
     }
 
     private startAutoSave() {
@@ -40,6 +40,8 @@ class CreatePage extends React.PureComponent<CreatePageProps> {
     }
 
     render() {
+        const { categories } = this.props;
+
         const formLayout = {
             labelCol: { span: 4 },
             wrapperCol: { span: 20 },
@@ -83,8 +85,8 @@ class CreatePage extends React.PureComponent<CreatePageProps> {
                                     name="control-ref"
                                     initialValues={{ addressVisibleRuleId: addressVisibleRules[0].value }}
                                     onFinish={this.submit.bind(this)}>
-                                    <Form.Item name="catalogId" label="活动类型" rules={[{ required: true, message: "请选择活动类型" }]} wrapperCol={{ span: 8 }}>
-                                        <Select options={[{ label: "聚会", value: 1 }]} />
+                                    <Form.Item name="categoryId" label="活动类型" rules={[{ required: true, message: "请选择活动类型" }]} wrapperCol={{ span: 8 }}>
+                                        <Select options={categories?.map(c => ({ label: c.name, value: c.id }))} />
                                     </Form.Item>
                                     <Form.Item name="title" label="活动标题" rules={[{ required: true, message: "请输入活动标题" }]}>
                                         <Input placeholder="请填写概述活动主题" />
@@ -168,5 +170,5 @@ class CreatePage extends React.PureComponent<CreatePageProps> {
 }
 
 export default connect(({ loading, activitycreate }: { loading: Loading, activitycreate: CreateModelState }) => ({
-    catalogs: activitycreate.catalogs
+    categories: activitycreate.categories
 }))(CreatePage);

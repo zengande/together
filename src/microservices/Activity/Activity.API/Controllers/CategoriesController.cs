@@ -11,19 +11,19 @@ namespace Together.Activity.API.Controllers
     [OpenApiTag("活动类型")]
     [ApiController]
     [Route("api/[controller]")]
-    public class CatalogsController : ControllerBase
+    public class CategoriesController : ControllerBase
     {
-        private readonly ICatalogQueries _queries;
-        public CatalogsController(ICatalogQueries queries)
+        private readonly ICategoryQueries _queries;
+        public CategoriesController(ICategoryQueries queries)
         {
             _queries = queries;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAsync(int? parentId = null)
+        public async Task<IActionResult> GetAsync()
         {
-            var catalogs = await _queries.GetCatalogsAsync(parentId);
-            return Ok(catalogs);
+            var categories = await _queries.GetCategoriesAsync();
+            return Ok(categories);
         }
     }
 }

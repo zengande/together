@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Together.Activity.Application.Dtos
 {
-    public class ParticipantDto
+    public class AttendeeDto
     {
         public string UserId { get; set; }
         public string Nickname { get; set; }

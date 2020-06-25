@@ -65,7 +65,7 @@ namespace Together.Activity.Infrastructure.EntityTypeConfigurations
                 .HasDefaultValue(0);
 
             var navigation = builder.Metadata
-                .FindNavigation(nameof(Domain.AggregatesModel.ActivityAggregate.Activity.Participants));
+                .FindNavigation(nameof(Domain.AggregatesModel.ActivityAggregate.Activity.Attendees));
             navigation.SetPropertyAccessMode(PropertyAccessMode.Field);
 
             builder.HasOne(a => a.ActivityStatus)
@@ -78,9 +78,9 @@ namespace Together.Activity.Infrastructure.EntityTypeConfigurations
                 .HasForeignKey("AddressVisibleRuleId")
                 .IsRequired();
 
-            builder.HasOne<Catalog>()
+            builder.HasOne<Category>()
                 .WithMany()
-                .HasForeignKey("CatalogId")
+                .HasForeignKey("CategoryId")
                 .IsRequired();
         }
     }

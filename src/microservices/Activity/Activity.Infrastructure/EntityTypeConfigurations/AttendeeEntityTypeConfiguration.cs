@@ -8,12 +8,12 @@ using Together.Activity.Infrastructure.Data;
 
 namespace Together.Activity.Infrastructure.EntityTypeConfigurations
 {
-    public class ParticipantEntityTypeConfiguration
-        : IEntityTypeConfiguration<Participant>
+    public class AttendeeEntityTypeConfiguration
+        : IEntityTypeConfiguration<Attendee>
     {
-        public void Configure(EntityTypeBuilder<Participant> builder)
+        public void Configure(EntityTypeBuilder<Attendee> builder)
         {
-            builder.ToTable(ActivityDbContext.DbTablePrefix + "Participants", ActivityDbContext.DbSchema);
+            builder.ToTable(ActivityDbContext.DbTablePrefix + "Attendees", ActivityDbContext.DbSchema);
 
             builder.HasKey(p => new { p.UserId, p.ActivityId });
             builder.Ignore(p => p.Id);

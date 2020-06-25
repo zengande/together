@@ -71,21 +71,21 @@ var Model = {
                 }
             });
         },
-        fetchParticipants: function (_a, _b) {
-            var participants, _c;
+        fetchAttendees: function (_a, _b) {
+            var attendees, _c;
             var payload = _a.payload;
             var call = _b.call, put = _b.put;
             return __generator(this, function (_d) {
                 switch (_d.label) {
                     case 0:
                         _d.trys.push([0, 3, , 4]);
-                        return [4 /*yield*/, call(activity_service_1["default"].getParticipants, payload)];
+                        return [4 /*yield*/, call(activity_service_1["default"].getAttendees, payload)];
                     case 1:
-                        participants = _d.sent();
+                        attendees = _d.sent();
                         return [4 /*yield*/, put({
                                 type: 'save',
                                 payload: {
-                                    participants: participants
+                                    attendees: attendees
                                 }
                             })];
                     case 2:
@@ -96,6 +96,60 @@ var Model = {
                         console.log('error');
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
+                }
+            });
+        },
+        join: function (_a, _b) {
+            var activity;
+            var payload = _a.payload;
+            var call = _b.call, put = _b.put, select = _b.select;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0: return [4 /*yield*/, call(activity_service_1["default"].join, payload)];
+                    case 1:
+                        _c.sent();
+                        return [4 /*yield*/, select(function (_a) {
+                                var activity = _a.activity;
+                                return (activity.activity);
+                            })];
+                    case 2:
+                        activity = _c.sent();
+                        return [4 /*yield*/, put({
+                                type: 'save',
+                                payload: {
+                                    activity: __assign(__assign({}, activity), { isJoined: true })
+                                }
+                            })];
+                    case 3:
+                        _c.sent();
+                        return [2 /*return*/];
+                }
+            });
+        },
+        collect: function (_a, _b) {
+            var activity;
+            var payload = _a.payload;
+            var call = _b.call, put = _b.put, select = _b.select;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0: return [4 /*yield*/, call(activity_service_1["default"].collect, payload)];
+                    case 1:
+                        _c.sent();
+                        return [4 /*yield*/, select(function (_a) {
+                                var activity = _a.activity;
+                                return (activity.activity);
+                            })];
+                    case 2:
+                        activity = _c.sent();
+                        return [4 /*yield*/, put({
+                                type: 'save',
+                                payload: {
+                                    activity: __assign(__assign({}, activity), { isCollected: true })
+                                }
+                            })];
+                    case 3:
+                        _c.sent();
+                        return [2 /*return*/];
                 }
             });
         }

@@ -18,8 +18,8 @@ namespace Together.Activity.Infrastructure.Data
         public DbSet<Domain.AggregatesModel.ActivityAggregate.Activity> Activities { get; set; }
         public DbSet<ActivityStatus> ActivityStatuses { get; set; }
         public DbSet<AddressVisibleRule> AddressVisibleRules { get; set; }
-        public DbSet<Participant> Participants { get; set; }
-        public DbSet<Catalog> Catalogs { get; set; }
+        public DbSet<Attendee> Participants { get; set; }
+        public DbSet<Category> Categories { get; set; }
         public DbSet<Collection> Collections { get; set; }
 
         public ActivityDbContext(DbContextOptions<ActivityDbContext> options, IMediator mediator)
@@ -31,13 +31,13 @@ namespace Together.Activity.Infrastructure.Data
         {
             modelBuilder.ApplyConfiguration(new ClientRequestEntityTypeConfiguration());
 
-            modelBuilder.ApplyConfiguration(new CatalogEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new CategoryEntityTypeConfiguration());
 
             modelBuilder.ApplyConfiguration(new CollectionEntityTypeConfiguration());
 
             modelBuilder.ApplyConfiguration(new ActivityStatusEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ActivityEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new ParticipantEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new AttendeeEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new AddressVisibleRuleEntityTypeConfiguration());
         }
     }

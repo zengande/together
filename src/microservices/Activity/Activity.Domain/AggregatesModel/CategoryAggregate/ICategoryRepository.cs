@@ -5,7 +5,7 @@ using Together.BuildingBlocks.Domain;
 
 namespace Together.Activity.Domain.AggregatesModel.CatalogAggregate
 {
-    public interface ICatalogRepository : IRepository<Catalog>
+    public interface ICategoryRepository : IRepository<Category>
     {
     }
 }

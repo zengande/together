@@ -49,7 +49,7 @@ var CreatePage = /** @class */ (function (_super) {
         }
     };
     CreatePage.prototype.fetCatalogs = function (parentId) {
-        this.props.dispatch({ type: 'activitycreate/fetchCatalogs', payload: parentId });
+        this.props.dispatch({ type: 'activitycreate/fetchCategories', payload: parentId });
     };
     CreatePage.prototype.startAutoSave = function () {
         var _this = this;
@@ -60,6 +60,7 @@ var CreatePage = /** @class */ (function (_super) {
         }, 30 * 1000);
     };
     CreatePage.prototype.render = function () {
+        var categories = this.props.categories;
         var formLayout = {
             labelCol: { span: 4 },
             wrapperCol: { span: 20 }
@@ -93,8 +94,8 @@ var CreatePage = /** @class */ (function (_super) {
                     react_1["default"].createElement(antd_1.Row, { gutter: 48 },
                         react_1["default"].createElement(antd_1.Col, { span: 16 },
                             react_1["default"].createElement(antd_1.Form, __assign({}, formLayout, { ref: this.formRef, name: "control-ref", initialValues: { addressVisibleRuleId: addressVisibleRules[0].value }, onFinish: this.submit.bind(this) }),
-                                react_1["default"].createElement(antd_1.Form.Item, { name: "catalogId", label: "\u6D3B\u52A8\u7C7B\u578B", rules: [{ required: true, message: "请选择活动类型" }], wrapperCol: { span: 8 } },
-                                    react_1["default"].createElement(antd_1.Select, { options: [{ label: "聚会", value: 1 }] })),
+                                react_1["default"].createElement(antd_1.Form.Item, { name: "categoryId", label: "\u6D3B\u52A8\u7C7B\u578B", rules: [{ required: true, message: "请选择活动类型" }], wrapperCol: { span: 8 } },
+                                    react_1["default"].createElement(antd_1.Select, { options: categories === null || categories === void 0 ? void 0 : categories.map(function (c) { return ({ label: c.name, value: c.id }); }) })),
                                 react_1["default"].createElement(antd_1.Form.Item, { name: "title", label: "\u6D3B\u52A8\u6807\u9898", rules: [{ required: true, message: "请输入活动标题" }] },
                                     react_1["default"].createElement(antd_1.Input, { placeholder: "\u8BF7\u586B\u5199\u6982\u8FF0\u6D3B\u52A8\u4E3B\u9898" })),
                                 react_1["default"].createElement(antd_1.Form.Item, { name: "activityTime", label: "\u6D3B\u52A8\u65F6\u95F4", rules: [{ type: 'array', required: true, message: '请选择活动时间' }] },
@@ -133,13 +134,16 @@ var CreatePage = /** @class */ (function (_super) {
                                     react_1["default"].createElement("li", null, "\u6D3B\u52A8\u8BE6\u60C5\u53EF\u4EE5\u4F7F\u7528 Markdown \u683C\u5F0F\u7F16\u8F91")))))))));
     };
     CreatePage.prototype.submit = function (values) {
-        console.log(values);
+        var dispatch = this.props.dispatch;
+        var activityTime = values.activityTime;
+        var activity = __assign(__assign({}, values), { activityStartTime: activityTime[0], activityEndTime: activityTime[1] });
+        dispatch && dispatch({ type: 'activitycreate/post', payload: activity });
     };
     return CreatePage;
 }(react_1["default"].PureComponent));
 exports["default"] = umi_1.connect(function (_a) {
     var loading = _a.loading, activitycreate = _a.activitycreate;
     return ({
-        catalogs: activitycreate.catalogs
+        categories: activitycreate.categories
     });
 })(CreatePage);

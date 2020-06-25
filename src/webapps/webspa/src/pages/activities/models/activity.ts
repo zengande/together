@@ -1,10 +1,10 @@
 import { Reducer, Effect } from 'umi';
 import ActivityService from '@/services/activity.service';
-import Activity, { Participant } from '@/@types/activity/activity';
+import Activity, { Atteandee } from '@/@types/activity/activity';
 
 export interface ActivityModelState {
     activity?: Activity;
-    participants?: Participant[];
+    attendees?: Atteandee[];
 }
 
 export interface ActivityModelType {
@@ -12,7 +12,7 @@ export interface ActivityModelType {
     state: ActivityModelState;
     effects: {
         fetch: Effect;
-        fetchParticipants: Effect;
+        fetchAttendees: Effect;
         join: Effect;
         collect: Effect;
     }
@@ -39,13 +39,13 @@ const Model: ActivityModelType = {
                 console.log('error');
             }
         },
-        *fetchParticipants({ payload }, { call, put }) {
+        *fetchAttendees({ payload }, { call, put }) {
             try {
-                const participants = yield call(ActivityService.getParticipants, payload);
+                const attendees = yield call(ActivityService.getAttendees, payload);
                 yield put({
                     type: 'save',
                     payload: {
-                        participants
+                        attendees
                     }
                 })
             } catch{

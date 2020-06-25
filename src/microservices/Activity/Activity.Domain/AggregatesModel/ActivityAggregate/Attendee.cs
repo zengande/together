@@ -5,7 +5,7 @@ using Together.BuildingBlocks.Domain;
 
 namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
 {
-    public class Participant : Entity
+    public class Attendee : Entity
     {
         public string UserId { get; private set; }
 
@@ -21,7 +21,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
 
         public bool IsOwner { get; private set; }
 
-        public Participant(string userId, string nickname, string avatar, int sex, bool isOwner = false)
+        public Attendee(string userId, string nickname, string avatar, int sex, bool isOwner = false)
         {
             UserId = userId;
             Nickname = nickname;

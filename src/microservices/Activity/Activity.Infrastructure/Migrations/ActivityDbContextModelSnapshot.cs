@@ -29,16 +29,13 @@ namespace Together.Activity.Infrastructure.Migrations
                     b.Property<DateTime>("ActivityStartTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("ActivityStatusId")
-                        .IsRequired()
+                    b.Property<int>("ActivityStatusId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("AddressVisibleRuleId")
-                        .IsRequired()
+                    b.Property<int>("AddressVisibleRuleId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CatalogId")
-                        .IsRequired()
+                    b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
@@ -66,7 +63,7 @@ namespace Together.Activity.Infrastructure.Migrations
 
                     b.HasIndex("AddressVisibleRuleId");
 
-                    b.HasIndex("CatalogId");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("AppActivities");
                 });
@@ -142,7 +139,7 @@ namespace Together.Activity.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.ActivityAggregate.Participant", b =>
+            modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.ActivityAggregate.Attendee", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("varchar(200) CHARACTER SET utf8mb4")
@@ -177,14 +174,17 @@ namespace Together.Activity.Infrastructure.Migrations
 
                     b.HasIndex("ActivityId");
 
-                    b.ToTable("AppParticipants");
+                    b.ToTable("AppAttendees");
                 });
 
-            modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.CatalogAggregate.Catalog", b =>
+            modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.CatalogAggregate.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -197,14 +197,9 @@ namespace Together.Activity.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
-                    b.Property<int?>("ParentId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("ParentId");
-
-                    b.ToTable("AppCatalogs");
+                    b.ToTable("AppCategories");
                 });
 
             modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.CollectionAggregate.Collection", b =>
@@ -228,7 +223,7 @@ namespace Together.Activity.Infrastructure.Migrations
 
             modelBuilder.Entity("Together.BuildingBlocks.Infrastructure.Idempotency.ClientRequest", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
@@ -258,9 +253,9 @@ namespace Together.Activity.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Together.Activity.Domain.AggregatesModel.CatalogAggregate.Catalog", null)
+                    b.HasOne("Together.Activity.Domain.AggregatesModel.CatalogAggregate.Category", null)
                         .WithMany()
-                        .HasForeignKey("CatalogId")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -309,20 +304,13 @@ namespace Together.Activity.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.ActivityAggregate.Participant", b =>
+            modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.ActivityAggregate.Attendee", b =>
                 {
                     b.HasOne("Together.Activity.Domain.AggregatesModel.ActivityAggregate.Activity", null)
-                        .WithMany("Participants")
+                        .WithMany("Attendees")
                         .HasForeignKey("ActivityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.CatalogAggregate.Catalog", b =>
-                {
-                    b.HasOne("Together.Activity.Domain.AggregatesModel.CatalogAggregate.Catalog", null)
-                        .WithMany("Children")
-                        .HasForeignKey("ParentId");
                 });
 
             modelBuilder.Entity("Together.Activity.Domain.AggregatesModel.CollectionAggregate.Collection", b =>

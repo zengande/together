@@ -8,11 +8,11 @@ using Together.Activity.Infrastructure.Data;
 
 namespace Together.Activity.Infrastructure.EntityTypeConfigurations
 {
-    public class CatalogEntityTypeConfiguration : IEntityTypeConfiguration<Catalog>
+    public class CategoryEntityTypeConfiguration : IEntityTypeConfiguration<Category>
     {
-        public void Configure(EntityTypeBuilder<Catalog> builder)
+        public void Configure(EntityTypeBuilder<Category> builder)
         {
-            builder.ToTable(ActivityDbContext.DbTablePrefix + "Catalogs", ActivityDbContext.DbSchema);
+            builder.ToTable(ActivityDbContext.DbTablePrefix + "Categories", ActivityDbContext.DbSchema);
 
             builder.HasKey(c => c.Id);
 
@@ -23,17 +23,11 @@ namespace Together.Activity.Infrastructure.EntityTypeConfigurations
                 .IsRequired()
                 .IsUnicode();
 
+            builder.Property(c => c.Image);
+
             builder.Property(c => c.Order)
                 .HasDefaultValue(0)
                 .IsRequired();
-
-            var navigation = builder.Metadata
-                .FindNavigation(nameof(Catalog.Children));
-            navigation.SetPropertyAccessMode(PropertyAccessMode.Field);
-
-            builder.HasOne<Catalog>()
-                .WithMany(c => c.Children)
-                .HasForeignKey(c => c.ParentId);
         }
     }
 }

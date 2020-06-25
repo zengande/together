@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
 using NSwag.AspNetCore;
 using Together.Activity.API;
+using Together.Activity.API.Tasks;
 using Together.Activity.Application.Commands;
 using Together.Activity.Application.Elasticsearch;
 using Together.Activity.Application.Queries;
@@ -40,6 +41,8 @@ namespace Activity.API
         {
             IdentityModelEventSource.ShowPII = true;
 
+            services.AddHostedService<AutoChangeActivityStatusTask>();
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
                 .AddCustomAuth(Configuration)
                 .AddIdentityServices()
@@ -62,8 +65,8 @@ namespace Activity.API
             builder.RegisterType<ActivityRepository>()
                 .As<IActivityRepository>()
                 .InstancePerLifetimeScope();
-            builder.RegisterType<CatalogRepository>()
-                .As<ICatalogRepository>()
+            builder.RegisterType<CategoryRepository>()
+                .As<ICategoryRepository>()
                 .InstancePerLifetimeScope();
             builder.RegisterType<CollectionRepository>()
                 .As<ICollectionRepository>()
@@ -74,8 +77,8 @@ namespace Activity.API
             builder.Register(c => new ActivityQueries(connectionString))
                 .As<IActivityQueries>()
                 .InstancePerLifetimeScope();
-            builder.Register(c => new CatalogQueries(connectionString))
-                .As<ICatalogQueries>()
+            builder.Register(c => new CategoryQueries(connectionString))
+                .As<ICategoryQueries>()
                 .InstancePerLifetimeScope();
         }
 

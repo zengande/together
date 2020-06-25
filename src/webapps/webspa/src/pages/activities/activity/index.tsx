@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import ReactMarkdown from 'react-markdown'
 import { ActivityModelState } from '../models/activity';
 import Activity from '@/@types/activity/activity';
-import { Participant } from '../../../@types/activity/activity';
+import { Atteandee } from '../../../@types/activity/activity';
 import CodeBlock from '@/components/markdown/codeblock';
 import moment from 'moment';
 import {
@@ -27,7 +27,7 @@ moment.locale('zh-cn');
 
 interface ActivityPageProps extends ConnectProps {
     activity?: Activity;
-    participants?: Participant[];
+    attendees?: Atteandee[];
     loading?: boolean;
     joining?: boolean;
     collecting?: boolean;
@@ -50,7 +50,7 @@ class ActivityPage extends React.PureComponent<ActivityPageProps> {
         if (!isNaN(activityId)) {
             this.setState({ activityId })
             dispatch!({ type: 'activity/fetch', payload: activityId });
-            dispatch!({ type: 'activity/fetchParticipants', payload: activityId });
+            dispatch!({ type: 'activity/fetchAttendees', payload: activityId });
         } else {
             history.push("/activities")
         }
@@ -81,10 +81,12 @@ class ActivityPage extends React.PureComponent<ActivityPageProps> {
         const {
             activity,
             loading = true,
-            participants,
+            attendees,
             joining,
             collecting
         } = this.props;
+
+        console.log(attendees);
 
         const {
             title,
@@ -167,20 +169,20 @@ class ActivityPage extends React.PureComponent<ActivityPageProps> {
                         <Row className={styles.content}>
                             <Col span={16}>
                                 <h3 className={styles.sec_title}>参与者({numOfP})</h3>
-                                <div className={styles.participants}>
-                                    {participants ? participants.map(participant => (
-                                        <Link to={`/users/${participant.userId}`} key={participant.userId}>
-                                            <div className={styles.participant}>
-                                                {participant.gender === 1 ?
+                                <div className={styles.attendees}>
+                                    {attendees && attendees.map(attendee => (
+                                        <Link to={`/users/${attendee.userId}`} key={attendee.userId}>
+                                            <div className={styles.attendee}>
+                                                {attendee.gender === 1 ?
                                                     <WomanOutlined className={classNames(styles.gender, styles.woman)} /> :
                                                     <ManOutlined className={classNames(styles.gender, styles.man)} />
                                                 }
                                                 <Avatar size={64} className={styles.avatar} />
-                                                <p className={styles.name}>{participant.nickname}</p>
-                                                <p className={styles.role}>{participant.isOwner ? "创建者" : "成员"}</p>
+                                                <p className={styles.name}>{attendee.nickname}</p>
+                                                <p className={styles.role}>{attendee.isOwner ? "创建者" : "成员"}</p>
                                             </div>
                                         </Link>
-                                    )) : <></>}
+                                    ))}
                                 </div>
                             </Col>
                         </Row>

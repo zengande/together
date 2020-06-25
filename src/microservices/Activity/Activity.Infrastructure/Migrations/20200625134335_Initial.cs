@@ -33,24 +33,18 @@ namespace Together.Activity.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AppCatalogs",
+                name: "AppCategories",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(maxLength: 200, nullable: false),
                     Order = table.Column<int>(nullable: false, defaultValue: 0),
-                    ParentId = table.Column<int>(nullable: true)
+                    Image = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AppCatalogs", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AppCatalogs_AppCatalogs_ParentId",
-                        column: x => x.ParentId,
-                        principalTable: "AppCatalogs",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                    table.PrimaryKey("PK_AppCategories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -87,7 +81,7 @@ namespace Together.Activity.Infrastructure.Migrations
                     ActivityEndTime = table.Column<DateTime>(nullable: false),
                     ActivityStatusId = table.Column<int>(nullable: false),
                     AddressVisibleRuleId = table.Column<int>(nullable: false),
-                    CatalogId = table.Column<int>(nullable: false)
+                    CategoryId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -105,9 +99,32 @@ namespace Together.Activity.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AppActivities_AppCatalogs_CatalogId",
-                        column: x => x.CatalogId,
-                        principalTable: "AppCatalogs",
+                        name: "FK_AppActivities_AppCategories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "AppCategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppAttendees",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(maxLength: 200, nullable: false),
+                    ActivityId = table.Column<int>(nullable: false),
+                    Nickname = table.Column<string>(maxLength: 100, nullable: false),
+                    Avatar = table.Column<string>(maxLength: 200, nullable: true),
+                    Sex = table.Column<int>(nullable: false, defaultValue: 0),
+                    JoinTime = table.Column<DateTime>(nullable: false),
+                    IsOwner = table.Column<bool>(nullable: false, defaultValue: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppAttendees", x => new { x.UserId, x.ActivityId });
+                    table.ForeignKey(
+                        name: "FK_AppAttendees_AppActivities_ActivityId",
+                        column: x => x.ActivityId,
+                        principalTable: "AppActivities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -125,29 +142,6 @@ namespace Together.Activity.Infrastructure.Migrations
                     table.PrimaryKey("PK_AppCollections", x => new { x.UserId, x.ActivityId });
                     table.ForeignKey(
                         name: "FK_AppCollections_AppActivities_ActivityId",
-                        column: x => x.ActivityId,
-                        principalTable: "AppActivities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AppParticipants",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(maxLength: 200, nullable: false),
-                    ActivityId = table.Column<int>(nullable: false),
-                    Nickname = table.Column<string>(maxLength: 100, nullable: false),
-                    Avatar = table.Column<string>(maxLength: 200, nullable: true),
-                    Sex = table.Column<int>(nullable: false, defaultValue: 0),
-                    JoinTime = table.Column<DateTime>(nullable: false),
-                    IsOwner = table.Column<bool>(nullable: false, defaultValue: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AppParticipants", x => new { x.UserId, x.ActivityId });
-                    table.ForeignKey(
-                        name: "FK_AppParticipants_AppActivities_ActivityId",
                         column: x => x.ActivityId,
                         principalTable: "AppActivities",
                         principalColumn: "Id",
@@ -186,33 +180,28 @@ namespace Together.Activity.Infrastructure.Migrations
                 column: "AddressVisibleRuleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AppActivities_CatalogId",
+                name: "IX_AppActivities_CategoryId",
                 table: "AppActivities",
-                column: "CatalogId");
+                column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AppCatalogs_ParentId",
-                table: "AppCatalogs",
-                column: "ParentId");
+                name: "IX_AppAttendees_ActivityId",
+                table: "AppAttendees",
+                column: "ActivityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AppCollections_ActivityId",
                 table: "AppCollections",
-                column: "ActivityId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AppParticipants_ActivityId",
-                table: "AppParticipants",
                 column: "ActivityId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AppCollections");
+                name: "AppAttendees");
 
             migrationBuilder.DropTable(
-                name: "AppParticipants");
+                name: "AppCollections");
 
             migrationBuilder.DropTable(
                 name: "AppRequests");
@@ -227,7 +216,7 @@ namespace Together.Activity.Infrastructure.Migrations
                 name: "AppAddressVisibleRules");
 
             migrationBuilder.DropTable(
-                name: "AppCatalogs");
+                name: "AppCategories");
         }
     }
 }

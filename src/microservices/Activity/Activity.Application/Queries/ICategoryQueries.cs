@@ -6,8 +6,8 @@ using Together.Activity.Application.Dtos;
 
 namespace Together.Activity.Application.Queries
 {
-    public interface ICatalogQueries
+    public interface ICategoryQueries
     {
-        Task<IEnumerable<CatalogDto>> GetCatalogsAsync(int? parentId);
+        Task<IEnumerable<CategoryDto>> GetCategoriesAsync();
     }
 }

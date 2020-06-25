@@ -31,7 +31,7 @@ namespace Together.Activity.Application.Commands
                 request.ActivityStartTime,
                 request.ActivityEndTime,
                 request.Address,
-                request.CatalogId,
+                request.CategoryId,
                 request.AddressVisibleRuleId,
                 request.LimitsNum);
 
@@ -39,7 +39,7 @@ namespace Together.Activity.Application.Commands
             var result = await _repository.UnitOfWork.SaveEntitiesAsync();
             if (result)
             {
-                var index = new ActivityIndex(entity.Id, entity.Title, entity.Content, entity.CreateTime, entity.EndRegisterTime, entity.ActivityStartTime, entity.ActivityEndTime, entity.Address.City, entity.Address.County, entity.Address.DetailAddress, entity.Address.Latitude, entity.Address.Longitude, entity.CatalogId, request.Creator.UserId, request.Creator.Nickname);
+                var index = new ActivityIndex(entity.Id, entity.Title, entity.Content, entity.CreateTime, entity.EndRegisterTime, entity.ActivityStartTime, entity.ActivityEndTime, entity.Address.City, entity.Address.County, entity.Address.DetailAddress, entity.Address.Latitude, entity.Address.Longitude, entity.CategoryId, request.Creator.UserId, request.Creator.Nickname);
                 _indexService.CreateIndex(index);
             }
 

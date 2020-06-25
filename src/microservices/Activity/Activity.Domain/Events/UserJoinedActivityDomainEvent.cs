@@ -8,10 +8,10 @@ namespace Together.Activity.Domain.Events
 {
     public class UserJoinedActivityDomainEvent : DomainEvent
     {
-        public Participant Participant { get; }
-        public UserJoinedActivityDomainEvent(Participant participant)
+        public Attendee Attendee { get; }
+        public UserJoinedActivityDomainEvent(Attendee attendee)
         {
-            Participant = participant;
+            Attendee = attendee;
         }
     }
 }

@@ -33,10 +33,10 @@ namespace Together.Activity.Application.Queries
             }
             else
             {
-                sql.Append(@"CASE appactivities.CreatorId WHEN @userId THEN TRUE ELSE FALSE END AS IsCreator, ");
+                sql.Append(@"CASE AppActivities.CreatorId WHEN @userId THEN TRUE ELSE FALSE END AS IsCreator, ");
             }
 
-            sql.Append(@"@isJoined AS ShowAddress, @isJoined AS IsJoined, @isCollected AS IsCollected, AppActivities.LimitsNum, AppActivities.ActivityEndTime, AppActivities.Content, AppActivities.Id, AppActivities.ActivityStatusId, (SELECT COUNT(*) FROM appparticipants WHERE ActivityId=@id) AS NumOfP FROM AppActivities WHERE AppActivities.Id = @id");
+            sql.Append(@"@isJoined AS ShowAddress, @isJoined AS IsJoined, @isCollected AS IsCollected, AppActivities.LimitsNum, AppActivities.ActivityEndTime, AppActivities.Content, AppActivities.Id, AppActivities.ActivityStatusId, (SELECT COUNT(*) FROM AppAttendees WHERE ActivityId=@id) AS NumOfP FROM AppActivities WHERE AppActivities.Id = @id");
 
             using var connection = new MySqlConnection(_connectionString);
             connection.Open();
@@ -44,24 +44,24 @@ namespace Together.Activity.Application.Queries
             return await connection.QueryFirstOrDefaultAsync<ActivityDto>(sql.ToString(), new { id, isJoined, userId, isCollected });
         }
 
-        public async Task<IEnumerable<ParticipantDto>> GetActivityParticipantsAsync(int id)
+        public async Task<IEnumerable<AttendeeDto>> GetActivityAttendeesAsync(int id)
         {
             var sql = @"SELECT
-							AppParticipants.UserId,
-							AppParticipants.Nickname,
-							AppParticipants.Avatar,
-							AppParticipants.Sex,
-							AppParticipants.JoinTime,
-							AppParticipants.IsOwner 
+							AppAttendees.UserId,
+							AppAttendees.Nickname,
+							AppAttendees.Avatar,
+							AppAttendees.Sex,
+							AppAttendees.JoinTime,
+							AppAttendees.IsOwner 
 						FROM
-							AppParticipants
-						WHERE AppParticipants.ActivityId=@id
-                        ORDER BY AppParticipants.JoinTime";
+							AppAttendees
+						WHERE AppAttendees.ActivityId=@id
+                        ORDER BY AppAttendees.JoinTime";
 
             using var connection = new MySqlConnection(_connectionString);
             connection.Open();
 
-            return await connection.QueryAsync<ParticipantDto>(sql, new { id });
+            return await connection.QueryAsync<AttendeeDto>(sql, new { id });
         }
 
         public async Task<bool> IsJoinedAsync(int activityId, string userId)
@@ -74,7 +74,7 @@ namespace Together.Activity.Application.Queries
             var sql = @"SELECT
 	                        COUNT(*)
                         FROM
-                            appparticipants
+                            AppAttendees
                         WHERE ActivityId=@activityId AND UserId=@userId
                         ";
             using var connection = new MySqlConnection(_connectionString);
