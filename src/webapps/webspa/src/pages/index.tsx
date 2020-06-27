@@ -11,7 +11,7 @@ export default () => {
             <div className={styles.body}>
                 <div className="t-content">
                     <ActivitiesCarousel title="附近活动" loading={true} activities={[]}/>
-                    <ActivitiesCarousel title="户外与冒险" loading={true} activities={[]}/>
+                    <ActivitiesCarousel title="户外与冒险" loading={true} activities={[]} more="sd"/>
                     <ActivitiesCarousel title="学习" loading={true} activities={[]}/>
                     <ActivitiesCarousel title="社交" loading={true} activities={[]}/>
                 </div>

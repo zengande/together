@@ -2,11 +2,13 @@ import React from 'react';
 import styles from './activities-carousel.less';
 import { Row, Col, Avatar } from 'antd'
 import classNames from 'classnames';
+import { Link } from 'umi';
 
 interface ActivitiesCarouselProps {
     title: string;
     loading?: boolean;
-    activities?: any[]
+    activities?: any[];
+    more?: string;
 }
 
 const LoadingDiv: React.FC = (props) => {
@@ -21,9 +23,9 @@ const LoadingDiv: React.FC = (props) => {
                         <div className={classNames(styles.address, styles.loading)}></div>
                     </div>
                     <div className={classNames(styles.avatars, styles.loading)}>
-                        <Avatar className={classNames(styles.avatar, styles.loading)} size={30}/>
-                        <Avatar className={classNames(styles.avatar, styles.loading)} size={30}/>
-                        <Avatar className={classNames(styles.avatar, styles.loading)} size={30}/>
+                        <Avatar className={classNames(styles.avatar, styles.loading)} size={30} />
+                        <Avatar className={classNames(styles.avatar, styles.loading)} size={30} />
+                        <Avatar className={classNames(styles.avatar, styles.loading)} size={30} />
                     </div>
                 </div>
             )}
@@ -33,11 +35,13 @@ const LoadingDiv: React.FC = (props) => {
 
 class ActivitiesCarousel extends React.PureComponent<ActivitiesCarouselProps>{
     render() {
-        const { title, loading, activities } = this.props;
+        const { title, loading, activities, more } = this.props;
 
         return (
             <div className={styles.container}>
-                <h2 className={styles.header}>{title}</h2>
+                <h2 className={styles.header}>{title}
+                    {more && <Link className={styles.more} to={more}>更多</Link>}
+                </h2>
                 <div className={styles.content}>
                     {loading ? <LoadingDiv /> :
                         activities && activities.map(ativity =>

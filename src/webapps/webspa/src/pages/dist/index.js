@@ -10,7 +10,7 @@ exports["default"] = (function () {
         react_1["default"].createElement("div", { className: index_less_1["default"].body },
             react_1["default"].createElement("div", { className: "t-content" },
                 react_1["default"].createElement(activities_carousel_1["default"], { title: "\u9644\u8FD1\u6D3B\u52A8", loading: true, activities: [] }),
-                react_1["default"].createElement(activities_carousel_1["default"], { title: "\u6237\u5916\u4E0E\u5192\u9669", loading: true, activities: [] }),
+                react_1["default"].createElement(activities_carousel_1["default"], { title: "\u6237\u5916\u4E0E\u5192\u9669", loading: true, activities: [], more: "sd" }),
                 react_1["default"].createElement(activities_carousel_1["default"], { title: "\u5B66\u4E60", loading: true, activities: [] }),
                 react_1["default"].createElement(activities_carousel_1["default"], { title: "\u793E\u4EA4", loading: true, activities: [] })))));
 });

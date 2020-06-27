@@ -5,6 +5,14 @@
   font-size: 28px;
   font-weight: 600;
   margin-bottom: 16px;
+  line-height: 44px;
+}
+.container .header .more {
+  float: right;
+  font-size: 16px;
+  line-height: 44px;
+  font-weight: normal;
+  color: #008294;
 }
 .container .content {
   height: 310px;

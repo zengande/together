@@ -17,6 +17,7 @@ var react_1 = require("react");
 var activities_carousel_less_1 = require("./activities-carousel.less");
 var antd_1 = require("antd");
 var classnames_1 = require("classnames");
+var umi_1 = require("umi");
 var LoadingDiv = function (props) {
     return (react_1["default"].createElement("div", { className: activities_carousel_less_1["default"].activities }, new Array(4).fill(0).map(function (v, i) {
         return react_1["default"].createElement("div", { className: activities_carousel_less_1["default"].activity, key: i },
@@ -37,9 +38,11 @@ var ActivitiesCarousel = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     ActivitiesCarousel.prototype.render = function () {
-        var _a = this.props, title = _a.title, loading = _a.loading, activities = _a.activities;
+        var _a = this.props, title = _a.title, loading = _a.loading, activities = _a.activities, more = _a.more;
         return (react_1["default"].createElement("div", { className: activities_carousel_less_1["default"].container },
-            react_1["default"].createElement("h2", { className: activities_carousel_less_1["default"].header }, title),
+            react_1["default"].createElement("h2", { className: activities_carousel_less_1["default"].header },
+                title,
+                more && react_1["default"].createElement(umi_1.Link, { className: activities_carousel_less_1["default"].more, to: more }, "\u66F4\u591A")),
             react_1["default"].createElement("div", { className: activities_carousel_less_1["default"].content }, loading ? react_1["default"].createElement(LoadingDiv, null) :
                 activities && activities.map(function (ativity) {
                     return react_1["default"].createElement("div", { className: activities_carousel_less_1["default"].activities });
