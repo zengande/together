@@ -10,7 +10,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Together.Location.Application.Services;
+using Together.Location.Domain.Entities;
 using Together.Location.Infrastructure;
+using Together.Location.Infrastructure.Repositories;
 
 namespace Together.Location.API
 {
@@ -31,7 +34,9 @@ namespace Together.Location.API
             services.AddOptions();
             services.Configure<LocationDbSettings>(Configuration.GetSection("LocationDbSettings"));
 
-            services.AddScoped<LocationDbContext>();
+            services.AddScoped<LocationDbContext>()
+                .AddTransient<ILocationsRepository, LocationsRepository>()
+                .AddTransient<ILocationsService, LocationsService>();
 
             services.AddControllers();
         }

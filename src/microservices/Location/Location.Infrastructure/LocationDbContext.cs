@@ -3,7 +3,7 @@ using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Together.Location.Domain.Locations;
+using Together.Location.Domain.Entities;
 
 namespace Together.Location.Infrastructure
 {
@@ -18,7 +18,7 @@ namespace Together.Location.Infrastructure
                 _database = client.GetDatabase(settings.Value.Database);
         }
 
-        public IMongoCollection<LocationArea> Locations 
-            => _database.GetCollection<LocationArea>("Locations");
+        public IMongoCollection<Locations> Locations 
+            => _database.GetCollection<Locations>("Locations");
     }
 }

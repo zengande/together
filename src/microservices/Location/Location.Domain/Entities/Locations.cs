@@ -5,15 +5,16 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Together.Location.Domain.Locations
+namespace Together.Location.Domain.Entities
 {
-    public class LocationArea
+    public class Locations
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; private set; }
         public int Code { get; private set; }
         public int? ParentCode { get; private set; }
+        public int Level { get; private set; }
         public string Name { get; private set; }
         public string MergeName { get; private set; }
         public double Latitude { get; private set; }
@@ -28,13 +29,14 @@ namespace Together.Location.Domain.Locations
                 new GeoJson2DGeographicCoordinates(lon, lat));
         }
 
-        private LocationArea() { }
+        private Locations() { }
 
-        public LocationArea(int code, string name, string mergeName, int? parentCode = 0)
+        public Locations(int code, string name, string mergeName, int level, int? parentCode = 0)
         {
             Code = code;
             Name = name;
             MergeName = mergeName;
+            Level = level;
             ParentCode = parentCode;
         }
     }

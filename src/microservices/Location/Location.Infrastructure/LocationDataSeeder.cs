@@ -13,7 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Together.Location.Domain.Locations;
+using Together.Location.Domain.Entities;
 
 namespace Together.Location.Infrastructure
 {
@@ -28,7 +28,7 @@ namespace Together.Location.Infrastructure
             {
                 ctx = scope.ServiceProvider.GetRequiredService<LocationDbContext>();
 
-                if (!ctx.Locations.Database.GetCollection<LocationArea>("Locations").AsQueryable().Any())
+                if (!ctx.Locations.Database.GetCollection<Locations>("Locations").AsQueryable().Any())
                 {
                     var cityCenters = GetCityCenters(rootPath);
                     var administrativeDistricts = await GetAdministrativeDistrictsAsync(rootPath);
@@ -62,7 +62,7 @@ namespace Together.Location.Infrastructure
             var provinces = administrativeDistricts.GroupBy(a => new { a.CODE_PROV, a.NAME_PROV }).Select(g => g.Key);
             if (provinces != null)
             {
-                var areas = new List<LocationArea>();
+                var areas = new List<Locations>();
                 foreach (var province in provinces)
                 {
                     Center center = null;
@@ -78,7 +78,7 @@ namespace Together.Location.Infrastructure
 
                     var location = center?.Point.Split(',', '|').Select(p => Convert.ToDouble(p)).ToArray();
 
-                    var area = new LocationArea(province.CODE_PROV, province.NAME_PROV, province.NAME_PROV);
+                    var area = new Locations(province.CODE_PROV, province.NAME_PROV, province.NAME_PROV, 1);
                     area.SetLocation(location[0], location[1]);
 
                     areas.Add(area);
@@ -94,7 +94,7 @@ namespace Together.Location.Infrastructure
             var cities = administrativeDistricts.GroupBy(a => new { a.CODE_PROV, a.NAME_PROV, a.CODE_CITY, a.NAME_CITY }).Select(g => g.Key);
             if (cities != null)
             {
-                var areas = new List<LocationArea>();
+                var areas = new List<Locations>();
                 foreach (var city in cities)
                 {
                     Center center = null;
@@ -103,7 +103,7 @@ namespace Together.Location.Infrastructure
                     {
                         center = cityCenters.municipalities.FirstOrDefault(m => city.NAME_PROV.StartsWith(m.Name));
                     }
-                    if(center==null)
+                    if (center == null)
                     {
                         center = cityCenters.other.FirstOrDefault(m => city.NAME_PROV.StartsWith(m.Name));
                     }
@@ -114,7 +114,7 @@ namespace Together.Location.Infrastructure
 
                     var location = center?.Point.Split(',', '|').Select(p => Convert.ToDouble(p)).ToArray();
 
-                    var area = new LocationArea(city.CODE_CITY, city.NAME_CITY, $"{city.NAME_PROV},{city.NAME_CITY}", city.CODE_PROV);
+                    var area = new Locations(city.CODE_CITY, city.NAME_CITY, $"{city.NAME_PROV},{city.NAME_CITY}", 2, city.CODE_PROV);
                     area.SetLocation(location[0], location[1]);
 
                     areas.Add(area);
@@ -130,7 +130,7 @@ namespace Together.Location.Infrastructure
             var counties = administrativeDistricts.GroupBy(a => new { a.NAME_PROV, a.CODE_CITY, a.NAME_CITY, a.NAME_COUN, a.CODE_COUN }).Select(g => g.Key);
             if (counties != null)
             {
-                var areas = new List<LocationArea>();
+                var areas = new List<Locations>();
                 foreach (var county in counties)
                 {
                     Center center = null;
@@ -150,7 +150,7 @@ namespace Together.Location.Infrastructure
 
                     var location = center?.Point.Split(',', '|').Select(p => Convert.ToDouble(p)).ToArray();
 
-                    var area = new LocationArea(county.CODE_COUN, county.NAME_COUN, $"{county.NAME_PROV},{county.NAME_CITY},{county.NAME_COUN}", county.CODE_CITY);
+                    var area = new Locations(county.CODE_COUN, county.NAME_COUN, $"{county.NAME_PROV},{county.NAME_CITY},{county.NAME_COUN}", 3, county.CODE_CITY);
                     area.SetLocation(location[0], location[1]);
 
                     areas.Add(area);
