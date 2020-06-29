@@ -3,11 +3,9 @@ import { IRouteComponentProps, history, Redirect, Link, connect, Loading, Connec
 import styles from './index.less'
 import { Row, Col, Avatar, Button, Modal, List } from 'antd';
 import classNames from 'classnames';
-import ReactMarkdown from 'react-markdown'
 import { ActivityModelState } from '../models/activity';
-import Activity from '@/@types/activity/activity';
-import { Atteandee } from '../../../@types/activity/activity';
-import CodeBlock from '@/components/markdown/codeblock';
+import MarkdownRender from '@/components/markdown'
+import Activity, { Atteandee } from '../../../@types/activity/activity';
 import moment from 'moment';
 import {
     ClockCircleOutlined,
@@ -86,8 +84,6 @@ class ActivityPage extends React.PureComponent<ActivityPageProps> {
             collecting
         } = this.props;
 
-        console.log(attendees);
-
         const {
             title,
             content,
@@ -132,10 +128,7 @@ class ActivityPage extends React.PureComponent<ActivityPageProps> {
                         <Row className={styles.content}>
                             <Col span={16} className={styles.body}>
                                 <h3 className={styles.sec_title}>活动详情</h3>
-                                <ReactMarkdown source={content}
-                                    renderers={{
-                                        code: CodeBlock
-                                    }} />
+                                <MarkdownRender content={content} />
                             </Col>
                             <Col span={8} className={styles.float}>
                                 <div className={styles.time}>
@@ -205,7 +198,7 @@ class ActivityPage extends React.PureComponent<ActivityPageProps> {
                                             icon={isCollected ? <StarFilled style={{ color: '#1890ff' }} /> : <StarOutlined />}
                                             type="ghost"
                                             loading={collecting}
-                                            onClick={this.collect.bind(this)}/>
+                                            onClick={this.collect.bind(this)} />
                                         <Button className={styles.joinBtn} type="primary" loading={joining} onClick={this.join.bind(this)}>{isJoined ? "已加入" : "加入活动"}</Button>
                                     </>
                                 }
