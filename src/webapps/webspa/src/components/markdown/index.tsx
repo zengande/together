@@ -4,7 +4,7 @@ import CodeBlock from './codeblock';
 import ImageViewer from './imageviewer';
 
 interface MarkdownRenderProps {
-    content: string;
+    content?: string;
 }
 
 class MarkdownRender extends React.PureComponent<MarkdownRenderProps> {

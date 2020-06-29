@@ -19,6 +19,7 @@ import {
     StarFilled,
     ShareAltOutlined
 } from '@ant-design/icons';
+import authorize, { log } from '@/decorators/authorize';
 
 const TriggerHight = 180;
 moment.locale('zh-cn');
@@ -68,6 +69,7 @@ class ActivityPage extends React.PureComponent<ActivityPageProps> {
         dispatch && dispatch({ type: 'activity/collect', payload: activityId })
     }
 
+    @authorize
     private join() {
         const { dispatch } = this.props;
         const { activityId } = this.state;
@@ -135,7 +137,7 @@ class ActivityPage extends React.PureComponent<ActivityPageProps> {
                                     <ClockCircleOutlined className={styles.icon} />
                                     <p>{moment(activityStartTime).zone("-08:00").format("YYYY年MM月DD日, ddd")}</p>
                                     <p>{moment(activityStartTime).zone("-08:00").format("HH:mm")} · {moment(activityEndTime).zone("-08:00").format("HH:mm")}</p>
-                                    <a>添加到我的日历</a>
+                                    <a href="javascript:void();">添加到我的日历</a>
                                 </div>
                                 <div className={styles.address}>
                                     <EnvironmentOutlined className={styles.icon} />

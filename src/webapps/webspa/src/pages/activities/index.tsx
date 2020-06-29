@@ -45,7 +45,7 @@ class ActivitiesPage extends React.PureComponent<ActivitiesPageProps> {
                     </div>
                 </div>
                 <div className={styles.body}>
-                    <Link to="/activities/2">活动2</Link>
+                    <Link to="/activities/1">活动1</Link>
                 </div>
             </div>
         )

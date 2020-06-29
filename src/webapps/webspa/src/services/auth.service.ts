@@ -78,9 +78,13 @@ class AuthService {
         application.logout();
     }
 
-    public getAccount(): msal.Account {
-        const account = application.getAccount();
-        return account;
+    public getAccount(): msal.Account | null {
+        try {
+            const account = application.getAccount();
+            return account;
+        } catch{
+            return null;
+        }
     }
 
     private getTokenPopup(request: msal.AuthenticationParameters) {
