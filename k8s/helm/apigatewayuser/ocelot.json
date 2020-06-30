@@ -32,7 +32,7 @@
       }
     },
     {
-      "DownstreamPathTemplate": "/api/catalogs",
+      "DownstreamPathTemplate": "/api/categories",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -40,8 +40,50 @@
           "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/catalogs",
+      "UpstreamPathTemplate": "/categories",
       "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/activities/{activityId:int}/attendees",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "activityapi",
+          "Port": 3001
+        }
+      ],
+      "UpstreamPathTemplate": "/activities/{activityId:int}/attendees",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/activities/{activityId:int}/join",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "activityapi",
+          "Port": 3001
+        }
+      ],
+      "UpstreamPathTemplate": "/activities/{activityId:int}/join",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "IdentityApiKey"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/activities/{activityId:int}/collect",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "activityapi",
+          "Port": 3001
+        }
+      ],
+      "UpstreamPathTemplate": "/activities/{activityId:int}/collect",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "IdentityApiKey"
+      }
     }
   ]
 }
