@@ -9,7 +9,7 @@ COPY ["src/webapps/webspa", "."]
 RUN npm install
 
 FROM build AS publish
-RUN npm run build
+RUN npm run build:prod
 
 FROM base AS final
 WORKDIR /app

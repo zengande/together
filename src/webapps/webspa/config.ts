@@ -1,6 +1,8 @@
+const env = process.env.NODE_ENV
+
 export default {
     // 当前应用地址
-    AppBaseAddress: process.env.APP_BASEADDRESS || "http://localhost:3000",
+    AppBaseAddress: env === "production" ? "https://together2.fun" : "http://localhost:3000",
     // API 地址
-    ApiBaseAddress: process.env.API_BASEADDRESS || "http://localhost:3000/api"
+    ApiBaseAddress: env === "production" ? "https://api.together2.fun" : "http://localhost:3000/api"
 }
