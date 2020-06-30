@@ -36,7 +36,7 @@ namespace Together.Activity.Application.Queries
                 sql.Append(@"CASE AppActivities.CreatorId WHEN @userId THEN TRUE ELSE FALSE END AS IsCreator, ");
             }
 
-            sql.Append(@"@isJoined AS ShowAddress, @isJoined AS IsJoined, @isCollected AS IsCollected, AppActivities.LimitsNum, AppActivities.ActivityEndTime, AppActivities.Content, AppActivities.Id, AppActivities.ActivityStatusId, (SELECT COUNT(*) FROM AppAttendees WHERE ActivityId=@id) AS NumOfP FROM AppActivities WHERE AppActivities.Id = @id");
+            sql.Append(@"(@isJoined OR AppActivities.AddressVisibleRuleId=1) AS ShowAddress, @isJoined AS IsJoined, @isCollected AS IsCollected, AppActivities.LimitsNum, AppActivities.ActivityEndTime, AppActivities.Content, AppActivities.Id, AppActivities.ActivityStatusId, (SELECT COUNT(*) FROM AppAttendees WHERE ActivityId=@id) AS NumOfP FROM AppActivities WHERE AppActivities.Id = @id");
 
             using var connection = new MySqlConnection(_connectionString);
             connection.Open();
