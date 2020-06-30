@@ -10,6 +10,9 @@ helm upgrade --install kibana elastic/kibana -f .\k8s\helm\efk\kibana.yaml --nam
 ## Create TLS secret
 kubectl create secret tls www.together2.fun --cert .\1_www.together2.fun_bundle.crt --key .\2_www.together2.fun.key --namespace together
 
+## MySQL
+helm upgrade --install mysql stable/mysql -f .\k8s\helm\mysql\values.yaml --namespace together
+
 ## RabbitMQ
 helm upgrade --install rabbitmq stable/rabbitmq-ha -f ./k8s/helm/rabbitmq/values --namespace together
 

@@ -25,9 +25,8 @@ namespace Together.Activity.Application.Queries
             var sql = @"SELECT
 	                        COUNT(*)
                         FROM
-                            appcollections
-                        WHERE ActivityId=@activityId AND UserId=@userId
-                        ";
+                            AppCollections
+                        WHERE ActivityId=@activityId AND UserId=@userId";
             using var connection = new MySqlConnection(_connectionString);
             connection.Open();
 

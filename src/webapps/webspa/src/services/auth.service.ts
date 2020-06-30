@@ -90,7 +90,7 @@ class AuthService {
     public setLoginState(isAuthenticated: boolean, expiresOn: Date) {
         localStorage.setItem('msal.authorize.status', JSON.stringify({ isAuthenticated, expiresOn }));
         if (typeof (getDvaApp) === 'function') {
-            getDvaApp()._store.dispatch({ type: 'auth/save', payload: { isAuthenticated } });
+            getDvaApp()?._store.dispatch({ type: 'auth/save', payload: { isAuthenticated } });
         }
     }
 }
