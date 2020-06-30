@@ -7,7 +7,6 @@ WORKDIR /src
 
 COPY ["src/webapps/webspa", "."]
 RUN npm install
-COPY . .
 
 FROM build AS publish
 RUN npm run build

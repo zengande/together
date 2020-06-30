@@ -23,6 +23,7 @@
     "@types/classnames": "^2.2.10",
     "@umijs/preset-react": "1.x",
     "@umijs/test": "^3.2.3",
+    "@types/mockjs": "^1.0.2",
     "for-editor": "^0.3.5",
     "lint-staged": "^10.0.7",
     "moment": "^2.27.0",
@@ -33,6 +34,7 @@
     "react-markdown": "^4.3.1",
     "react-syntax-highlighter": "^12.2.1",
     "umi": "^3.2.3",
-    "yorkie": "^2.0.0"
+    "yorkie": "^2.0.0",
+    "react-zmage": "^0.8.5-beta.36"
   }
 }
