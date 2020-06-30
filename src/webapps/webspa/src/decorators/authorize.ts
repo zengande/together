@@ -6,14 +6,16 @@ export default function authorize(target: any, propertyKey: string, descriptor: 
 
     // Replace the original function with a wrapper
     descriptor.value = async function (...args: any[]) {
-        const isAuthenticated = await AuthService.isAuthenticated();
+        const isAuthenticated = AuthService.isAuthenticated();
 
+        var loginResult = isAuthenticated;
         var result = null;
-        if (isAuthenticated) {
+        if (!isAuthenticated) {
+            loginResult = await AuthService.loginPopup();
+        }
+        if (loginResult) {
             // Call the original function
             result = originalValue.apply(this, args);
-        } else {
-            await AuthService.loginPopup();
         }
 
         return result;

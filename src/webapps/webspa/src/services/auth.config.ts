@@ -23,7 +23,8 @@ const msalConfig: Configuration = {
         clientId: "5f572c0d-7839-418f-a01b-71b07debf436",
         authority: b2cPolicies.authorities.signUpSignIn.authority,
         validateAuthority: false,
-        redirectUri: config.AppBaseAddress
+        redirectUri: config.AppBaseAddress,
+        postLogoutRedirectUri: config.AppBaseAddress
     },
     cache: {
         cacheLocation: "localStorage", // This configures where your cache will be stored

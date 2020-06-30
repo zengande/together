@@ -24,7 +24,7 @@ class GlobalHeader extends React.PureComponent<GlobalHeaderProps> {
                     <div className={styles.account}>
                         {
                             isAuthenticated ?
-                                <Avatar /> :
+                                <a href="javascript:void();" onClick={() => AuthService.logout()}><Avatar /></a> :
                                 <>
                                     <a href="javascript:void();" onClick={() => AuthService.loginRedirect()} className={styles.item}>登录</a>
                                     <Link to="/" className={styles.item}>注册</Link>

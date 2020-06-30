@@ -10,12 +10,9 @@ export default defineConfig({
         routes: [
             {
                 path: "/activities/create",
-                component: '@/layouts/AuthorizeLayout',
-                routes: [{
-                    path: '/activities/create',
-                    title: "创建活动 - TOGETHER",
-                    component: 'activities/create'
-                }]
+                wrappers: ['@/wrappers/auth'],
+                title: "创建活动 - TOGETHER",
+                component: 'activities/create'
             },
             {
                 path: "/activities",
@@ -33,5 +30,8 @@ export default defineConfig({
                 title: "TOGETHER"
             }
         ]
-    }]
+    }],
+    analytics: {
+        baidu: 'ba26b3a231c48c6716a2447ffda9c181'
+    }
 });

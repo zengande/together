@@ -9,7 +9,6 @@ export interface AuthModelType {
     namespace: 'auth';
     state: AuthModelState;
     effects: {
-        init: Effect
     };
     reducers: {
         save: Reducer<AuthModelState>;
@@ -19,18 +18,9 @@ export interface AuthModelType {
 const Model: AuthModelType = {
     namespace: 'auth',
     state: {
-        isAuthenticated: false
+        isAuthenticated: AuthService.isAuthenticated()
     },
     effects: {
-        *init(_, { call, put }) {
-            const isAuthenticated = yield call(AuthService.isAuthenticated);
-            yield put({
-                type: 'save',
-                payload: {
-                    isAuthenticated
-                }
-            })
-        }
     },
     reducers: {
         save(state, action) {

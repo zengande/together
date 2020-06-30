@@ -13,7 +13,6 @@ interface BasicLayoutProps extends ConnectProps {
 
 class BasicLayout extends React.PureComponent<BasicLayoutProps> {
     componentDidMount() {
-        this.props.dispatch!({ type: 'auth/init' })
     }
 
     render() {

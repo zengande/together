@@ -30,6 +30,7 @@ const codeMessage = {
  * 异常处理程序
  */
 const errorHandler = (error: { response: Response }): Response => {
+    console.error(error);
     const { response } = error;
     if (response && response.status) {
         const { status, url, statusText } = response;

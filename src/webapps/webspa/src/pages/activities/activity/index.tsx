@@ -5,7 +5,7 @@ import { Row, Col, Avatar, Button, Modal, List } from 'antd';
 import classNames from 'classnames';
 import { ActivityModelState } from '../models/activity';
 import MarkdownRender from '@/components/markdown'
-import Activity, { Atteandee } from '../../../@types/activity/activity';
+import Activity, { Atteandee } from '@/@types/activity/activity';
 import moment from 'moment';
 import {
     ClockCircleOutlined,
@@ -19,7 +19,7 @@ import {
     StarFilled,
     ShareAltOutlined
 } from '@ant-design/icons';
-import authorize, { log } from '@/decorators/authorize';
+import authorize from '@/decorators/authorize';
 
 const TriggerHight = 180;
 moment.locale('zh-cn');
@@ -63,6 +63,7 @@ class ActivityPage extends React.PureComponent<ActivityPageProps> {
         })
     }
 
+    @authorize
     private collect() {
         const { dispatch } = this.props;
         const { activityId } = this.state;

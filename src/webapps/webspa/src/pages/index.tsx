@@ -6,7 +6,7 @@ export default () => {
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <h1 className={styles.title}>与你志趣相投的朋友一同进步</h1>
+                <h1 className={styles.title}>与更多志趣相投的朋友一同进步</h1>
             </div>
             <div className={styles.body}>
                 <div className="t-content">
