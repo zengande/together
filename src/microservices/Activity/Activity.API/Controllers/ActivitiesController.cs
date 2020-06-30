@@ -34,7 +34,8 @@ namespace Together.Activity.API.Controllers
         [HttpGet, Route("{activityId}")]
         public async Task<IActionResult> Get(int activityId)
         {
-            var activity = await _queries.GetActivityByIdAsync(activityId);
+            var userId = _identityService.GetUserIdentity();
+            var activity = await _queries.GetActivityByIdAsync(activityId, userId);
             return activity != null ? Ok(activity) : (IActionResult)NotFound(activityId);
         }
 
@@ -46,9 +47,9 @@ namespace Together.Activity.API.Controllers
             {
                 var userId = _identityService.GetUserIdentity();
                 // TODO 获取用户信息
-                var creator = new Participant(userId, "nickname", "", 1, true);
-                var address = new Address("浙江省", "西湖区", "西湖风景区", 0, 0);
-                var command = new CreateActivityCommand(creator, dto.Title, dto.Content, dto.EndRegisterTime, dto.ActivityStartTime, dto.ActivityEndTime, address, dto.CatalogId, dto.AddressVisibleRuleId, dto.LimitsNum);
+                var creator = new Attendee(userId, "nickname", "", 1, true);
+                var address = new Address("杭州", "西湖区", "西湖风景区", 0, 0);
+                var command = new CreateActivityCommand(creator, dto.Title, dto.Content, dto.EndRegisterTime, dto.ActivityStartTime, dto.ActivityEndTime, address, dto.CategoryId, dto.AddressVisibleRuleId, dto.LimitsNum);
                 var requestCreateActivity = new IdentifiedCommand<CreateActivityCommand, int>(command, guid);
                 var activityId = await _mediator.Send(requestCreateActivity);
                 if (activityId > 0)
@@ -60,11 +61,11 @@ namespace Together.Activity.API.Controllers
             return BadRequest();
         }
 
-        [HttpGet, Route("{activityId}/participants")]
-        public async Task<IActionResult> GetActivityParticipantsAsync(int activityId)
+        [HttpGet, Route("{activityId}/attendees")]
+        public async Task<IActionResult> GetActivityAttendeesAsync(int activityId)
         {
-            var participants = await _queries.GetActivityParticipantsAsync(activityId);
-            return Ok(participants);
+            var attendees = await _queries.GetActivityAttendeesAsync(activityId);
+            return Ok(attendees);
         }
 
         [Authorize]
@@ -79,6 +80,22 @@ namespace Together.Activity.API.Controllers
                 var requestJoinActivity = new IdentifiedCommand<JoinActivityCommand, bool>(command, guid);
                 commandResult = await _mediator.Send(requestJoinActivity);
                 //commandResult = await _mediator.Send(command);
+            }
+
+            return commandResult ? Ok() : (IActionResult)BadRequest();
+        }
+
+        [Authorize]
+        [HttpPost, Route("{activityId}/collect")]
+        public async Task<IActionResult> CollectAsync(int activityId, [FromHeader(Name = "x-requestid")] string requestId)
+        {
+            bool commandResult = false;
+            if (Guid.TryParse(requestId, out Guid guid) && guid != Guid.Empty)
+            {
+                var userId = _identityService.GetUserIdentity();
+                var command = new CollectActivityCommand(activityId, userId);
+                var requestJoinActivity = new IdentifiedCommand<CollectActivityCommand, bool>(command, guid);
+                commandResult = await _mediator.Send(requestJoinActivity);
             }
 
             return commandResult ? Ok() : (IActionResult)BadRequest();

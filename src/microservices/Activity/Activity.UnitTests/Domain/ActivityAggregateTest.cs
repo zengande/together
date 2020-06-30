@@ -11,7 +11,7 @@ namespace Activity.UnitTests.Domain
         [Fact]
         public void Add_new_Activity_raises_new_event()
         {
-            var creator = new Participant("1", "fake user", "avatar", 1, true);
+            var creator = new Attendee("1", "fake user", "avatar", 1, true);
             var address = new Address("provice", "city", "detail address", 0, 0);
             var title = "fake activity";
             var content = "content";

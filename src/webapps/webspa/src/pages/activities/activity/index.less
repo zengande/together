@@ -1,0 +1,269 @@
+.container {
+    background-color: #f6f7f8;
+
+    .content {
+        margin       : 0px auto;
+        width        : 1100px;
+        margin-bottom: 10px;
+        padding-top  : 10px;
+
+        .sec_title {
+            margin-bottom: 20px;
+        }
+    }
+
+    .header {
+        background-color: #ffffff;
+        border-bottom   : 1px solid #eaeaea;
+
+        .content {
+            .date {
+                margin-bottom: 5px;
+                font-size    : .95rem;
+                color        : #2e3e48;
+            }
+
+            .title {
+                color      : #000000;
+                font-size  : 1.6rem;
+                font-weight: 600;
+            }
+
+            .creator {
+                .avatar {
+                    margin-right: 10px;
+                }
+
+                .name {
+                    font-size: .85rem;
+                    color    : #666666;
+                }
+            }
+
+            .share {
+                height       : 40px;
+                width        : 100px;
+                border-radius: 5px;
+            }
+        }
+    }
+
+    .fixedHeader {
+        background-color: #ffffff;
+        width           : 100%;
+        position        : fixed;
+        top             : 0px;
+        z-index         : 999;
+        box-shadow      : 0px 0px 5px 0px rgba(0, 0, 0, .3);
+
+        .title,
+        .date {
+            margin: 0px
+        }
+
+        .date {
+            font-size: .85rem;
+        }
+
+        .title {
+            font-size  : 1.1rem;
+            font-weight: 600;
+            color      : #000000;
+        }
+    }
+
+    .main {
+        min-height: 60vh;
+
+        .content {
+            padding-top: 30px;
+
+            .body {
+                padding-right: 50px;
+
+                img {
+                    max-width: 100% !important;
+                }
+            }
+
+            .float {
+                height          : fit-content;
+                padding-top     : 10px;
+                background-color: #ffffff;
+                border-radius   : 8px;
+                overflow        : hidden;
+                border          : 1px solid #eaeaea;
+                box-shadow      : 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+                position        : -webkit-sticky;
+                position        : sticky;
+                top             : 78px;
+
+                .time,
+                .address {
+                    padding-left : 60px;
+                    padding-right: 20px;
+                    position     : relative;
+                    margin-bottom: 10px;
+
+                    .icon {
+                        position : absolute;
+                        left     : 20px;
+                        top      : 2px;
+                        font-size: 20px;
+                    }
+
+                    p {
+                        margin: 0px;
+                    }
+                }
+
+                .map {
+                    border-radius   : 8px;
+                    overflow        : hidden;
+                    height          : 240px;
+                    background-color: #defedd;
+
+                    img {
+                        height: 100%;
+                        width : 100%;
+                    }
+                }
+            }
+        }
+    }
+
+    .footer {
+        padding-bottom: 50px;
+
+        .attendees {
+            .attendee {
+                height          : 148px;
+                overflow        : hidden;
+                margin-right    : 20px;
+                margin-bottom   : 20px;
+                text-align      : center;
+                color           : rgba(0, 0, 0, 0.65);
+                float           : left;
+                background-color: #ffffff;
+                position        : relative;
+                padding         : 15px 20px;
+                padding-bottom  : 25px;
+                border-radius   : 5px;
+                box-shadow      : 0px 0px 4px 0px rgba(0, 0, 0, 0.1);
+                transition      : all ease-in .3s;
+
+                &:hover {
+                    box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);
+                }
+
+                .gender {
+                    position : absolute;
+                    top      : 5px;
+                    right    : 5px;
+                    font-size: 14px;
+
+                    &.man {
+                        color: rgb(63, 81, 181);
+                    }
+
+                    &.woman {
+                        color: rgb(255, 64, 129);
+                    }
+                }
+
+                .name {
+                    margin    : 0px;
+                    margin-top: 5px;
+                    font-size : .85rem;
+                    color     : #333333;
+                }
+
+                .role {
+                    margin   : 0px;
+                    font-size: .7rem;
+                    color    : #999999;
+                }
+            }
+        }
+    }
+
+    .stickyFooter {
+        border-top      : 1px solid #eaeaea;
+        background-color: #ffffff;
+        position        : -webkit-sticky;
+        position        : sticky;
+        bottom          : 0px;
+        padding         : 10px 0px;
+
+        .date,
+        .title {
+            margin: 0px;
+        }
+
+        .date {
+            vertical-align: top;
+            font-size     : .9rem;
+            margin-bottom : 5px;
+        }
+
+        .title {
+            vertical-align: bottom;
+            font-size     : .98rem;
+            font-weight   : 600;
+            color         : #000000;
+        }
+
+        .right {
+            text-align: right;
+
+            .info {
+                float     : left;
+                text-align: left;
+                height    : 50px;
+
+                span,
+                b {
+                    display: block;
+                }
+
+                span {
+                    font-size: .85rem;
+                }
+
+                b {
+                    font-size     : .95rem;
+                    color         : #000000;
+                    vertical-align: top;
+                }
+            }
+
+            .starBtn,
+            .joinBtn,
+            .cancelBtn {
+                height       : 50px;
+                border-radius: 5px;
+            }
+
+            .starBtn {
+                width : 50px;
+                margin: 0px 20px;
+
+                &.active {}
+            }
+
+            .joinBtn {
+                padding  : 0px 25px;
+                font-size: .95rem;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 1100px) {
+    .container {
+        .content {
+            margin: 0px auto;
+            width : 100%;
+        }
+    }
+}

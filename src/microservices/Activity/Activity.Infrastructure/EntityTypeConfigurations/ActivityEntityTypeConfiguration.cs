@@ -31,21 +31,6 @@ namespace Together.Activity.Infrastructure.EntityTypeConfigurations
             builder.Property(a => a.CreatorId)
                 .HasMaxLength(200)
                 .IsRequired(false);
-            
-            builder.Property<int>("_activityStatusId")
-                .UsePropertyAccessMode(PropertyAccessMode.Field)
-                .HasColumnName("ActivityStatusId")
-                .IsRequired();
-
-            builder.Property<int>("_addressVisibleRuleId")
-                .UsePropertyAccessMode(PropertyAccessMode.Field)
-                .HasColumnName("AddressVisibleRuleId")
-                .IsRequired();
-
-            builder.Property<int>("_catalogId")
-                .UsePropertyAccessMode(PropertyAccessMode.Field)
-                .HasColumnName("CategoryId")
-                .IsRequired();
 
             builder.Property(a => a.Title)
                 .IsRequired(false);
@@ -64,8 +49,8 @@ namespace Together.Activity.Infrastructure.EntityTypeConfigurations
                 .IsRequired()
                 .HasMaxLength(200)
                 .IsUnicode();
-            addressBuilder.Property(a => a.Province)
-                .HasColumnName("Province")
+            addressBuilder.Property(a => a.County)
+                .HasColumnName("County")
                 .HasMaxLength(200)
                 .IsUnicode();
             addressBuilder.Property(a => a.DetailAddress)
@@ -80,20 +65,23 @@ namespace Together.Activity.Infrastructure.EntityTypeConfigurations
                 .HasDefaultValue(0);
 
             var navigation = builder.Metadata
-                .FindNavigation(nameof(Domain.AggregatesModel.ActivityAggregate.Activity.Participants));
+                .FindNavigation(nameof(Domain.AggregatesModel.ActivityAggregate.Activity.Attendees));
             navigation.SetPropertyAccessMode(PropertyAccessMode.Field);
 
             builder.HasOne(a => a.ActivityStatus)
                 .WithMany()
-                .HasForeignKey("ActivityStatusId");
+                .HasForeignKey("ActivityStatusId")
+                .IsRequired();
 
             builder.HasOne(a => a.AddressVisibleRule)
                 .WithMany()
-                .HasForeignKey("AddressVisibleRuleId");
+                .HasForeignKey("AddressVisibleRuleId")
+                .IsRequired();
 
-            builder.HasOne<Catalog>()
+            builder.HasOne<Category>()
                 .WithMany()
-                .HasForeignKey("_catalogId");
+                .HasForeignKey("CategoryId")
+                .IsRequired();
         }
     }
 }

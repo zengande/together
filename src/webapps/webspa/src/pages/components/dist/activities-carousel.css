@@ -1,0 +1,80 @@
+.container {
+  margin-bottom: 20px;
+}
+.container .header {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  line-height: 44px;
+}
+.container .header .more {
+  float: right;
+  font-size: 16px;
+  line-height: 44px;
+  font-weight: normal;
+  color: #008294;
+}
+.container .content {
+  height: 310px;
+  width: 100%;
+  overflow: hidden;
+}
+.container .content .activities {
+  height: 100%;
+}
+.container .content .activities .activity {
+  width: 260px;
+  height: 100%;
+  float: left;
+  margin-left: 20px;
+}
+.container .content .activities .activity:first-child {
+  margin-left: 0px;
+}
+.container .content .activities .activity .image {
+  height: 140px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+}
+.container .content .activities .activity .info {
+  height: 124px;
+}
+.container .content .activities .activity .info .date.loading {
+  width: 60%;
+  height: 22px;
+  margin-bottom: 10px;
+}
+.container .content .activities .activity .info .title.loading {
+  width: 80%;
+  height: 22px;
+  margin-bottom: 10px;
+}
+.container .content .activities .activity .info .address.loading {
+  height: 22px;
+  width: 100%;
+}
+.container .content .activities .activity .avatars {
+  height: 30px;
+  position: relative;
+}
+.container .content .activities .activity .avatars.loading {
+  background-color: transparent;
+}
+.container .content .activities .activity .avatars .avatar {
+  margin-left: -7px;
+  border-right: 2px solid #ffffff;
+}
+.container .content .activities .activity .avatars .avatar:first-child {
+  margin-left: 0px;
+  z-index: 2;
+}
+.container .content .activities .activity .avatars .avatar:nth-child(2) {
+  z-index: 1;
+}
+.container .content .activities .activity .avatars .avatar:last-child {
+  z-index: 0;
+  border-right: none;
+}
+.container .loading {
+  background-color: #f9f9f9;
+}

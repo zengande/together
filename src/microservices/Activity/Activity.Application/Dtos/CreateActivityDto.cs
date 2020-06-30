@@ -43,6 +43,6 @@ namespace Together.Activity.Application.Dtos
         /// <summary>
         /// 活动类型
         /// </summary>
-        public int CatalogId { get; set; }
+        public int CategoryId { get; set; }
     }
 }

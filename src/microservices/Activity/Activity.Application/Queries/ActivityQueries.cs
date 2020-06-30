@@ -16,51 +16,71 @@ namespace Together.Activity.Application.Queries
             _connectionString = !string.IsNullOrWhiteSpace(connectionString) ? connectionString : throw new ArgumentNullException(nameof(connectionString));
         }
 
-        public async Task<ActivityDto> GetActivityByIdAsync(int id)
+        public async Task<ActivityDto> GetActivityByIdAsync(int id, string userId = null)
         {
-            var sql = @"SELECT
-	                        AppActivities.Title,
-	                        AppActivities.EndRegisterTime,
-	                        AppActivities.ActivityStartTime,
-	                        AppActivities.DetailAddress,
-	                        AppActivities.City,
-	                        AppActivities.Province,
-	                        AppActivities.Longitude,
-	                        AppActivities.Latitude,
-	                        AppActivities.LimitsNum,
-	                        AppActivities.ActivityEndTime,
-	                        AppActivities.Content,
-	                        AppActivities.AddressVisibleRuleId,
-	                        AppActivities.Id,
-	                        AppActivities.ActivityStatusId 
-                        FROM
-	                        AppActivities
-                        WHERE AppActivities.Id=@id";
+            var isCollected = await new CollectionQueries(_connectionString).IsCollected(id, userId);
+            var isJoined = await IsJoinedAsync(id, userId);
+
+            var sql = new StringBuilder(@"SELECT AppActivities.Title, AppActivities.EndRegisterTime, AppActivities.ActivityStartTime, ");
+            if (isJoined)
+            {
+                sql.Append("AppActivities.DetailAddress, AppActivities.City, AppActivities.County, AppActivities.Longitude, AppActivities.Latitude, ");
+            }
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                sql.Append("FALSE AS IsCreator, ");
+            }
+            else
+            {
+                sql.Append(@"CASE AppActivities.CreatorId WHEN @userId THEN TRUE ELSE FALSE END AS IsCreator, ");
+            }
+
+            sql.Append(@"@isJoined AS ShowAddress, @isJoined AS IsJoined, @isCollected AS IsCollected, AppActivities.LimitsNum, AppActivities.ActivityEndTime, AppActivities.Content, AppActivities.Id, AppActivities.ActivityStatusId, (SELECT COUNT(*) FROM AppAttendees WHERE ActivityId=@id) AS NumOfP FROM AppActivities WHERE AppActivities.Id = @id");
 
             using var connection = new MySqlConnection(_connectionString);
             connection.Open();
 
-            return await connection.QueryFirstOrDefaultAsync<ActivityDto>(sql, new { id });
+            return await connection.QueryFirstOrDefaultAsync<ActivityDto>(sql.ToString(), new { id, isJoined, userId, isCollected });
         }
 
-        public async Task<IEnumerable<ParticipantDto>> GetActivityParticipantsAsync(int id)
+        public async Task<IEnumerable<AttendeeDto>> GetActivityAttendeesAsync(int id)
         {
             var sql = @"SELECT
-							AppParticipants.UserId,
-							AppParticipants.Nickname,
-							AppParticipants.Avatar,
-							AppParticipants.Sex,
-							AppParticipants.JoinTime,
-							AppParticipants.IsOwner 
+							AppAttendees.UserId,
+							AppAttendees.Nickname,
+							AppAttendees.Avatar,
+							AppAttendees.Sex,
+							AppAttendees.JoinTime,
+							AppAttendees.IsOwner 
 						FROM
-							AppParticipants
-						WHERE AppParticipants.ActivityId=@id
-                        ORDER BY AppParticipants.JoinTime";
+							AppAttendees
+						WHERE AppAttendees.ActivityId=@id
+                        ORDER BY AppAttendees.JoinTime";
 
             using var connection = new MySqlConnection(_connectionString);
             connection.Open();
 
-            return await connection.QueryAsync<ParticipantDto>(sql, new { id });
+            return await connection.QueryAsync<AttendeeDto>(sql, new { id });
+        }
+
+        public async Task<bool> IsJoinedAsync(int activityId, string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                return false;
+            }
+
+            var sql = @"SELECT
+	                        COUNT(*)
+                        FROM
+                            AppAttendees
+                        WHERE ActivityId=@activityId AND UserId=@userId
+                        ";
+            using var connection = new MySqlConnection(_connectionString);
+            connection.Open();
+
+            return await connection.QueryFirstOrDefaultAsync<int>(sql, new { activityId, userId }) > 0;
         }
     }
 }

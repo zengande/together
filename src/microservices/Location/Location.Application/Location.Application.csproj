@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Together.Location.Application</AssemblyName>
+    <RootNamespace>Together.Location.Application</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Location.Infrastructure\Location.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -13,12 +13,18 @@ namespace Together.Activity.Application.Queries
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<ActivityDto> GetActivityByIdAsync(int id);
+        Task<ActivityDto> GetActivityByIdAsync(int id, string userId = null);
         /// <summary>
         /// 获取活动参与者
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<IEnumerable<ParticipantDto>> GetActivityParticipantsAsync(int id);
+        Task<IEnumerable<AttendeeDto>> GetActivityAttendeesAsync(int id);
+        /// <summary>
+        /// 是否加入了此活动
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<bool> IsJoinedAsync(int activityId, string userId);
     }
 }

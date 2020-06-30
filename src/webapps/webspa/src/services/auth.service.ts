@@ -1,9 +1,103 @@
 import * as msal from 'msal';
-import AuthConfig from '@/services/auth.config'
+import AuthConfig from '@/services/auth.config';
+import moment from 'moment';
+import { getDvaApp } from 'umi';
 
 const application = new msal.UserAgentApplication(AuthConfig.msalConfig);
+
+class AuthService {
+
+    public async loginPopup(): Promise<boolean> {
+        try {
+            const response = await application.loginPopup(AuthConfig.loginRequest);
+            console.log("id_token acquired at: " + new Date().toString());
+            console.log(response);
+            service.setLoginState(true, response.expiresOn);
+            return true;
+        } catch (error) {
+            console.error(error);
+            // Error handling
+            if (error.errorMessage) {
+                // Check for forgot password error
+                // Learn more about AAD error codes at https://docs.microsoft.com/en-us/azure/active-directory/develop/reference-aadsts-error-codes
+                if (error.errorMessage.indexOf("AADB2C90118") > -1) {
+                    const response = await application.loginPopup(AuthConfig.b2cPolicies.authorities.forgotPassword);
+                    console.log(response);
+                    window.alert("Password has been reset successfully. \nPlease sign-in with your new password.");
+
+                }
+            }
+        }
+        return false;
+    }
+
+    public loginRedirect() {
+        application.loginRedirect(AuthConfig.loginRequest)
+    }
+
+    /**Sign-out the user */
+    public logout() {
+        service.setLoginState(false, new Date('1970-01-01 00:00'))
+        // Removes all sessions, need to call AAD endpoint to do full logout
+        application.logout();
+    }
+
+    public getAccount(): msal.Account | null {
+        try {
+            const account = application.getAccount();
+            return account;
+        } catch{
+            return null;
+        }
+    }
+
+    private getTokenPopup(request: msal.AuthenticationParameters) {
+        return application.acquireTokenSilent(request)
+            .catch(error => {
+                console.error(error)
+                return null;
+            });
+    }
+
+    // Acquires and access token and then passes it to the API call
+    public async getAccessToken(): Promise<string> {
+        const tokenResponse = await service.getTokenPopup(AuthConfig.tokenRequest)
+        if (tokenResponse != null) {
+            const { accessToken } = tokenResponse;
+            console.log("access_token acquired at: " + new Date().toString());
+            console.log(accessToken);
+            service.setLoginState(true, tokenResponse.expiresOn)
+            return accessToken;
+        }
+        return '';
+    }
+
+    public isAuthenticated(): boolean {
+        try {
+            const result = localStorage.getItem("msal.authorize.status");
+            if (result != null) {
+                const { expiresOn, isAuthenticated } = <{ isAuthenticated: boolean, expiresOn: Date }>JSON.parse(result);
+                const now = moment();
+                return isAuthenticated &&
+                    now.isBefore(expiresOn)
+            }
+
+        } catch{
+        }
+        return false;
+    }
+
+    public setLoginState(isAuthenticated: boolean, expiresOn: Date) {
+        localStorage.setItem('msal.authorize.status', JSON.stringify({ isAuthenticated, expiresOn }));
+        if (typeof (getDvaApp) === 'function') {
+            getDvaApp()._store.dispatch({ type: 'auth/save', payload: { isAuthenticated } });
+        }
+    }
+}
+
+const service = new AuthService();
+
 application.handleRedirectCallback((error, response) => {
-    console.log(JSON.stringify(response));
     // Error handling
     if (error) {
         console.error(error);
@@ -27,7 +121,7 @@ application.handleRedirectCallback((error, response) => {
             window.alert("Password has been reset successfully. \nPlease sign-in with your new password.");
         } else if (response.tokenType === "id_token" && response.idToken.claims['tfp'] === AuthConfig.b2cPolicies.names.signUpSignIn) {
             console.log("id_token acquired at: " + new Date().toString());
-
+            service.setLoginState(true, response.expiresOn);
             if (application.getAccount()) {
                 // todo dva
             }
@@ -39,81 +133,5 @@ application.handleRedirectCallback((error, response) => {
         }
     }
 })
-
-class AuthService {
-    public async loginPopup() {
-        try {
-            const response = await application.loginPopup(AuthConfig.loginRequest);
-            console.log("id_token acquired at: " + new Date().toString());
-            console.log(response);
-
-            const account = service.getAccount();
-            console.log(account)
-            if (account) {
-
-            }
-        } catch (error) {
-            console.error(error);
-            // Error handling
-            if (error.errorMessage) {
-                // Check for forgot password error
-                // Learn more about AAD error codes at https://docs.microsoft.com/en-us/azure/active-directory/develop/reference-aadsts-error-codes
-                if (error.errorMessage.indexOf("AADB2C90118") > -1) {
-                    const response = await application.loginPopup(AuthConfig.b2cPolicies.authorities.forgotPassword);
-                    console.log(response);
-                    window.alert("Password has been reset successfully. \nPlease sign-in with your new password.");
-
-                }
-            }
-        }
-    }
-
-    public loginRedirect() {
-        application.loginRedirect(AuthConfig.loginRequest)
-    }
-
-    /**Sign-out the user */
-    public logout() {
-        // Removes all sessions, need to call AAD endpoint to do full logout
-        application.logout();
-    }
-
-    public getAccount(): msal.Account {
-        const account = application.getAccount();
-        console.log(account);
-        return account;
-    }
-
-    private getTokenPopup(request: msal.AuthenticationParameters) {
-        return application.acquireTokenSilent(request)
-            .catch(error => {
-                console.log("Silent token acquisition fails. Acquiring token using popup");
-                console.log(error);
-                // fallback to interaction when silent call fails
-                return application.acquireTokenPopup(request)
-                    .then(tokenResponse => {
-                        console.log("access_token acquired at: " + new Date().toString());
-                        return tokenResponse;
-                    }).catch(error => {
-                        console.log(error);
-                        return null;
-                    });
-            });
-    }
-
-    // Acquires and access token and then passes it to the API call
-    public async getAccessToken(): Promise<string> {
-        const tokenResponse = await service.getTokenPopup(AuthConfig.tokenRequest)
-        if (tokenResponse != null) {
-            const { accessToken } = tokenResponse;
-            console.log("access_token acquired at: " + new Date().toString());
-            console.log(accessToken);
-            return accessToken;
-        }
-        return '';
-    }
-}
-
-const service = new AuthService();
 
 export default service;

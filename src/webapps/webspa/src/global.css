@@ -1,0 +1,33 @@
+:root {
+    --global-border-color: #eaeaea;
+    --title-font-size: 1.6rem;
+    --title-color: #333333;
+}
+
+ul,
+li {
+    list-style: none;
+}
+
+.t-mosaic {
+    text-shadow: 0 0 10px rgba(0, 0, 0, .6);
+    -webkit-text-fill-color: transparent;
+    user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+}
+
+.t-content {
+    margin: 0px auto;
+    width: 1100px;
+    margin-bottom: 10px;
+    padding-top: 10px;
+}
+
+@media screen and (max-width: 1100px) {
+    .t-content {
+        margin: 0px auto;
+        width: 100%;
+    }
+}

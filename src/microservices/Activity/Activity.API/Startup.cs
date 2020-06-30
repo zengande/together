@@ -12,10 +12,14 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
 using NSwag.AspNetCore;
 using Together.Activity.API;
+using Together.Activity.API.Tasks;
 using Together.Activity.Application.Commands;
+using Together.Activity.Application.Elasticsearch;
 using Together.Activity.Application.Queries;
 using Together.Activity.Application.Validations;
 using Together.Activity.Domain.AggregatesModel.ActivityAggregate;
+using Together.Activity.Domain.AggregatesModel.CatalogAggregate;
+using Together.Activity.Domain.AggregatesModel.CollectionAggregate;
 using Together.Activity.Infrastructure.Data;
 using Together.Activity.Infrastructure.Repositories;
 using Together.BuildingBlocks.Infrastructure;
@@ -37,6 +41,8 @@ namespace Activity.API
         {
             IdentityModelEventSource.ShowPII = true;
 
+            services.AddHostedService<AutoChangeActivityStatusTask>();
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
                 .AddCustomAuth(Configuration)
                 .AddIdentityServices()
@@ -53,18 +59,26 @@ namespace Activity.API
             builder.RegisterMediatorModule(typeof(CreateActivityCommandHandler), typeof(CreateActivityCommandValidator));
             builder.RegisterGeneric(typeof(IdentifiedCommandHandler<,>)).As(typeof(IRequestHandler<,>));
 
+            builder.RegisterType<ActivityIndexService>()
+                .InstancePerLifetimeScope();
+
             builder.RegisterType<ActivityRepository>()
                 .As<IActivityRepository>()
+                .InstancePerLifetimeScope();
+            builder.RegisterType<CategoryRepository>()
+                .As<ICategoryRepository>()
+                .InstancePerLifetimeScope();
+            builder.RegisterType<CollectionRepository>()
+                .As<ICollectionRepository>()
                 .InstancePerLifetimeScope();
 
             // ²éÑ¯¿â
             var connectionString = Configuration.GetConnectionString("Default");
-            System.Console.WriteLine(connectionString);
             builder.Register(c => new ActivityQueries(connectionString))
                 .As<IActivityQueries>()
                 .InstancePerLifetimeScope();
-            builder.Register(c => new CatalogQueries(connectionString))
-                .As<ICatalogQueries>()
+            builder.Register(c => new CategoryQueries(connectionString))
+                .As<ICategoryQueries>()
                 .InstancePerLifetimeScope();
         }
 

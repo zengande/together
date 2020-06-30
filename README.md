@@ -1,5 +1,10 @@
-# TOGETHER
+# [TOGETHER](https://together2.fun)
 ![big picture](./docs/images/big-pic.jpg)
+
+## Screen shots
+![活动详情](./screenshots/webspa-1.png)
+
+
 ## Microservice application based on Azure cloud
 1. [使用 Azure AD B2C 进行认证授权](https://zengande.github.io/)
 2. [将服务部署到 Azure Kubernetes Service](https://zengande.github.io/)

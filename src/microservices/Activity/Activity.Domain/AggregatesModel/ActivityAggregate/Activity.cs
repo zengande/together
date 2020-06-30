@@ -58,26 +58,26 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         /// <summary>
         /// 参与者
         /// </summary>
-        private readonly List<Participant> _participants;
-        public IReadOnlyCollection<Participant> Participants => _participants;
+        private readonly List<Attendee> _attendees;
+        public IReadOnlyCollection<Attendee> Attendees => _attendees;
 
         /// <summary>
         /// 活动状态
         /// </summary>
-        private int _activityStatusId;
+        public int ActivityStatusId { get; private set; }
         public ActivityStatus ActivityStatus { get; private set; }
 
         /// <summary>
         /// 地址可见规则
         /// </summary>
-        private int _addressVisibleRuleId;
+        public int AddressVisibleRuleId { get; private set; }
         public AddressVisibleRule AddressVisibleRule { get; private set; }
 
-        private int _catalogId;
+        public int CategoryId { get; private set; }
 
         protected Activity()
         {
-            _participants = new List<Participant>();
+            _attendees = new List<Attendee>();
             CreateTime = DateTimeOffset.UtcNow.DateTime;
         }
 
@@ -91,10 +91,10 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         /// <param name="startTime"></param>
         /// <param name="endTime"></param>
         /// <param name="address"></param>
-        /// <param name="catalogId"></param>
+        /// <param name="categoryId"></param>
         /// <param name="addressVisibleRuleId"></param>
         /// <param name="limitsNum"></param>
-        public Activity(Participant creator, string title, string content, DateTime endRegisterTime, DateTime startTime, DateTime endTime, Address address, int catalogId, int? addressVisibleRuleId, int? limitsNum = null)
+        public Activity(Attendee creator, string title, string content, DateTime endRegisterTime, DateTime startTime, DateTime endTime, Address address, int categoryId, int? addressVisibleRuleId, int? limitsNum = null)
             : this()
         {
             ValidateAllTime(endRegisterTime, startTime, endTime);
@@ -107,15 +107,15 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
             ActivityEndTime = endTime;
             Address = address;
             LimitsNum = limitsNum;
-            _catalogId = catalogId;
-            _activityStatusId = ActivityStatus.Recruitment.Id;
+            CategoryId = categoryId;
+            ActivityStatusId = ActivityStatus.Recruitment.Id;
             if (addressVisibleRuleId == null)
             {
                 addressVisibleRuleId = AddressVisibleRule.PublicVisible.Id;
             }
-            _addressVisibleRuleId = addressVisibleRuleId.Value;
+            AddressVisibleRuleId = addressVisibleRuleId.Value;
 
-            _participants.Add(creator);
+            _attendees.Add(creator);
 
             // 创建活动领域事件
             AddDomainEvent(new ActivityCreatedDomainEvent(this));
@@ -129,7 +129,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
                 throw new DomainException("截止报名时间不能早于当前时间");
             }
             // 活动时间早于截止报名时间
-            if (startTime < endRegisterTime)
+            if (startTime <= endRegisterTime)
             {
                 throw new DomainException("截止报名时间不能晚于活动时间");
             }
@@ -146,7 +146,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         public void JoinActivity(string userId, string nickname, string avatar, int sex)
         {
             // 招募状态才能加入
-            if (_activityStatusId != ActivityStatus.Recruitment.Id)
+            if (ActivityStatusId != ActivityStatus.Recruitment.Id)
             {
                 throw new DomainException($"该活动当前状态不允许加入");
             }
@@ -158,7 +158,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
             }
 
             // 已参加了此活动
-            if (_participants.Any(u => u.UserId == userId))
+            if (_attendees.Any(u => u.UserId == userId))
             {
                 throw new DomainException("已经参加，请不要重复提交");
             }
@@ -167,32 +167,32 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
             if (LimitsNum.HasValue && LimitsNum > 0)
             {
                 // 除本人外人数限制
-                if (_participants.Count > LimitsNum.Value)
+                if (_attendees.Count > LimitsNum.Value)
                 {
                     throw new DomainException("本次活动人数已满");
                 }
             }
 
-            var participant = new Participant(userId, nickname, avatar, sex, userId == CreatorId);
-            _participants.Add(participant);
+            var attendee = new Attendee(userId, nickname, avatar, sex, userId == CreatorId);
+            _attendees.Add(attendee);
 
             // 加入活动领域事件
-            AddDomainEvent(new UserJoinedActivityDomainEvent(participant));
+            AddDomainEvent(new UserJoinedActivityDomainEvent(attendee));
         }
 
         public void SetFinishedStatus()
         {
-            if (_activityStatusId == ActivityStatus.Processing.Id)
+            if (ActivityStatusId == ActivityStatus.Processing.Id)
             {
-                _activityStatusId = ActivityStatus.Finished.Id;
+                ActivityStatusId = ActivityStatus.Finished.Id;
             }
         }
 
         public void SetProcessingStatus()
         {
-            if (_activityStatusId == ActivityStatus.Recruitment.Id)
+            if (ActivityStatusId == ActivityStatus.Recruitment.Id)
             {
-                _activityStatusId = ActivityStatus.Processing.Id;
+                ActivityStatusId = ActivityStatus.Processing.Id;
             }
         }
 
@@ -201,9 +201,9 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         /// </summary>
         public void Obsolete()
         {
-            if (_activityStatusId == ActivityStatus.Recruitment.Id)
+            if (ActivityStatusId == ActivityStatus.Recruitment.Id)
             {
-                _activityStatusId = ActivityStatus.Obsoleted.Id;
+                ActivityStatusId = ActivityStatus.Obsoleted.Id;
             }
         }
 

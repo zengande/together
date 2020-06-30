@@ -1,3 +1,6 @@
+{{- $name := include "webspa.fullname" . -}}
+{{- $cfgname := printf "%s-%s" "cfg" $name -}}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -51,7 +54,7 @@ spec:
             - name: {{ $ref }}_{{ $key }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "messagingapi.fullname" $root }}-{{ $ref | lower }}
+                  name: {{ template "webspa.fullname" $root }}-{{ $ref | lower }}
                   key: {{ $key }}
             {{- end }}
             {{- end }}

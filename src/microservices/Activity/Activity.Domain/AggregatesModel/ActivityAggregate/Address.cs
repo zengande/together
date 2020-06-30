@@ -10,7 +10,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
     {
         public string DetailAddress { get; set; }
         public string City { get; private set; }
-        public string Province { get; private set; }
+        public string County { get; private set; }
 
         /// <summary>
         /// 经度
@@ -21,13 +21,13 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         /// </summary>
         public double Latitude { get; set; }
 
-        public Address(string province,
-            string city,
+        public Address(string city,
+            string county,
             string detailAddress,
             double longitude, double latitude)
         {
-            Province = province;
             City = city;
+            County = county;
             DetailAddress = detailAddress;
             Longitude = longitude;
             Latitude = latitude;
@@ -36,8 +36,8 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         protected override IEnumerable<object> GetAtomicValues()
         {
             yield return DetailAddress;
+            yield return County;
             yield return City;
-            yield return Province;
         }
     }
 }
