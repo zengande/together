@@ -22,20 +22,20 @@ namespace Activity.API
                     if (!context.Categories.Any())
                     {
                         var categories = new Category[] {
-                            new Category("»§ÍâÓëÃ°ÏÕ", "",1),
-                            new Category("¼¼Êõ", "",2),
-                            new Category("½¡¿µÓëÑøÉú", "",3),
-                            new Category("ÔË¶¯Óë½¡Éí", "",4),
-                            new Category("Ğ´×÷", "",5),
-                            new Category("ÒôÀÖ", "",6),
-                            new Category("µçÓ°", "",7),
-                            new Category("ÒÕÊõ", "",8),
-                            new Category("ÊÖ¹¤ÒÕ", "",9),
-                            new Category("³èÎï", "",10),
-                            new Category("Éç½»", "",11),
-                            new Category("Ê±ÉĞÓëÃÀÈİ", "",12),
-                            new Category("ÓïÑÔÓëÎÄ»¯", "",13),
-                            new Category("Ö°ÒµÓëÉÌÒµ", "",14),
+                            new Category("æˆ·å¤–ä¸å†’é™©", "",1),
+                            new Category("æŠ€æœ¯", "",2),
+                            new Category("å¥åº·ä¸å…»ç”Ÿ", "",3),
+                            new Category("è¿åŠ¨ä¸å¥èº«", "",4),
+                            new Category("å†™ä½œ", "",5),
+                            new Category("éŸ³ä¹", "",6),
+                            new Category("ç”µå½±", "",7),
+                            new Category("è‰ºæœ¯", "",8),
+                            new Category("æ‰‹å·¥è‰º", "",9),
+                            new Category("å® ç‰©", "",10),
+                            new Category("ç¤¾äº¤", "",11),
+                            new Category("æ—¶å°šä¸ç¾å®¹", "",12),
+                            new Category("è¯­è¨€ä¸æ–‡åŒ–", "",13),
+                            new Category("Ö°èŒä¸šä¸å•†ä¸š", "",14),
                         };
                         context.Categories.AddRange(categories);
                     }

@@ -84,7 +84,7 @@ namespace Together.Activity.Domain.AggregatesModel.ActivityAggregate
         /// <summary>
         /// 创建活动
         /// </summary>
-        /// <param name="userId"></param>
+        /// <param name="creator"></param>
         /// <param name="title"></param>
         /// <param name="content"></param>
         /// <param name="endRegisterTime"></param>
