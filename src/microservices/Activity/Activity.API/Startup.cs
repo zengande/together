@@ -72,7 +72,7 @@ namespace Activity.API
                 .As<ICollectionRepository>()
                 .InstancePerLifetimeScope();
 
-            // ²éÑ¯¿â
+            // æŸ¥è¯¢åº“
             var connectionString = Configuration.GetConnectionString("Default");
             builder.Register(c => new ActivityQueries(connectionString))
                 .As<IActivityQueries>()
