@@ -1,8 +1,16 @@
 import React from 'react';
 import styles from './index.less';
 import ActivitiesCarousel from './components/activities-carousel';
+import { connect, Loading, GlobalModelState, ConnectProps } from 'umi';
+import UserLocation from '@/@types/user/location';
 
-export default () => {
+interface IndexPageProps extends ConnectProps {
+    userLocation?: UserLocation
+}
+
+const IndexPage: React.FC<IndexPageProps> = (props: IndexPageProps) => {
+    const { userLocation } =props;
+    const { displayString } =userLocation || {};
     return (
         <div className={styles.container}>
             <div className={styles.header}>
@@ -10,12 +18,16 @@ export default () => {
             </div>
             <div className={styles.body}>
                 <div className="t-content">
-                    <ActivitiesCarousel title="附近活动" loading={true} activities={[]}/>
-                    <ActivitiesCarousel title="户外与冒险" loading={true} activities={[]} more="/activities"/>
-                    <ActivitiesCarousel title="学习" loading={true} activities={[]}/>
-                    <ActivitiesCarousel title="社交" loading={true} activities={[]}/>
+                    <ActivitiesCarousel title={`${displayString}附近活动`} loading={true} activities={[]} />
+                    <ActivitiesCarousel title="户外与冒险" loading={true} activities={[]} more="/activities" />
+                    <ActivitiesCarousel title="学习" loading={true} activities={[]} />
+                    <ActivitiesCarousel title="社交" loading={true} activities={[]} />
                 </div>
             </div>
         </div>
     );
 }
+
+export default connect(({ loading, global }: { loading: Loading, global: GlobalModelState }) => ({
+    userLocation: global.userLocation
+}))(IndexPage)
