@@ -15,23 +15,18 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "ApiGateway.User": {
-      "commandName": "Project",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "http://localhost:4000"
-    },
-    "Azure Dev Spaces": {
-      "commandName": "AzureDevSpaces",
-      "launchBrowser": true
-    },
     "Docker": {
       "commandName": "Docker",
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "environmentVariables": {},
       "publishAllPorts": true,
       "useSSL": true
+    },
+    "Azure Dev Spaces": {
+      "commandName": "AzureDevSpaces",
+      "launchBrowser": true,
+      "environmentVariables": {}
     }
   }
 }

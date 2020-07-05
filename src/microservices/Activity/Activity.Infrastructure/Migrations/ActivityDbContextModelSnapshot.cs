@@ -3,7 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Together.Activity.Infrastructure.Data;
+using Together.Activity.Infrastructure.EntityFrameworkCore;
 
 namespace Together.Activity.Infrastructure.Migrations
 {

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Together.Activity.Infrastructure.Data;
+using Together.Activity.Infrastructure.EntityFrameworkCore;
 using Together.BuildingBlocks.Infrastructure.Idempotency;
 
 namespace Together.Activity.Infrastructure.EntityTypeConfigurations

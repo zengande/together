@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Together.BuildingBlocks.Domain;
 
-namespace Together.BuildingBlocks.Infrastructure.Data
+namespace Together.BuildingBlocks.EntityFrameworkCore
 {
     public abstract class DbContextBase : DbContext, IUnitOfWork
     {

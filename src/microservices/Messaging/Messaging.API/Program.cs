@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Messaging.Infrastructure.Data;
+using Messaging.Infrastructure.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Together.BuildingBlocks.Infrastructure.Data;
+using Together.BuildingBlocks.EntityFrameworkCore;
 
 namespace Together.Messaging.API
 {

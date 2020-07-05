@@ -9,7 +9,7 @@ using System;
 using System.Data.SqlClient;
 using System.Linq;
 
-namespace Together.BuildingBlocks.Infrastructure.Data
+namespace Together.BuildingBlocks.EntityFrameworkCore
 {
     public static class Extensions
     {

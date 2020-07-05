@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Together.BuildingBlocks.Infrastructure.Data
+namespace Together.BuildingBlocks.EntityFrameworkCore
 {
     public abstract class DbContextDesignFactoryBase<TDbContext> : IDesignTimeDbContextFactory<TDbContext>
         where TDbContext : DbContextBase

@@ -8,10 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
 using NSwag.AspNetCore;
-using Together.Activity.API;
 using Together.Activity.API.Tasks;
 using Together.Activity.Application.Commands;
 using Together.Activity.Application.Elasticsearch;
@@ -20,21 +18,21 @@ using Together.Activity.Application.Validations;
 using Together.Activity.Domain.AggregatesModel.ActivityAggregate;
 using Together.Activity.Domain.AggregatesModel.CatalogAggregate;
 using Together.Activity.Domain.AggregatesModel.CollectionAggregate;
-using Together.Activity.Infrastructure.Data;
+using Together.Activity.Infrastructure.EntityFrameworkCore;
 using Together.Activity.Infrastructure.Repositories;
 using Together.BuildingBlocks.Infrastructure;
 using Together.BuildingBlocks.Infrastructure.Filters;
 
-namespace Activity.API
+namespace Together.Activity.API
 {
     public class Startup
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private readonly IConfiguration _configuration;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -44,10 +42,10 @@ namespace Activity.API
             services.AddHostedService<AutoChangeActivityStatusTask>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
-                .AddCustomAuth(Configuration)
+                .AddCustomAuth(_configuration)
                 .AddIdentityServices()
-                .AddOpenApiDocument(document => document.AddCustomSecurity(Configuration))
-                .AddDbContext<ActivityDbContext>(options => options.UseMySql(Configuration.GetConnectionString("Default")))
+                .AddOpenApiDocument(document => document.AddCustomSecurity(_configuration))
+                .AddDbContext<ActivityDbContext>(options => options.UseMySql(_configuration.GetConnectionString("Default")))
                 .AddControllers(options => options.Filters.Add<HttpGlobalExceptionFilter>())
                 .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
@@ -73,7 +71,7 @@ namespace Activity.API
                 .InstancePerLifetimeScope();
 
             // 查询库
-            var connectionString = Configuration.GetConnectionString("Default");
+            var connectionString = _configuration.GetConnectionString("Default");
             builder.Register(c => new ActivityQueries(connectionString))
                 .As<IActivityQueries>()
                 .InstancePerLifetimeScope();
@@ -102,7 +100,7 @@ namespace Activity.API
                {
                    settings.OAuth2Client = new OAuth2ClientSettings
                    {
-                       ClientId = Configuration["AzureAdB2C:SwaggerUIClientId"],
+                       ClientId = _configuration["AzureAdB2C:SwaggerUIClientId"],
                        AppName = "Activity Swagger UI"
                    };
                });
@@ -118,11 +116,11 @@ namespace Activity.API
             services.AddCap(options =>
             {
                 options.UseEntityFramework<ActivityDbContext>();
-                options.UseRabbitMQ(options =>
+                options.UseRabbitMQ(x =>
                 {
-                    options.HostName = Configuration["CAP:RabbitMQ:HostName"];
-                    options.UserName = Configuration["CAP:RabbitMQ:UserName"];
-                    options.Password = Configuration["CAP:RabbitMQ:Password"];
+                    x.HostName = _configuration["CAP:RabbitMQ:HostName"];
+                    x.UserName = _configuration["CAP:RabbitMQ:UserName"];
+                    x.Password = _configuration["CAP:RabbitMQ:Password"];
                 });
             });
         }

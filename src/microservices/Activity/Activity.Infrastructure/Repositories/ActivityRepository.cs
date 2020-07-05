@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Together.Activity.Domain.AggregatesModel.ActivityAggregate;
-using Together.Activity.Infrastructure.Data;
+using Together.Activity.Infrastructure.EntityFrameworkCore;
 using Together.BuildingBlocks.Domain;
 
 namespace Together.Activity.Infrastructure.Repositories

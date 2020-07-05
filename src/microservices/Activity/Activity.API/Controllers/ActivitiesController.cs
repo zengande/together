@@ -46,8 +46,8 @@ namespace Together.Activity.API.Controllers
             if (Guid.TryParse(requestId, out Guid guid) && guid != Guid.Empty)
             {
                 var userId = _identityService.GetUserIdentity();
-                // TODO 获取用户信息
                 var creator = new Attendee(userId, "nickname", "", 1, true);
+                // TODO 收集活动位置信息
                 var address = new Address("杭州", "西湖区", "西湖风景区", 0, 0);
                 var command = new CreateActivityCommand(creator, dto.Title, dto.Content, dto.EndRegisterTime, dto.ActivityStartTime, dto.ActivityEndTime, address, dto.CategoryId, dto.AddressVisibleRuleId, dto.LimitsNum);
                 var requestCreateActivity = new IdentifiedCommand<CreateActivityCommand, int>(command, guid);

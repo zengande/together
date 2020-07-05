@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Together.Activity.Domain.AggregatesModel.CatalogAggregate;
-using Together.Activity.Infrastructure.Data;
+using Together.Activity.Infrastructure.EntityFrameworkCore;
 
 namespace Together.Activity.Infrastructure.EntityTypeConfigurations
 {

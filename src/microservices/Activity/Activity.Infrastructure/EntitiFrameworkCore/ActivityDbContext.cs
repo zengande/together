@@ -6,9 +6,9 @@ using Together.Activity.Domain.AggregatesModel.ActivityAggregate;
 using Together.Activity.Domain.AggregatesModel.CatalogAggregate;
 using Together.Activity.Domain.AggregatesModel.CollectionAggregate;
 using Together.Activity.Infrastructure.EntityTypeConfigurations;
-using Together.BuildingBlocks.Infrastructure.Data;
+using Together.BuildingBlocks.EntityFrameworkCore;
 
-namespace Together.Activity.Infrastructure.Data
+namespace Together.Activity.Infrastructure.EntityFrameworkCore
 {
     public class ActivityDbContext : DbContextBase
     {

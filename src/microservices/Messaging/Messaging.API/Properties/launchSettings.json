@@ -17,24 +17,18 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Messaging.Host": {
-      "commandName": "Project",
-      "launchUrl": "weatherforecast",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "http://localhost:3002;"
-    },
     "Docker": {
       "commandName": "Docker",
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/weatherforecast",
+      "environmentVariables": {},
       "publishAllPorts": true,
       "useSSL": true
     },
     "Azure Dev Spaces": {
       "commandName": "AzureDevSpaces",
-      "launchBrowser": true
+      "launchBrowser": true,
+      "environmentVariables": {}
     }
   }
 }

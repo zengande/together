@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Together.Activity.Infrastructure.Data;
+using Together.Activity.Infrastructure.EntityFrameworkCore;
 using Together.BuildingBlocks.Domain;
 using Together.BuildingBlocks.Infrastructure.Idempotency;
 

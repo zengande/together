@@ -4,9 +4,9 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Together.BuildingBlocks.Infrastructure.Data;
+using Together.BuildingBlocks.EntityFrameworkCore;
 
-namespace Messaging.Infrastructure.Data
+namespace Messaging.Infrastructure.EntityFrameworkCore
 {
     public class MessagingDbContext : DbContextBase
     {

@@ -12,30 +12,31 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "weatherforecast",
+      "launchUrl": "/swagger/v1/index.html",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Activity.API": {
+    "Together.Activity.API": {
       "commandName": "Project",
-      "launchUrl": "weatherforecast",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "http://localhost:3001"
     },
+    "Docker": {
+      "commandName": "Docker",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger/v1/index.html",
+      "environmentVariables": {},
+      "publishAllPorts": true,
+      "useSSL": true
+    },
     "Azure Dev Spaces": {
       "commandName": "AzureDevSpaces",
+      "environmentVariables": {},
       "resourceGroup": "together-group",
       "aksName": "together-aks",
       "subscriptionId": "03289134-4bce-463d-82e1-5147f05443b3"
-    },
-    "Docker": {
-      "commandName": "Docker",
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/weatherforecast",
-      "publishAllPorts": true,
-      "useSSL": true
     }
   }
 }

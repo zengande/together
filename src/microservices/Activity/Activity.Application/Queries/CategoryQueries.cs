@@ -20,7 +20,7 @@ namespace Together.Activity.Application.Queries
 
         public async Task<IEnumerable<CategoryDto>> GetCategoriesAsync()
         {
-            // TODO cache
+            // TODO 添加缓存
             var sql = @"SELECT
 	                        AppCategories.Id,
 	                        AppCategories.NAME

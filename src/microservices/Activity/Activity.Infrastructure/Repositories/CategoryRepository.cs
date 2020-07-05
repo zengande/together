@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Together.Activity.Domain.AggregatesModel.CatalogAggregate;
-using Together.Activity.Infrastructure.Data;
+using Together.Activity.Infrastructure.EntityFrameworkCore;
 using Together.BuildingBlocks.Domain;
 
 namespace Together.Activity.Infrastructure.Repositories
