@@ -6,6 +6,11 @@ namespace Together.Activity.Application.Dtos
 {
     public class CreateActivityDto
     {
+        public CreateActivityDto()
+        {
+            Address = new ActivityAddress();
+        }
+        
         /// <summary>
         /// 活动标题
         /// </summary>
@@ -40,9 +45,25 @@ namespace Together.Activity.Application.Dtos
         /// 地址可见规则
         /// </summary>
         public int AddressVisibleRuleId { get; set; }
+
         /// <summary>
         /// 活动类型
         /// </summary>
         public int CategoryId { get; set; }
+        
+        /// <summary>
+        /// 活动地址
+        /// </summary>
+        public ActivityAddress Address { get; set; }
+    }
+
+    public class ActivityAddress
+    {
+        public string City { get; set; }
+        public string County { get; set; }
+        public string Detail { get; set; }
+        public int CityCode { get; set; }
+        public double Lng { get; set; }
+        public double Lat { get; set; }
     }
 }

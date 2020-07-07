@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Together.Activity.Application.Commands;
 using Together.Activity.Application.Dtos;
@@ -48,7 +46,7 @@ namespace Together.Activity.API.Controllers
                 var userId = _identityService.GetUserIdentity();
                 var creator = new Attendee(userId, "nickname", "", 1, true);
                 // TODO 收集活动位置信息
-                var address = new Address("杭州", "西湖区", "西湖风景区", 0, 0);
+                var address = new Address(dto.Address.City, dto.Address.County, dto.Address.Detail, dto.Address.Lng, dto.Address.Lat);
                 var command = new CreateActivityCommand(creator, dto.Title, dto.Content, dto.EndRegisterTime, dto.ActivityStartTime, dto.ActivityEndTime, address, dto.CategoryId, dto.AddressVisibleRuleId, dto.LimitsNum);
                 var requestCreateActivity = new IdentifiedCommand<CreateActivityCommand, int>(command, guid);
                 var activityId = await _mediator.Send(requestCreateActivity);
@@ -72,8 +70,8 @@ namespace Together.Activity.API.Controllers
         [HttpPost, Route("{activityId}/join")]
         public async Task<IActionResult> JoinAsync(int activityId, [FromHeader(Name = "x-requestid")] string requestId)
         {
-            bool commandResult = false;
-            if (Guid.TryParse(requestId, out Guid guid) && guid != Guid.Empty)
+            var commandResult = false;
+            if (Guid.TryParse(requestId, out var guid) && guid != Guid.Empty)
             {
                 var userInfo = _identityService.GetUserInfo();
                 var command = new JoinActivityCommand(activityId, userInfo);

@@ -1,4 +1,4 @@
-import config from '../../config';
+import config from '@/config';
 import request from '@/utils/request';
 import Activity, { ActivityInputModel } from '@/@types/activity/activity';
 

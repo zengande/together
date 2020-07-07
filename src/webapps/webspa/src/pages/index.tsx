@@ -10,7 +10,7 @@ interface IndexPageProps extends ConnectProps {
 
 const IndexPage: React.FC<IndexPageProps> = (props: IndexPageProps) => {
     const { userLocation } =props;
-    const { displayString } =userLocation || {};
+    const { city } =userLocation || {};
     return (
         <div className={styles.container}>
             <div className={styles.header}>
@@ -18,7 +18,7 @@ const IndexPage: React.FC<IndexPageProps> = (props: IndexPageProps) => {
             </div>
             <div className={styles.body}>
                 <div className="t-content">
-                    <ActivitiesCarousel title={`${displayString}附近活动`} loading={true} activities={[]} />
+                    <ActivitiesCarousel title={`${city}附近活动`} loading={true} activities={[]} />
                     <ActivitiesCarousel title="户外与冒险" loading={true} activities={[]} more="/activities" />
                     <ActivitiesCarousel title="学习" loading={true} activities={[]} />
                     <ActivitiesCarousel title="社交" loading={true} activities={[]} />
