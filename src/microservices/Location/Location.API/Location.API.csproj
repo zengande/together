@@ -1,20 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>Together.Location.API</AssemblyName>
     <RootNamespace>Together.Location.API</RootNamespace>
+    <UserSecretsId>bab41541-939a-4afc-ac5f-432c8c453cdc</UserSecretsId>
   </PropertyGroup>
-
   <ItemGroup>
+    <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\buildingblocks\BuildingBlocks.BaiDuMap\BuildingBlocks.BaiDuMap.csproj" />
     <ProjectReference Include="..\Location.Application\Location.Application.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <None Update="Baidu\BaiduMap_cityCenter.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
-
 </Project>

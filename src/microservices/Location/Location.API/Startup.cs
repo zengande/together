@@ -14,6 +14,7 @@ using Together.Location.Application.Services;
 using Together.Location.Domain.Entities;
 using Together.Location.Infrastructure;
 using Together.Location.Infrastructure.Repositories;
+using Together.BuildingBlocks.BaiDuMap;
 
 namespace Together.Location.API
 {
@@ -34,7 +35,8 @@ namespace Together.Location.API
             services.AddOptions();
             services.Configure<LocationDbSettings>(Configuration.GetSection("LocationDbSettings"));
 
-            services.AddScoped<LocationDbContext>()
+            services.AddBaiDuMapServices()
+                .AddScoped<LocationDbContext>()
                 .AddTransient<ILocationsRepository, LocationsRepository>()
                 .AddTransient<ILocationsService, LocationsService>();
 

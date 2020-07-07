@@ -19,14 +19,19 @@
       "commandName": "Docker",
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
-      "environmentVariables": {},
       "publishAllPorts": true,
       "useSSL": true
     },
     "Azure Dev Spaces": {
       "commandName": "AzureDevSpaces",
-      "launchBrowser": true,
-      "environmentVariables": {}
+      "launchBrowser": true
+    },
+    "Together.ApiGateway.User": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://0.0.0.0:4000"
     }
   }
 }
