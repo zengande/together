@@ -18,7 +18,7 @@ namespace Together.Activity.Application.Elasticsearch
         {
             _logger = logger;
 
-            var uri = configuration.GetValue<string>("Elaticsearch:Endpoint");
+            var uri = configuration.GetValue<string>("ElasticSearch:Endpoint");
             var settings = new ConnectionSettings(new Uri(uri))
                 .DefaultIndex("activity");
             _elasticClient = new ElasticClient(settings);

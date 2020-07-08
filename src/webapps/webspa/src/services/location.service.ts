@@ -1,13 +1,14 @@
 import request from '@/utils/request';
-import config from '../../config';
+import config from '@/config';
 import UserLocation from '@/@types/user/location';
+import { getDvaApp } from 'umi';
 
 const defaultLocation: UserLocation = {
     lat: 39.929986,
-    lng:116.395645,
+    lng: 116.395645,
     city: "北京",
-    province:"北京",
-    displayString:"北京",
+    province: "北京",
+    displayString: "北京",
     cityCode: 110100
 }
 
@@ -25,6 +26,7 @@ export default {
                         const { coords: { latitude, longitude } } = position;
                         userLocation = await request<UserLocation>(`${config.ApiBaseAddress}/locations/reverse_geocoding?location=${latitude},${longitude}`, { getResponse: false }) || defaultLocation;
                         localStorage.setItem(cacheKey, JSON.stringify(userLocation))
+                        getDvaApp()._store.dispatch({ type: 'global/updateUserLocation', payload: userLocation})
                     }, error => {
                         console.error(error)
                     })

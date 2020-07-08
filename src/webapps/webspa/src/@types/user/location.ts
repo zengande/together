@@ -4,5 +4,4 @@ export default interface UserLocation {
     city: string;
     province: string;
     cityCode: number;
-    displayString: string;
 }

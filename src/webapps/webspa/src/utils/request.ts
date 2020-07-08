@@ -29,9 +29,9 @@ const codeMessage = {
 /**
  * 异常处理程序
  */
-const errorHandler = (error: { response: Response }): Response => {
-    console.error(error);
+const errorHandler = (error: { response: Response }) => {
     const { response } = error;
+    console.log(response);
     if (response && response.status) {
         const { status, url, statusText } = response;
 
@@ -51,7 +51,7 @@ const errorHandler = (error: { response: Response }): Response => {
             message: '网络异常',
         });
     }
-    return response;
+    return undefined;
 };
 
 /**

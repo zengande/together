@@ -10,7 +10,8 @@ export interface GlobalModelType {
     namespace: "global",
     state: GlobalModelState,
     effects: {
-        fetchUserLocation: Effect
+        fetchUserLocation: Effect,
+        updateUserLocation: Effect,
     },
     reducers: {
         save: Reducer<GlobalModelState>;
@@ -27,6 +28,14 @@ export default {
                 type: 'save',
                 payload: {
                     userLocation
+                }
+            })
+        },
+        *updateUserLocation({ payload }, { put }) {
+            yield put({
+                type: 'save',
+                payload: {
+                    userLocation: payload
                 }
             })
         }

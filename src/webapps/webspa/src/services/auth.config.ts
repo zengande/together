@@ -1,5 +1,5 @@
 import { Configuration } from 'msal';
-import config from '../../config';
+import config from '@/config';
 
 const baseAddress = "https://together2.b2clogin.com/together2.onmicrosoft.com";
 
