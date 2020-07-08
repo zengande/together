@@ -22,7 +22,7 @@ namespace Together.BuildingBlogs.BaiDuMap.Services
 
         public async Task<ReverseGeoCodingResult> ReverseGeoCodingAsync(string location)
         {
-            var url = $"reverse_geocoding/v3/?ak={_ak}&output=json&coordtype=wgs84ll&location={location}";
+            var url = $"reverse_geocoding/v3/?ak={_ak}&output=json&coordtype=bd09ll&location={location}";
             try
             {
                 var response = await _http.GetAsync(url);

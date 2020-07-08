@@ -48,7 +48,7 @@ namespace Together.Location.API.Controllers
                     Lng = result.result.location.lng,
                     Province = result.result.addressComponent.province,
                     City = result.result.addressComponent.city,
-                    CityCode = result.result.cityCode
+                    CityCode = Convert.ToInt32(result.result.addressComponent.adcode)
                 };
                 return Ok(userLocation);
             }

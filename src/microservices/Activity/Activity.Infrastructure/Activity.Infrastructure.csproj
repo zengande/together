@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>Together.Activity.Infrastructure</AssemblyName>
     <RootNamespace>Together.Activity.Infrastructure</RootNamespace>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

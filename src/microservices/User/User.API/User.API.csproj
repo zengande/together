@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>Together.User.API</AssemblyName>
     <RootNamespace>Together.User.API</RootNamespace>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
